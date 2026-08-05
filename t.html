@@ -34,7 +34,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; }
 
-        .app-shell { width: 100%; max-width: 480px; background-color: var(--bg); min-height: 100vh; padding: 16px; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); padding-bottom: 70px; }
+        .app-shell { width: 100%; max-width: 480px; background-color: var(--bg); min-height: 100vh; padding: 16px; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); padding-bottom: 90px; }
 
         /* AUTH SCREEN */
         #auth-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 90vh; }
@@ -61,14 +61,13 @@
         .hero-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
         .hero-greeting { font-size: 0.8rem; opacity: 0.9; margin-bottom: 2px; }
         .hero-name { font-size: 1.2rem; font-weight: 800; word-break: break-all; }
-        .hero-avatar-box { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; color: #fff; }
         
         .hero-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: rgba(255, 255, 255, 0.12); padding: 12px; border-radius: 14px; backdrop-filter: blur(5px); }
         .hero-stat-item { text-align: center; }
         .hero-stat-item span { display: block; font-size: 0.65rem; opacity: 0.85; text-transform: uppercase; margin-bottom: 2px; }
         .hero-stat-item b { font-size: 0.95rem; font-weight: 700; }
 
-        /* APP GRID MENU ALA ZONAKERJA */
+        /* APP GRID MENU */
         .menu-section-title { font-size: 0.82rem; font-weight: 700; color: var(--text-sub); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
         .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 8px; margin-bottom: 20px; }
         .grid-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 12px 4px; display: flex; flex-direction: column; align-items: center; color: var(--text-main); cursor: pointer; box-shadow: var(--shadow); transition: transform 0.2s; }
@@ -85,7 +84,7 @@
         .alert-success-custom { background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
 
         /* SUBPAGE & TABLES */
-        .sub-page { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 100; padding: 16px; overflow-y: auto; }
+        .sub-page { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg); z-index: 100; padding: 16px; overflow-y: auto; padding-bottom: 90px; }
         .sub-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
         .sub-header h2 { font-size: 0.95rem; flex: 1; text-transform: uppercase; }
 
@@ -117,6 +116,17 @@
         .bill-label { color: var(--text-sub); }
         .bill-val { font-weight: 700; color: var(--text-main); }
         .bill-total { background: #e0f2fe; padding: 10px; border-radius: 8px; margin-top: 8px; font-weight: 800; color: #0369a1; font-size: 0.95rem; }
+
+        /* BOTTOM NAVIGATION BAR ALA GAMBAR */
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; height: 75px; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-around; padding: 0 12px; z-index: 999; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-sub); text-decoration: none; font-size: 0.7rem; font-weight: 600; cursor: pointer; flex: 1; border: none; background: none; }
+        .nav-item i { font-size: 1.25rem; margin-bottom: 3px; }
+        .nav-item.active { color: var(--primary); }
+        
+        /* TOMBOL TENGAH MENGAPUNG (+) */
+        .nav-center-btn-wrapper { position: relative; width: 64px; display: flex; justify-content: center; flex: 1; }
+        .nav-floating-btn { position: absolute; bottom: 18px; width: 56px; height: 56px; background: #10b981; color: #fff; border-radius: 50%; border: 4px solid var(--bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4); transition: transform 0.2s; }
+        .nav-floating-btn:active { transform: scale(0.92); }
 
         /* MODAL */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
@@ -202,7 +212,7 @@
                 <div class="grid-item" onclick="scanQRModal()"><div class="grid-icon-wrapper" style="background:#f3e8ff; color:#9333ea;"><i class="fa-solid fa-qrcode"></i></div><span class="grid-label">Scan QR</span></div>
             </div>
 
-            <!-- CARD GRAFIK UTILITAS (PINDAH KE ATAS DI BAWAH MENU) -->
+            <!-- CARD GRAFIK UTILITAS -->
             <div class="card">
                 <div class="card-title" style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
                     <span style="font-size:0.95rem; font-weight:700;"><i class="fa-solid fa-chart-line" style="color:var(--primary);"></i> Tren Biaya Utilitas</span>
@@ -250,6 +260,33 @@
                 </div>
             </div>
             <div id="sub-page-content"></div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION BAR (FIXED BOTTOM) -->
+        <div class="bottom-nav" id="main-bottom-nav" style="display: none;">
+            <button class="nav-item active" onclick="navigateBottom('home')">
+                <i class="fa-solid fa-house"></i>
+                <span>Beranda</span>
+            </button>
+            <button class="nav-item" onclick="navigateBottom('laporan')">
+                <i class="fa-solid fa-chart-column"></i>
+                <span>Laporan</span>
+            </button>
+            
+            <div class="nav-center-btn-wrapper">
+                <button class="nav-floating-btn" onclick="openQuickActionModal()" title="Tambah Data Cepat">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+
+            <button class="nav-item" onclick="navigateBottom('utilitas')">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Utilitas</span>
+            </button>
+            <button class="nav-item" onclick="navigateBottom('profil')">
+                <i class="fa-solid fa-user"></i>
+                <span>Profil</span>
+            </button>
         </div>
 
     </div>
@@ -310,6 +347,7 @@
                     currentUser = session.user;
                     document.getElementById('auth-container').style.display = 'none';
                     document.getElementById('app-dashboard').style.display = 'block';
+                    document.getElementById('main-bottom-nav').style.display = 'flex';
                     
                     const emailStr = currentUser.email;
                     document.getElementById('user-email').innerText = emailStr;
@@ -319,6 +357,7 @@
                 } else {
                     document.getElementById('auth-container').style.display = 'flex';
                     document.getElementById('app-dashboard').style.display = 'none';
+                    document.getElementById('main-bottom-nav').style.display = 'none';
                 }
             } catch (err) {
                 console.error("Auth Exception:", err);
@@ -359,6 +398,40 @@
                 stopQRScanner();
                 document.getElementById('app-modal').style.display = 'none';
             });
+        }
+
+        /* FUNGSI NAVIGASI BOTTOM BAR */
+        function navigateBottom(targetKey) {
+            closeSubPage();
+            document.querySelectorAll('.bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
+
+            if (targetKey === 'home') {
+                event.currentTarget.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (targetKey === 'laporan') {
+                event.currentTarget.classList.add('active');
+                openSubPage('laporan');
+            } else if (targetKey === 'utilitas') {
+                event.currentTarget.classList.add('active');
+                openSubPage('utilitas');
+            } else if (targetKey === 'profil') {
+                event.currentTarget.classList.add('active');
+                openSubPage('pengaturan');
+            }
+        }
+
+        function openQuickActionModal() {
+            document.getElementById('modal-title').innerText = "Aksi Cepat & Input Data";
+            document.getElementById('modal-body').innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <button class="btn btn-primary" style="justify-content:flex-start; padding:12px;" onclick="closeSubPage(); document.getElementById('app-modal').style.display='none'; openFormKantor();"><i class="fa-solid fa-building"></i> Tambah Kantor Baru</button>
+                    <button class="btn btn-primary" style="justify-content:flex-start; padding:12px;" onclick="closeSubPage(); document.getElementById('app-modal').style.display='none'; openFormAsset();"><i class="fa-solid fa-boxes-stacked"></i> Tambah Asset Baru</button>
+                    <button class="btn btn-primary" style="justify-content:flex-start; padding:12px;" onclick="closeSubPage(); document.getElementById('app-modal').style.display='none'; openFormUtilitas();"><i class="fa-solid fa-bolt"></i> Catat Utilitas Bulanan</button>
+                    <button class="btn btn-primary" style="justify-content:flex-start; padding:12px;" onclick="closeSubPage(); document.getElementById('app-modal').style.display='none'; openFormPerawatan();"><i class="fa-solid fa-screwdriver-wrench"></i> Input Perawatan & Foto</button>
+                    <button class="btn btn-warning" style="justify-content:flex-start; padding:12px; color:#000;" onclick="closeSubPage(); document.getElementById('app-modal').style.display='none'; scanQRModal();"><i class="fa-solid fa-qrcode"></i> Scan QR Code</button>
+                </div>
+            `;
+            document.getElementById('app-modal').style.display = 'flex';
         }
 
         async function loadKantorFilter() {
@@ -1127,7 +1200,7 @@
                         canvas.width = width;
                         canvas.height = height;
 
-                        const ctx = canvas.getContext('2d');
+                        const ctx = canvas.getContext('canvas');
                         ctx.drawImage(img, 0, 0, width, height);
 
                         canvas.toBlob((blob) => {
