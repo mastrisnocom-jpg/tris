@@ -131,11 +131,12 @@
         .form-group label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 4px; color: var(--text-sub); }
         .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: rgba(0,0,0,0.2); color: #fff; outline: none; font-size: 0.9rem; }
 
-        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.8rem; text-decoration: none; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: 6px 10px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.75rem; text-decoration: none; }
         .btn-primary { background: #10b981; color: #fff; }
         .btn-secondary { background: var(--border); color: var(--text-main); }
         .btn-warning { background: #ffc107; color: #000; }
         .btn-danger { background: #dc3545; color: #fff; }
+        .btn-info { background: #0dcaf0; color: #000; }
         .btn-pay { background: #10b981; color: #fff; }
         .btn-share { background: #0d6efd; color: #fff; }
         .btn-icon { width: 36px; height: 36px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); cursor: pointer; }
@@ -193,14 +194,10 @@
         .table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
         .table th, .table td { padding: 8px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
         .table th { background: rgba(255,255,255,0.1); color: #20c997; font-weight: 700; }
+        .table tr.clickable-row { cursor: pointer; transition: background 0.2s; }
+        .table tr.clickable-row:hover { background: rgba(255, 255, 255, 0.05); }
 
-        /* DROPDOWN MENU */
-        .dropdown-action { position: relative; display: inline-block; }
-        .btn-action-trigger { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-        .dropdown-menu-content { display: none; position: absolute; right: 0; top: 36px; background-color: #122b1e; min-width: 130px; box-shadow: 0px 8px 16px rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 10px; z-index: 105; overflow: hidden; }
-        .dropdown-menu-content button { color: var(--text-main); padding: 8px 12px; text-decoration: none; display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: none; border: none; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
-        .dropdown-menu-content button:hover { background-color: rgba(255,255,255,0.1); }
-        .dropdown-action.active .dropdown-menu-content { display: block; }
+        .action-group { display: flex; gap: 4px; justify-content: center; }
 
         .badge { padding: 3px 6px; border-radius: 4px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; }
         .badge-success { background: rgba(16,185,129,0.2); color: #20c997; }
@@ -415,20 +412,6 @@
             checkAuth();
             setupEventListeners();
         });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.dropdown-action')) {
-                document.querySelectorAll('.dropdown-action').forEach(el => el.classList.remove('active'));
-            }
-        });
-
-        function toggleDropdownMenu(button) {
-            const currentContainer = button.closest('.dropdown-action');
-            document.querySelectorAll('.dropdown-action').forEach(el => {
-                if (el !== currentContainer) el.classList.remove('active');
-            });
-            currentContainer.classList.toggle('active');
-        }
 
         async function checkAuth() {
             try {
@@ -769,23 +752,19 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Nama</th><th>Alamat</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <thead><tr><th>Nama</th><th>Alamat</th><th style="width:110px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
                                     ${data && data.length > 0 ? data.map(k => {
                                         const detailStr = `Nama: ${k.nama}\nAlamat: ${k.alamat}\n\n[PLN]\nPelanggan: ${k.nama_pelanggan_pln || '-'}\nID: ${k.id_pelanggan_pln || '-'}\nTarif/Daya: ${k.tarif_daya_pln || '-'}\n\n[PDAM]\nPelanggan: ${k.nama_pelanggan_pdam || '-'}\nID: ${k.id_pelanggan_pdam || '-'}\nTarif/Daya: ${k.tarif_daya_pdam || '-'}`;
                                         return `
-                                        <tr>
-                                            <td><b>${k.nama}</b></td>
-                                            <td>${k.alamat}</td>
+                                        <tr class="clickable-row">
+                                            <td onclick="viewGenericDetail('Kantor', '${k.nama}', \`${detailStr}\`)"><b>${k.nama}</b></td>
+                                            <td onclick="viewGenericDetail('Kantor', '${k.nama}', \`${detailStr}\`)">${k.alamat}</td>
                                             <td style="text-align:center;">
-                                                <div class="dropdown-action">
-                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                    <div class="dropdown-menu-content">
-                                                        <button onclick="viewGenericDetail('Kantor', '${k.nama}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
-                                                        <button onclick="shareData('Data Kantor', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
-                                                        <button onclick="openFormKantor('${k.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
-                                                        <button onclick="deleteRecord('kantor','${k.id}','kantor')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
-                                                    </div>
+                                                <div class="action-group">
+                                                    <button class="btn btn-warning" onclick="openFormKantor('${k.id}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                                    <button class="btn btn-share" onclick="shareData('Data Kantor', \`${detailStr}\`)" title="Bagikan"><i class="fa-solid fa-share-nodes"></i></button>
+                                                    <button class="btn btn-danger" onclick="deleteRecord('kantor','${k.id}','kantor')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -800,24 +779,20 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Kode</th><th>Nama Asset</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <thead><tr><th>Kode</th><th>Nama Asset</th><th>Status</th><th style="width:110px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
                                     ${data && data.length > 0 ? data.map(a => {
                                         const detailStr = `Kode Asset: ${a.kode_asset}\nNama Asset: ${a.nama_asset}\nKantor: ${a.kantor ? a.kantor.nama : '-'}\nKategori: ${a.kategori}\nStatus: ${a.status}`;
                                         return `
-                                        <tr>
-                                            <td><b>${a.kode_asset}</b></td>
-                                            <td>${a.nama_asset}</td>
-                                            <td><span class="badge badge-${a.status === 'Baik' ? 'success' : 'danger'}">${a.status}</span></td>
+                                        <tr class="clickable-row">
+                                            <td onclick="viewGenericDetail('Asset', '${a.nama_asset}', \`${detailStr}\`)"><b>${a.kode_asset}</b></td>
+                                            <td onclick="viewGenericDetail('Asset', '${a.nama_asset}', \`${detailStr}\`)">${a.nama_asset}</td>
+                                            <td onclick="viewGenericDetail('Asset', '${a.nama_asset}', \`${detailStr}\`)"><span class="badge badge-${a.status === 'Baik' ? 'success' : 'danger'}">${a.status}</span></td>
                                             <td style="text-align:center;">
-                                                <div class="dropdown-action">
-                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                    <div class="dropdown-menu-content">
-                                                        <button onclick="viewGenericDetail('Asset', '${a.nama_asset}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
-                                                        <button onclick="shareData('Data Asset', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
-                                                        <button onclick="openFormAsset('${a.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
-                                                        <button onclick="deleteRecord('asset','${a.id}','asset')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
-                                                    </div>
+                                                <div class="action-group">
+                                                    <button class="btn btn-warning" onclick="openFormAsset('${a.id}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                                    <button class="btn btn-share" onclick="shareData('Data Asset', \`${detailStr}\`)" title="Bagikan"><i class="fa-solid fa-share-nodes"></i></button>
+                                                    <button class="btn btn-danger" onclick="deleteRecord('asset','${a.id}','asset')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -840,7 +815,7 @@
 
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Jenis</th><th>ID Pelanggan</th><th>Pemakaian</th><th>Biaya (Rp)</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <thead><tr><th>Jenis</th><th>ID Pelanggan</th><th>Biaya (Rp)</th><th style="width:110px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
                                     ${data && data.length > 0 ? data.map(u => {
                                         const k = u.kantor || {};
@@ -851,27 +826,19 @@
                                         const detailStr = `Jenis Utilitas: ${u.jenis}\nKantor: ${k.nama || '-'}\nNama Pelanggan: ${namaPel || '-'}\nID Pelanggan: ${u.id_pelanggan || '-'}\nPeriode Bulan: ${u.periode_bulan || '-'}\nTarif/Daya: ${tarifDaya || '-'}\nPemakaian: ${u.jumlah_pemakaian} ${u.satuan}\nBiaya: Rp ${Number(u.biaya).toLocaleString('id-ID')}\nTanggal Input: ${u.bulan_tahun || '-'}`;
                                         
                                         return `
-                                        <tr>
-                                            <td><b>${u.jenis}</b><br><small style="color:var(--text-sub);">${k.nama || '-'}</small></td>
-                                            <td><span class="badge badge-warning">${u.id_pelanggan || '-'}</span></td>
-                                            <td>${u.jumlah_pemakaian} ${u.satuan}</td>
-                                            <td>Rp ${Number(u.biaya).toLocaleString('id-ID')}</td>
+                                        <tr class="clickable-row">
+                                            <td onclick="viewGenericDetail('Utilitas', '${u.jenis}', \`${detailStr}\`)"><b>${u.jenis}</b><br><small style="color:var(--text-sub);">${k.nama || '-'}</small></td>
+                                            <td onclick="viewGenericDetail('Utilitas', '${u.jenis}', \`${detailStr}\`)"><span class="badge badge-warning">${u.id_pelanggan || '-'}</span></td>
+                                            <td onclick="viewGenericDetail('Utilitas', '${u.jenis}', \`${detailStr}\`)">Rp ${Number(u.biaya).toLocaleString('id-ID')}</td>
                                             <td style="text-align:center;">
-                                                <div class="dropdown-action">
-                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                    <div class="dropdown-menu-content">
-                                                        ${(u.jenis === 'Listrik' || u.jenis === 'Air') ? `
-                                                            <button onclick="processPaymentRedirect('${u.jenis}', '${u.id_pelanggan}')"><i class="fa-solid fa-credit-card" style="color:#10b981;"></i> Bayar</button>
-                                                        ` : ''}
-                                                        <button onclick="viewGenericDetail('Utilitas', '${u.jenis}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
-                                                        <button onclick="shareData('Data Utilitas', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
-                                                        <button onclick="openFormUtilitas('${u.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
-                                                        <button onclick="deleteRecord('utilitas','${u.id}','utilitas')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
-                                                    </div>
+                                                <div class="action-group">
+                                                    <button class="btn btn-warning" onclick="openFormUtilitas('${u.id}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                                    <button class="btn btn-share" onclick="shareData('Data Utilitas', \`${detailStr}\`)" title="Bagikan"><i class="fa-solid fa-share-nodes"></i></button>
+                                                    <button class="btn btn-danger" onclick="deleteRecord('utilitas','${u.id}','utilitas')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    `}).join('') : '<tr><td colspan="5" style="text-align:center;">Belum ada data utilitas</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada data utilitas</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -882,28 +849,22 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>WO</th><th>Before</th><th>After</th><th>Biaya</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <thead><tr><th>WO</th><th>Biaya</th><th style="width:110px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
                                     ${data && data.length > 0 ? data.map(m => {
                                         const detailStr = `Work Order: ${m.work_orders ? m.work_orders.judul : '-'}\nTeknisi: ${m.teknisi ? m.teknisi.nama : '-'}\nBiaya Perawatan: Rp ${Number(m.biaya).toLocaleString('id-ID')}\nFoto Before: ${m.foto_before ? 'Ada' : 'Tidak Ada'}\nFoto After: ${m.foto_after ? 'Ada' : 'Tidak Ada'}`;
                                         return `
-                                        <tr>
-                                            <td><b>${m.work_orders ? m.work_orders.judul : '-'}</b><br><small>Teknisi: ${m.teknisi ? m.teknisi.nama : '-'}</small></td>
-                                            <td>${m.foto_before ? `<img src="${m.foto_before}" class="img-thumb">` : '-'}</td>
-                                            <td>${m.foto_after ? `<img src="${m.foto_after}" class="img-thumb">` : '-'}</td>
-                                            <td>Rp ${Number(m.biaya).toLocaleString('id-ID')}</td>
+                                        <tr class="clickable-row">
+                                            <td onclick="viewGenericDetail('Hasil Perawatan', '${m.work_orders ? m.work_orders.judul : '-'}', \`${detailStr}\`)"><b>${m.work_orders ? m.work_orders.judul : '-'}</b><br><small>Teknisi: ${m.teknisi ? m.teknisi.nama : '-'}</small></td>
+                                            <td onclick="viewGenericDetail('Hasil Perawatan', '${m.work_orders ? m.work_orders.judul : '-'}', \`${detailStr}\`)">Rp ${Number(m.biaya).toLocaleString('id-ID')}</td>
                                             <td style="text-align:center;">
-                                                <div class="dropdown-action">
-                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                    <div class="dropdown-menu-content">
-                                                        <button onclick="viewGenericDetail('Hasil Perawatan', '${m.work_orders ? m.work_orders.judul : '-'}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
-                                                        <button onclick="shareData('Laporan Perawatan', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
-                                                        <button onclick="deleteRecord('maintenances','${m.id}','perawatan')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
-                                                    </div>
+                                                <div class="action-group">
+                                                    <button class="btn btn-share" onclick="shareData('Laporan Perawatan', \`${detailStr}\`)" title="Bagikan"><i class="fa-solid fa-share-nodes"></i></button>
+                                                    <button class="btn btn-danger" onclick="deleteRecord('maintenances','${m.id}','perawatan')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    `}).join('') : '<tr><td colspan="5" style="text-align:center;">Belum ada data pengerjaan</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="3" style="text-align:center;">Belum ada data pengerjaan</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -999,28 +960,23 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Lokasi/KCP</th><th>Kategori</th><th>Periode</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <thead><tr><th>Lokasi/KCP</th><th>Periode</th><th style="width:110px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
                                     ${data && data.length > 0 ? data.map(atm => {
                                         const detailStr = `Lokasi/KCP: ${atm.kantor ? atm.kantor.nama : '-'}\nKategori: ${atm.kategori_atm}\nPeriode: ${atm.periode_minggu}\nPetugas: ${atm.petugas_nama || '-'}\nSupervisor: ${atm.supervisor_nama || '-'}`;
                                         return `
-                                        <tr>
-                                            <td><b>${atm.kantor ? atm.kantor.nama : '-'}</b></td>
-                                            <td><span class="badge badge-success">${atm.kategori_atm}</span></td>
-                                            <td>${atm.periode_minggu}</td>
+                                        <tr class="clickable-row">
+                                            <td onclick="viewGenericDetail('Pemeriksaan ATM', '${atm.kantor ? atm.kantor.nama : ''}', \`${detailStr}\`)"><b>${atm.kantor ? atm.kantor.nama : '-'}</b></td>
+                                            <td onclick="viewGenericDetail('Pemeriksaan ATM', '${atm.kantor ? atm.kantor.nama : ''}', \`${detailStr}\`)">${atm.periode_minggu}</td>
                                             <td style="text-align:center;">
-                                                <div class="dropdown-action">
-                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                    <div class="dropdown-menu-content">
-                                                        <button onclick="viewGenericDetail('Pemeriksaan ATM', '${atm.kantor ? atm.kantor.nama : ''}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
-                                                        <button onclick="shareData('Laporan Pemeriksaan ATM', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
-                                                        <button onclick="openFormPemeriksaanATM('${atm.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
-                                                        <button onclick="deleteRecord('pemeriksaan_atm','${atm.id}','pemeriksaan_atm')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
-                                                    </div>
+                                                <div class="action-group">
+                                                    <button class="btn btn-warning" onclick="openFormPemeriksaanATM('${atm.id}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                                    <button class="btn btn-share" onclick="shareData('Laporan Pemeriksaan ATM', \`${detailStr}\`)" title="Bagikan"><i class="fa-solid fa-share-nodes"></i></button>
+                                                    <button class="btn btn-danger" onclick="deleteRecord('pemeriksaan_atm','${atm.id}','pemeriksaan_atm')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada pemeriksaan ATM</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="3" style="text-align:center;">Belum ada pemeriksaan ATM</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -1031,28 +987,23 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Judul</th><th>Asset</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <thead><tr><th>Judul</th><th>Status</th><th style="width:110px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
                                     ${data && data.length > 0 ? data.map(w => {
                                         const detailStr = `Judul Work Order: ${w.judul}\nAsset Terkait: ${w.asset ? w.asset.nama_asset : '-'}\nStatus: ${w.status}`;
                                         return `
-                                        <tr>
-                                            <td><b>${w.judul}</b></td>
-                                            <td>${w.asset ? w.asset.nama_asset : '-'}</td>
-                                            <td><span class="badge badge-warning">${w.status}</span></td>
+                                        <tr class="clickable-row">
+                                            <td onclick="viewGenericDetail('Work Order', '${w.judul}', \`${detailStr}\`)"><b>${w.judul}</b></td>
+                                            <td onclick="viewGenericDetail('Work Order', '${w.judul}', \`${detailStr}\`)"><span class="badge badge-warning">${w.status}</span></td>
                                             <td style="text-align:center;">
-                                                <div class="dropdown-action">
-                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                    <div class="dropdown-menu-content">
-                                                        <button onclick="viewGenericDetail('Work Order', '${w.judul}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
-                                                        <button onclick="shareData('Work Order', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
-                                                        <button onclick="openFormWO('${w.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
-                                                        <button onclick="deleteRecord('work_orders','${w.id}','workorder')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
-                                                    </div>
+                                                <div class="action-group">
+                                                    <button class="btn btn-warning" onclick="openFormWO('${w.id}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                                    <button class="btn btn-share" onclick="shareData('Work Order', \`${detailStr}\`)" title="Bagikan"><i class="fa-solid fa-share-nodes"></i></button>
+                                                    <button class="btn btn-danger" onclick="deleteRecord('work_orders','${w.id}','workorder')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada Work Order</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="3" style="text-align:center;">Belum ada Work Order</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -1063,28 +1014,23 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Nama</th><th>Spesialisasi</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <thead><tr><th>Nama</th><th>Spesialisasi</th><th style="width:110px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
                                     ${data && data.length > 0 ? data.map(t => {
                                         const detailStr = `Nama Teknisi: ${t.nama}\nSpesialisasi: ${t.spesialisasi}\nStatus Saat Ini: ${t.status}`;
                                         return `
-                                        <tr>
-                                            <td><b>${t.nama}</b></td>
-                                            <td>${t.spesialisasi}</td>
-                                            <td><span class="badge badge-success">${t.status}</span></td>
+                                        <tr class="clickable-row">
+                                            <td onclick="viewGenericDetail('Teknisi', '${t.nama}', \`${detailStr}\`)"><b>${t.nama}</b></td>
+                                            <td onclick="viewGenericDetail('Teknisi', '${t.nama}', \`${detailStr}\`)">${t.spesialisasi}</td>
                                             <td style="text-align:center;">
-                                                <div class="dropdown-action">
-                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                    <div class="dropdown-menu-content">
-                                                        <button onclick="viewGenericDetail('Teknisi', '${t.nama}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
-                                                        <button onclick="shareData('Data Teknisi', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
-                                                        <button onclick="openFormTeknisi('${t.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
-                                                        <button onclick="deleteRecord('teknisi','${t.id}','teknisi')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
-                                                    </div>
+                                                <div class="action-group">
+                                                    <button class="btn btn-warning" onclick="openFormTeknisi('${t.id}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                                    <button class="btn btn-share" onclick="shareData('Data Teknisi', \`${detailStr}\`)" title="Bagikan"><i class="fa-solid fa-share-nodes"></i></button>
+                                                    <button class="btn btn-danger" onclick="deleteRecord('teknisi','${t.id}','teknisi')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada data teknisi</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="3" style="text-align:center;">Belum ada data teknisi</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -1095,29 +1041,23 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Judul Kegiatan</th><th>Kategori</th><th>Tanggal</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <thead><tr><th>Judul</th><th>Tanggal</th><th style="width:110px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
                                     ${data && data.length > 0 ? data.map(j => {
                                         const detailStr = `Kegiatan: ${j.judul}\nKategori: ${j.kategori || '-'}\nTanggal: ${j.tanggal || '-'}\nStatus: ${j.status}\nKeterangan: ${j.keterangan || '-'}`;
                                         return `
-                                        <tr>
-                                            <td><b>${j.judul}</b><br><small style="color:var(--text-sub);">${j.keterangan || ''}</small></td>
-                                            <td>${j.kategori || '-'}</td>
-                                            <td>${j.tanggal || '-'}</td>
-                                            <td><span class="badge badge-${j.status === 'Selesai' ? 'success' : 'warning'}">${j.status}</span></td>
+                                        <tr class="clickable-row">
+                                            <td onclick="viewGenericDetail('Jadwal', '${j.judul}', \`${detailStr}\`)"><b>${j.judul}</b></td>
+                                            <td onclick="viewGenericDetail('Jadwal', '${j.judul}', \`${detailStr}\`)">${j.tanggal || '-'}</td>
                                             <td style="text-align:center;">
-                                                <div class="dropdown-action">
-                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                    <div class="dropdown-menu-content">
-                                                        <button onclick="viewGenericDetail('Jadwal', '${j.judul}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
-                                                        <button onclick="shareData('Jadwal Kegiatan', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
-                                                        <button onclick="openFormJadwal('${j.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
-                                                        <button onclick="deleteRecord('jadwal','${j.id}','jadwal')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
-                                                    </div>
+                                                <div class="action-group">
+                                                    <button class="btn btn-warning" onclick="openFormJadwal('${j.id}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                                    <button class="btn btn-share" onclick="shareData('Jadwal Kegiatan', \`${detailStr}\`)" title="Bagikan"><i class="fa-solid fa-share-nodes"></i></button>
+                                                    <button class="btn btn-danger" onclick="deleteRecord('jadwal','${j.id}','jadwal')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                                                 </div>
                                             </td>
                                         </tr>
-                                    `}).join('') : '<tr><td colspan="5" style="text-align:center;">Belum ada jadwal pemeliharaan</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="3" style="text-align:center;">Belum ada jadwal pemeliharaan</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
