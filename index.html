@@ -11,15 +11,15 @@
     
     <style>
         :root {
-            --primary: #198754;
-            --primary-light: #e8f5e9;
-            --bg: #f4f6f8;
+            --primary: #0b7a48;
+            --primary-gradient: linear-gradient(135deg, #0d8a52 0%, #065e36 100%);
+            --bg: #f4f7f6;
             --card-bg: #ffffff;
             --text-main: #1f2937;
             --text-sub: #6b7280;
-            --border: #e5e7eb;
-            --radius: 16px;
-            --shadow: 0 4px 12px rgba(0,0,0,0.05);
+            --border: #edf2f0;
+            --radius: 20px;
+            --shadow: 0 6px 16px rgba(0,0,0,0.04);
         }
 
         [data-theme="dark"] {
@@ -28,13 +28,12 @@
             --text-main: #f3f4f6;
             --text-sub: #9ca3af;
             --border: #2e2e2e;
-            --primary-light: #1b382b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; }
 
-        .app-shell { width: 100%; max-width: 480px; background-color: var(--bg); min-height: 100vh; padding: 16px; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .app-shell { width: 100%; max-width: 480px; background-color: var(--bg); min-height: 100vh; padding: 16px 16px 80px 16px; position: relative; }
 
         /* AUTH SCREEN */
         #auth-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 90vh; }
@@ -44,45 +43,94 @@
 
         .form-group { text-align: left; margin-bottom: 12px; }
         .form-group label { display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 4px; color: var(--text-sub); }
-        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--card-bg); color: var(--text-main); outline: none; font-size: 0.85rem; }
+        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--card-bg); color: var(--text-main); outline: none; font-size: 0.85rem; }
 
-        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.8rem; text-decoration: none; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 14px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 0.8rem; text-decoration: none; }
         .btn-primary { background: var(--primary); color: #fff; }
         .btn-secondary { background: var(--border); color: var(--text-main); }
-        .btn-info { background: #0dcaf0; color: #000; }
         .btn-warning { background: #ffc107; color: #000; }
         .btn-danger { background: #dc3545; color: #fff; }
-        .btn-share { background: #0d6efd; color: #fff; }
         .btn-pay { background: #10b981; color: #fff; }
-        .btn-icon { width: 38px; height: 38px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); cursor: pointer; }
+        .btn-icon { width: 40px; height: 40px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); cursor: pointer; }
 
-        /* HEADER & STATS */
-        .profile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .profile-left { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 44px; height: 44px; border-radius: 50%; background: #d1e7dd; color: #0f5132; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
-        .user-info .email { font-size: 0.82rem; font-weight: 700; word-break: break-all; }
-        .user-info .role { font-size: 0.68rem; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+        /* HEADER SAMA DENGAN DESAIN ACUAN */
+        .profile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .brand-title { font-size: 1.1rem; font-weight: 800; color: #0b7a48; letter-spacing: -0.5px; }
+        .brand-sub { font-size: 0.72rem; font-weight: 700; color: #c09d52; letter-spacing: 0.5px; }
 
-        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-box { background: var(--card-bg); border-radius: var(--radius); padding: 12px 6px; text-align: center; border: 1px solid var(--border); }
-        .stat-icon { width: 32px; height: 32px; border-radius: 50%; margin: 0 auto 6px auto; display: flex; align-items: center; justify-content: center; }
-        .stat-box h3 { font-size: 1.1rem; font-weight: 800; }
-        .stat-box p { font-size: 0.7rem; color: var(--text-sub); }
+        /* HERO CARD HIJAU UNTUK GRAFIK UTILITAS */
+        .hero-banner {
+            background: var(--primary-gradient);
+            border-radius: var(--radius);
+            padding: 16px;
+            color: #ffffff;
+            box-shadow: 0 8px 20px rgba(11, 122, 72, 0.25);
+            margin-bottom: 16px;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: #eab308;
+            color: #000000;
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+        }
+        .hero-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 2px; }
+        .hero-sub { font-size: 0.72rem; opacity: 0.85; margin-bottom: 12px; }
 
-        /* APP GRID (3 COLUMNS) */
-        .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-        .grid-item { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 8px; color: var(--text-main); cursor: pointer; transition: transform 0.1s; }
-        .grid-item:active { transform: scale(0.96); }
-        .grid-icon-wrapper { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 6px; }
-        .grid-label { font-size: 0.75rem; font-weight: 700; text-align: center; }
+        .filter-grid-hero {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .filter-grid-hero select {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #ffffff;
+            font-size: 0.68rem;
+            padding: 5px 4px;
+            border-radius: 8px;
+            outline: none;
+        }
+        .filter-grid-hero select option { color: #000; }
 
-        .card { background: var(--card-bg); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); margin-bottom: 20px; }
+        /* STATS CARDS SAMA DENGAN ITORA */
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+        .stat-box { background: var(--card-bg); border-radius: var(--radius); padding: 14px 8px; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); }
+        .stat-icon { width: 36px; height: 36px; border-radius: 50%; margin: 0 auto 6px auto; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .stat-box h3 { font-size: 1.1rem; font-weight: 800; color: var(--text-main); }
+        .stat-box p { font-size: 0.7rem; color: var(--text-sub); margin-top: 2px; }
+
+        /* CONTAINER MENU DENGAN CARD PUTIH MEMBULAT */
+        .menu-container-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+        }
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 8px; }
+        .grid-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-main); cursor: pointer; }
+        .grid-icon-wrapper { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 6px; }
+        .grid-label { font-size: 0.72rem; font-weight: 700; text-align: center; color: var(--text-main); }
+
+        .card { background: var(--card-bg); border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); margin-bottom: 16px; box-shadow: var(--shadow); }
         .card-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; }
 
-        /* NOTIFICATION BOX */
-        .alert-box { border-radius: 12px; padding: 10px 12px; font-size: 0.78rem; font-weight: 600; margin-bottom: 12px; display: none; align-items: center; gap: 8px; }
-        .alert-danger-custom { background: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
-        .alert-success-custom { background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+        /* ALERT BOX INTERNAL HERO */
+        .hero-alert {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 0.72rem;
+            margin-bottom: 10px;
+            display: none;
+            line-height: 1.3;
+        }
 
         /* SUBPAGE FIXED OVERLAY */
         .sub-page { display: none; position: fixed; inset: 0; max-width: 480px; margin: 0 auto; background: var(--bg); z-index: 500; padding: 16px; overflow-y: auto; }
@@ -118,11 +166,30 @@
         .modal-content { background: var(--card-bg); border-radius: var(--radius); width: 100%; max-width: 440px; max-height: 85vh; overflow-y: auto; padding: 18px; position: relative; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
         .close-modal { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-sub); }
-        .pay-banner { background: var(--primary-light); border: 1px dashed var(--primary); border-radius: 12px; padding: 12px; margin-bottom: 14px; text-align: center; }
+        .pay-banner { background: #e8f5e9; border: 1px dashed var(--primary); border-radius: 12px; padding: 12px; margin-bottom: 14px; text-align: center; }
         .pay-banner-title { font-size: 0.8rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
         .pay-banner-btns { display: flex; gap: 8px; justify-content: center; }
         .img-thumb { width: 44px; height: 44px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); }
         .form-section-title { font-size: 0.75rem; font-weight: 700; color: var(--primary); margin: 12px 0 6px 0; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 2px; }
+
+        /* BOTTOM NAVBAR SESUAI DESAIN */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 400;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 0.68rem; font-weight: 700; cursor: pointer; text-decoration: none; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item i { font-size: 1.2rem; margin-bottom: 2px; }
     </style>
 </head>
 <body>
@@ -150,21 +217,51 @@
 
         <!-- DASHBOARD MAIN -->
         <div id="app-dashboard" style="display: none;">
+            
+            <!-- HEADER ITORA STYLE -->
             <div class="profile-header">
-                <div class="profile-left">
-                    <div class="avatar" id="user-avatar">BS</div>
-                    <div class="user-info">
-                        <div class="email" id="user-email">admin@bms.com</div>
-                        <div class="role">BINAYASA UNIT BSN KC SURABAYA</div>
-                    </div>
-                </div>
                 <div>
+                    <div class="brand-title">BINAYASA BSN</div>
+                    <div class="brand-sub">SURABAYA CLUB</div>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-icon" onclick="scanQRModal()"><i class="fa-solid fa-qrcode"></i></button>
                     <button class="btn-icon" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
-                    <button class="btn-icon" id="btn-logout" style="color: #dc3545;"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
                 </div>
             </div>
 
-            <!-- STATS BOXES -->
+            <!-- HERO CARD HIJAU: GRAFIK UTILITAS -->
+            <div class="hero-banner">
+                <span class="hero-badge">Utilitas Realtime</span>
+                <div class="hero-title">Grafik Biaya Operasional</div>
+                <div class="hero-sub" id="user-email-display">Bank Syariah Nasional Cabang Surabaya</div>
+
+                <div class="filter-grid-hero">
+                    <select id="chart-filter-kantor" onchange="renderChart()">
+                        <option value="ALL">Semua Kantor</option>
+                    </select>
+                    <select id="chart-filter-tahun" onchange="renderChart()">
+                        <option value="LAST_12">12 Bln Terakhir</option>
+                        <option value="2026" selected>Tahun 2026</option>
+                        <option value="2025">Tahun 2025</option>
+                    </select>
+                    <select id="chart-filter-jenis" onchange="renderChart()">
+                        <option value="ALL">Semua Layanan</option>
+                        <option value="Listrik">Listrik</option>
+                        <option value="Air">Air PDAM</option>
+                    </select>
+                </div>
+
+                <div id="alert-trend" class="hero-alert">
+                    <b id="alert-trend-title">Status:</b> <span id="alert-trend-text">-</span>
+                </div>
+
+                <div style="position: relative; height: 160px; width: 100%;">
+                    <canvas id="chartRealtime"></canvas>
+                </div>
+            </div>
+
+            <!-- STATS ROW CARDS -->
             <div class="stats-row">
                 <div class="stat-box">
                     <div class="stat-icon" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-building"></i></div>
@@ -177,62 +274,37 @@
                     <p>Asset</p>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-icon" style="background:#e3f2fd; color:#1e88e5;"><i class="fa-solid fa-credit-card"></i></div>
+                    <div class="stat-icon" style="background:#e0f2fe; color:#0284c7;"><i class="fa-solid fa-credit-card"></i></div>
                     <h3 id="stat-atm">0</h3>
                     <p>Cek ATM</p>
                 </div>
             </div>
 
-            <!-- APP GRID MENU -->
-            <div class="app-grid">
-                <div class="grid-item" onclick="openSubPage('kantor')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-building"></i></div><span class="grid-label">Kantor</span></div>
-                <div class="grid-item" onclick="openSubPage('asset')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-boxes-stacked"></i></div><span class="grid-label">Asset</span></div>
-                <div class="grid-item" onclick="openSubPage('utilitas')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-bolt"></i></div><span class="grid-label">Utilitas</span></div>
-                <div class="grid-item" onclick="openSubPage('cek_tagihan')"><div class="grid-icon-wrapper" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-receipt"></i></div><span class="grid-label">Cek Tagihan</span></div>
-                <div class="grid-item" onclick="openSubPage('perawatan')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-screwdriver-wrench"></i></div><span class="grid-label">Perawatan</span></div>
-                <div class="grid-item" onclick="openSubPage('workorder')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-clipboard-list"></i></div><span class="grid-label">Work Order</span></div>
-                <div class="grid-item" onclick="openSubPage('pemeriksaan_atm')"><div class="grid-icon-wrapper" style="background:#e0f2fe; color:#0284c7;"><i class="fa-solid fa-credit-card"></i></div><span class="grid-label">Cek ATM</span></div>
-                <div class="grid-item" onclick="openSubPage('teknisi')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-user-gear"></i></div><span class="grid-label">Teknisi</span></div>
-                <div class="grid-item" onclick="openSubPage('jadwal')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-calendar-days"></i></div><span class="grid-label">Jadwal</span></div>
-                <div class="grid-item" onclick="openSubPage('laporan')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#198754;"><i class="fa-solid fa-file-invoice"></i></div><span class="grid-label">Laporan</span></div>
-                <div class="grid-item" onclick="openSubPage('pengaturan')"><div class="grid-icon-wrapper" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-gear"></i></div><span class="grid-label">Pengaturan</span></div>
-                <div class="grid-item" onclick="scanQRModal()"><div class="grid-icon-wrapper" style="background:#f3e8ff; color:#9333ea;"><i class="fa-solid fa-qrcode"></i></div><span class="grid-label">Scan QR</span></div>
-            </div>
-
-            <!-- CARD GRAFIK UTILITAS -->
-            <div class="card">
-                <div class="card-title" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
-                    <span style="font-size:0.9rem; font-weight:700;"><i class="fa-solid fa-chart-line" style="color:var(--primary);"></i> Tren Biaya Utilitas</span>
-                    
-                    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; width:100%;">
-                        <select id="chart-filter-kantor" class="form-control" style="padding: 6px 4px; font-size: 0.7rem;" onchange="renderChart()">
-                            <option value="ALL">Semua Kantor</option>
-                        </select>
-                        <select id="chart-filter-tahun" class="form-control" style="padding: 6px 4px; font-size: 0.7rem;" onchange="renderChart()">
-                            <option value="LAST_12">12 Bln Terakhir</option>
-                            <option value="2026" selected>Tahun 2026</option>
-                            <option value="2025">Tahun 2025</option>
-                        </select>
-                        <select id="chart-filter-jenis" class="form-control" style="padding: 6px 4px; font-size: 0.7rem;" onchange="renderChart()">
-                            <option value="ALL">Semua Layanan</option>
-                            <option value="Listrik">Listrik</option>
-                            <option value="Air">Air PDAM</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="alert-trend" class="alert-box" style="flex-direction:column; align-items:flex-start; gap:4px; font-size:0.75rem;">
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <i id="alert-trend-icon" class="fa-solid fa-triangle-exclamation"></i>
-                        <b id="alert-trend-title">Analisis Tren Biaya Utilitas</b>
-                    </div>
-                    <div id="alert-trend-text" style="font-weight:normal; line-height:1.3;">-</div>
-                </div>
-
-                <div style="position: relative; height: 200px; width: 100%;">
-                    <canvas id="chartRealtime"></canvas>
+            <!-- MENU GRID DALAM CONTAINER KARTU PUTIH MEMBULAT -->
+            <div class="menu-container-card">
+                <div class="app-grid">
+                    <div class="grid-item" onclick="openSubPage('kantor')"><div class="grid-icon-wrapper" style="background:#555555; color:#fff;"><i class="fa-solid fa-building"></i></div><span class="grid-label">Kantor</span></div>
+                    <div class="grid-item" onclick="openSubPage('asset')"><div class="grid-icon-wrapper" style="background:#0b7a48; color:#fff;"><i class="fa-solid fa-boxes-stacked"></i></div><span class="grid-label">Asset</span></div>
+                    <div class="grid-item" onclick="openSubPage('utilitas')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#0b7a48;"><i class="fa-solid fa-bolt"></i></div><span class="grid-label">Utilitas</span></div>
+                    <div class="grid-item" onclick="openSubPage('cek_tagihan')"><div class="grid-icon-wrapper" style="background:#e0f2fe; color:#0284c7;"><i class="fa-solid fa-receipt"></i></div><span class="grid-label">Tagihan</span></div>
+                    <div class="grid-item" onclick="openSubPage('perawatan')"><div class="grid-icon-wrapper" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-screwdriver-wrench"></i></div><span class="grid-label">Perawatan</span></div>
+                    <div class="grid-item" onclick="openSubPage('workorder')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#0b7a48;"><i class="fa-solid fa-clipboard-list"></i></div><span class="grid-label">Work Order</span></div>
+                    <div class="grid-item" onclick="openSubPage('pemeriksaan_atm')"><div class="grid-icon-wrapper" style="background:#e0f2fe; color:#0284c7;"><i class="fa-solid fa-credit-card"></i></div><span class="grid-label">Cek ATM</span></div>
+                    <div class="grid-item" onclick="openSubPage('teknisi')"><div class="grid-icon-wrapper" style="background:#555555; color:#fff;"><i class="fa-solid fa-user-gear"></i></div><span class="grid-label">Teknisi</span></div>
+                    <div class="grid-item" onclick="openSubPage('jadwal')"><div class="grid-icon-wrapper" style="background:#e8f5e9; color:#0b7a48;"><i class="fa-solid fa-calendar-days"></i></div><span class="grid-label">Jadwal</span></div>
+                    <div class="grid-item" onclick="openSubPage('laporan')"><div class="grid-icon-wrapper" style="background:#f3e8ff; color:#9333ea;"><i class="fa-solid fa-file-invoice"></i></div><span class="grid-label">Laporan</span></div>
+                    <div class="grid-item" onclick="openSubPage('pengaturan')"><div class="grid-icon-wrapper" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-gear"></i></div><span class="grid-label">Pengaturan</span></div>
+                    <div class="grid-item" id="btn-logout-grid"><div class="grid-icon-wrapper" style="background:#e0e7ff; color:#4f46e5;"><i class="fa-solid fa-right-from-bracket"></i></div><span class="grid-label">Keluar</span></div>
                 </div>
             </div>
+
+            <!-- BOTTOM NAVIGATION BAR ITORA STYLE -->
+            <div class="bottom-nav">
+                <a class="nav-item active" onclick="window.scrollTo({top:0, behavior:'smooth'})"><i class="fa-solid fa-house"></i>Beranda</a>
+                <a class="nav-item" onclick="openSubPage('pemeriksaan_atm')"><i class="fa-solid fa-credit-card"></i>Cek ATM</a>
+                <a class="nav-item" onclick="openSubPage('laporan')"><i class="fa-solid fa-file-invoice"></i>Laporan</a>
+            </div>
+
         </div>
 
         <!-- SUB PAGE OVERLAY VIEW -->
@@ -278,7 +350,7 @@
 
     <script>
         const SUPABASE_URL = "https://pykkfcszdihobpwhqinq.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5a2tmY3N6ZGlob2Jwd2hxaW5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3OTEyNjEsImV4cCI6MjEwMTM2NzI2MX0.Ig1GsJvn0jDobVCBGlp2lLwTLvtn6eAkzKKf3VxMFiA";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5a2tmY3N6ZGlob2Jwd2hxaW5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3OTE2NjEsImV4cCI6MjEwMTM2NzI2MX0.Ig1GsJvn0jDobVCBGlp2lLwTLvtn6eAkzKKf3VxMFiA";
         
         const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let currentUser = null;
@@ -299,7 +371,9 @@
                     document.getElementById('auth-container').style.display = 'none';
                     document.getElementById('app-dashboard').style.display = 'block';
                     
-                    document.getElementById('user-email').innerText = currentUser.email;
+                    const emailElem = document.getElementById('user-email-display');
+                    if(emailElem) emailElem.innerText = currentUser.email;
+
                     loadDashboardStats();
                     loadKantorFilter();
                 } else {
@@ -328,10 +402,13 @@
                 }
             });
 
-            document.getElementById('btn-logout').addEventListener('click', async () => {
-                await db.auth.signOut();
-                checkAuth();
-            });
+            const btnLogout = document.getElementById('btn-logout-grid');
+            if (btnLogout) {
+                btnLogout.addEventListener('click', async () => {
+                    await db.auth.signOut();
+                    checkAuth();
+                });
+            }
 
             document.getElementById('theme-toggle').addEventListener('click', () => {
                 if (document.body.getAttribute('data-theme') === 'dark') {
@@ -509,8 +586,8 @@
                     datasets.push({
                         label: 'Listrik (Rp)',
                         data: dataListrik,
-                        borderColor: '#198754',
-                        backgroundColor: 'rgba(25, 135, 84, 0.15)',
+                        borderColor: '#facc15',
+                        backgroundColor: 'rgba(250, 204, 21, 0.2)',
                         fill: true,
                         tension: 0.3,
                         borderWidth: 2,
@@ -522,8 +599,8 @@
                     datasets.push({
                         label: 'Air PDAM (Rp)',
                         data: dataAir,
-                        borderColor: '#0dcaf0',
-                        backgroundColor: 'rgba(13, 202, 240, 0.15)',
+                        borderColor: '#38bdf8',
+                        backgroundColor: 'rgba(56, 189, 248, 0.2)',
                         fill: true,
                         tension: 0.3,
                         borderWidth: 2,
@@ -539,7 +616,7 @@
                         maintainAspectRatio: false,
                         interaction: { intersect: false, mode: 'index' },
                         plugins: {
-                            legend: { display: true, position: 'top' },
+                            legend: { display: true, position: 'top', labels: { color: '#ffffff' } },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
@@ -554,14 +631,17 @@
                             }
                         },
                         scales: {
+                            x: { ticks: { color: 'rgba(255,255,255,0.8)' }, grid: { color: 'rgba(255,255,255,0.1)' } },
                             y: {
                                 ticks: {
+                                    color: 'rgba(255,255,255,0.8)',
                                     callback: function(val) {
                                         if (val >= 1000000) return 'Rp ' + (val / 1000000).toFixed(1) + 'Jt';
                                         if (val >= 1000) return 'Rp ' + (val / 1000) + 'rb';
                                         return 'Rp ' + val;
                                     }
-                                }
+                                },
+                                grid: { color: 'rgba(255,255,255,0.1)' }
                             }
                         }
                     }
@@ -574,7 +654,6 @@
         function checkTrendAlert(listrikArr, airArr, labels, kantorStats, selectedKantor) {
             const alertBox = document.getElementById('alert-trend');
             const alertText = document.getElementById('alert-trend-text');
-            const alertIcon = document.getElementById('alert-trend-icon');
 
             let lastIdx = -1;
             for (let i = labels.length - 1; i >= 0; i--) {
@@ -592,17 +671,13 @@
                     const diff = currTotal - prevTotal;
                     const percent = Math.round((diff / prevTotal) * 100);
 
-                    alertBox.style.display = 'flex';
+                    alertBox.style.display = 'block';
 
                     let detailMsg = "";
                     if (percent > 0) {
-                        alertBox.className = 'alert-box alert-danger-custom';
-                        alertIcon.className = 'fa-solid fa-arrow-trend-up';
-                        detailMsg = `Total biaya periode <b>${labels[lastIdx]}</b> NAIK <b>${percent}%</b> (+Rp ${diff.toLocaleString('id-ID')}) dibanding <b>${labels[lastIdx-1]}</b>.`;
+                        detailMsg = `Biaya periode <b>${labels[lastIdx]}</b> NAIK <b>${percent}%</b> (+Rp ${diff.toLocaleString('id-ID')}) dibanding <b>${labels[lastIdx-1]}</b>.`;
                     } else if (percent < 0) {
-                        alertBox.className = 'alert-box alert-success-custom';
-                        alertIcon.className = 'fa-solid fa-arrow-trend-down';
-                        detailMsg = `Total biaya periode <b>${labels[lastIdx]}</b> TURUN <b>${Math.abs(percent)}%</b> (-Rp ${Math.abs(diff).toLocaleString('id-ID')}) dibanding <b>${labels[lastIdx-1]}</b>.`;
+                        detailMsg = `Biaya periode <b>${labels[lastIdx]}</b> TURUN <b>${Math.abs(percent)}%</b> (-Rp ${Math.abs(diff).toLocaleString('id-ID')}) dibanding <b>${labels[lastIdx-1]}</b>.`;
                     } else {
                         alertBox.style.display = 'none';
                         return;
