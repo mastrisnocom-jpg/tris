@@ -733,6 +733,38 @@
                                 </tbody>
                             </table>
                         </div>`;
+                } else if (pageKey === 'perawatan') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormPerawatan();
+                    const { data } = await db.from('maintenances').select('*, work_orders(judul), teknisi(nama)').order('created_at', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>WO</th><th>Before</th><th>After</th><th>Biaya</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(m => {
+                                        const detailStr = `Work Order: ${m.work_orders ? m.work_orders.judul : '-'}\nTeknisi: ${m.teknisi ? m.teknisi.nama : '-'}\nBiaya Perawatan: Rp ${Number(m.biaya).toLocaleString('id-ID')}\nFoto Before: ${m.foto_before ? 'Ada' : 'Tidak Ada'}\nFoto After: ${m.foto_after ? 'Ada' : 'Tidak Ada'}`;
+                                        return `
+                                        <tr>
+                                            <td><b>${m.work_orders ? m.work_orders.judul : '-'}</b><br><small>Teknisi: ${m.teknisi ? m.teknisi.nama : '-'}</small></td>
+                                            <td>${m.foto_before ? `<img src="${m.foto_before}" class="img-thumb">` : '-'}</td>
+                                            <td>${m.foto_after ? `<img src="${m.foto_after}" class="img-thumb">` : '-'}</td>
+                                            <td>Rp ${Number(m.biaya).toLocaleString('id-ID')}</td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Hasil Perawatan', '${m.work_orders ? m.work_orders.judul : '-'}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Laporan Perawatan', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="deleteRecord('maintenances','${m.id}','perawatan')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `}).join('') : '<tr><td colspan="5" style="text-align:center;">Belum ada data pengerjaan</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
                 } else if (pageKey === 'laporan') {
                     const { data: kantorList } = await db.from('kantor').select('id, nama');
                     const currentYear = new Date().getFullYear();
@@ -880,38 +912,6 @@
                                             </td>
                                         </tr>
                                     `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada Work Order</td></tr>'}
-                                </tbody>
-                            </table>
-                        </div>`;
-                } else if (pageKey === 'perawatan') {
-                    actionBtn.style.display = 'inline-flex';
-                    actionBtn.onclick = () => openFormPerawatan();
-                    const { data } = await db.from('maintenances').select('*, work_orders(judul), teknisi(nama)').order('created_at', {ascending:false});
-                    contentEl.innerHTML = `
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead><tr><th>WO</th><th>Before</th><th>After</th><th>Biaya</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
-                                <tbody>
-                                    ${data && data.length > 0 ? data.map(m => {
-                                        const detailStr = `Work Order: ${m.work_orders ? m.work_orders.judul : '-'}\nTeknisi: ${m.teknisi ? m.teknisi.nama : '-'}\nBiaya Perawatan: Rp ${Number(m.biaya).toLocaleString('id-ID')}\nFoto Before: ${m.foto_before ? 'Ada' : 'Tidak Ada'}\nFoto After: ${m.foto_after ? 'Ada' : 'Tidak Ada'}`;
-                                        return `
-                                        <tr>
-                                            <td><b>${m.work_orders ? m.work_orders.judul : '-'}</b><br><small>Teknisi: ${m.teknisi ? m.teknisi.nama : '-'}</small></td>
-                                            <td>${m.foto_before ? `<img src="${m.foto_before}" class="img-thumb">` : '-'}</td>
-                                            <td>${m.foto_after ? `<img src="${m.foto_after}" class="img-thumb">` : '-'}</td>
-                                            <td>Rp ${Number(m.biaya).toLocaleString('id-ID')}</td>
-                                            <td style="text-align:center;">
-                                                <div class="dropdown-action">
-                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                    <div class="dropdown-menu-content">
-                                                        <button onclick="viewGenericDetail('Hasil Perawatan', '${m.work_orders ? m.work_orders.judul : '-'}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
-                                                        <button onclick="shareData('Laporan Perawatan', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
-                                                        <button onclick="deleteRecord('maintenances','${m.id}','perawatan')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    `}).join('') : '<tr><td colspan="5" style="text-align:center;">Belum ada data pengerjaan</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -1100,6 +1100,91 @@
             }
         }
 
+        // FORM PERAWATAN LENGKAPSESUAI TABEL: WO, TEKNISI, FOTO BEFORE, FOTO AFTER, BIAYA
+        async function openFormPerawatan() {
+            try {
+                const [woRes, tekRes] = await Promise.all([
+                    db.from('work_orders').select('id, judul').order('created_at', { ascending: false }),
+                    db.from('teknisi').select('id, nama').order('nama', { ascending: true })
+                ]);
+
+                const woList = woRes.data || [];
+                const teknisiList = tekRes.data || [];
+
+                if (woList.length === 0) {
+                    return Swal.fire('Peringatan', 'Buat Work Order (WO) terlebih dahulu!', 'warning');
+                }
+
+                document.getElementById('modal-title').innerText = "Input Hasil Perawatan";
+                document.getElementById('modal-body').innerHTML = `
+                    <form id="f-main">
+                        <div class="form-group">
+                            <label>Work Order (WO)</label>
+                            <select id="fm-wo" class="form-control" required>
+                                ${woList.map(w => `<option value="${w.id}">${w.judul}</option>`).join('')}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Teknisi Penanggung Jawab</label>
+                            <select id="fm-teknisi" class="form-control">
+                                <option value="">-- Pilih Teknisi (Opsional) --</option>
+                                ${teknisiList.map(t => `<option value="${t.id}">${t.nama}</option>`).join('')}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Foto Before (Kondisi Awal / URL)</label>
+                            <input type="text" id="fm-before" class="form-control" placeholder="URL Foto Before (Contoh: https://...)">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Foto After (Hasil Perawatan / URL)</label>
+                            <input type="text" id="fm-after" class="form-control" placeholder="URL Foto After (Contoh: https://...)">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Biaya Perawatan (Rp)</label>
+                            <input type="number" id="fm-biaya" class="form-control" value="0" min="0" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">
+                            <i class="fa-solid fa-floppy-disk"></i> Simpan Pengerjaan
+                        </button>
+                    </form>`;
+                
+                document.getElementById('app-modal').style.display = 'flex';
+
+                document.getElementById('f-main').onsubmit = async (e) => {
+                    e.preventDefault();
+                    Swal.fire({ title: 'Menyimpan Hasil Perawatan...', didOpen: () => Swal.showLoading() });
+
+                    const payload = {
+                        work_order_id: document.getElementById('fm-wo').value,
+                        teknisi_id: document.getElementById('fm-teknisi').value || null,
+                        foto_before: document.getElementById('fm-before').value || null,
+                        foto_after: document.getElementById('fm-after').value || null,
+                        biaya: document.getElementById('fm-biaya').value || 0
+                    };
+
+                    const { error } = await db.from('maintenances').insert([payload]);
+
+                    if (error) {
+                        Swal.fire('Gagal', error.message, 'error');
+                    } else {
+                        // Update status Work Order ke Selesai
+                        await db.from('work_orders').update({ status: 'Selesai' }).eq('id', payload.work_order_id);
+
+                        Swal.fire('Berhasil', 'Data perawatan berhasil disimpan', 'success');
+                        document.getElementById('app-modal').style.display = 'none';
+                        openSubPage('perawatan');
+                    }
+                };
+            } catch (err) {
+                Swal.fire('Error', err.message, 'error');
+            }
+        }
+
         async function renderLaporanChart() {
             const canvasEl = document.getElementById('chartLaporan');
             if (!canvasEl) return;
@@ -1202,7 +1287,6 @@
             }
         }
 
-        // LOGIKA EFEKTIF MENGAMBIL 1 TERINGGI DAN 1 TERRENDAH (TANPA EMOJI AGAR BERSIH DI PDF)
         async function analyzeUtilityTrends(dataUtilitas, filterBulan, filterTahun) {
             let insights = [];
             let hookMessage = "PERHATIAN: Lakukan pemantauan berkala untuk menjaga efisiensi anggaran operasional.";
@@ -1218,7 +1302,6 @@
                 kantorList.push({ nama: kName, biaya: totalBiaya, jenis: u.jenis });
             });
 
-            // Urutkan biaya dari tertinggi ke terendah
             kantorList.sort((a, b) => b.biaya - a.biaya);
 
             const tertinggi = kantorList[0];
@@ -1243,7 +1326,6 @@
             return { insights, hook: hookMessage };
         }
 
-        // GENERATOR EKSPOR PDF / EXCEL DENGAN BRANDING LENGKAP & TEKS BEBAS CHARACTER CORRUPT
         async function generateReport(type, format) {
             const selBulan = document.getElementById('exp-bulan').value;
             const selTahun = document.getElementById('exp-tahun').value;
@@ -1311,7 +1393,6 @@
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF();
 
-                    // Header Branding
                     doc.setFontSize(13);
                     doc.setFont("helvetica", "bold");
                     doc.setTextColor(25, 135, 84);
@@ -1322,7 +1403,6 @@
                     doc.setTextColor(100);
                     doc.text(`Periode Filter: Bulan ${selBulan} / Tahun ${selTahun}`, 14, 21);
 
-                    // Box Hook Notifikasi Pemicu (Bersih Tanpa Karakter Aneh)
                     doc.setFillColor(254, 242, 242);
                     doc.setDrawColor(239, 68, 68);
                     doc.roundedRect(14, 25, 182, 14, 2, 2, 'FD');
@@ -1889,20 +1969,6 @@
                         <div class="form-group"><label>Kategori</label><select id="fa-kat" class="form-control"><option value="Onsite">Onsite</option><option value="Offsite">Offsite</option></select></div>
                         <div class="form-group"><label>Periode</label><input type="text" id="fa-periode" class="form-control" placeholder="Minggu 1 Agustus" required></div>
                         <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Simpan Pemeriksaan</button>
-                    </form>`;
-                document.getElementById('app-modal').style.display = 'flex';
-            });
-        }
-
-        function openFormPerawatan() {
-            Promise.all([db.from('work_orders').select('id, judul'), db.from('teknisi').select('id, nama')]).then(([woRes, tekRes]) => {
-                if (!woRes.data || woRes.data.length === 0) return Swal.fire('Peringatan', 'Buat Work Order dulu!', 'warning');
-                document.getElementById('modal-title').innerText = "Input Hasil Perawatan";
-                document.getElementById('modal-body').innerHTML = `
-                    <form id="f-main">
-                        <div class="form-group"><label>Work Order</label><select id="fm-wo" class="form-control">${woRes.data.map(w=>`<option value="${w.id}">${w.judul}</option>`).join('')}</select></div>
-                        <div class="form-group"><label>Biaya (Rp)</label><input type="number" id="fm-biaya" class="form-control" value="0"></div>
-                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Simpan Pengerjaan</button>
                     </form>`;
                 document.getElementById('app-modal').style.display = 'flex';
             });
