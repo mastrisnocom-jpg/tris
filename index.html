@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Binayasa Unit BSN KC Surabaya - BUMN Corporate Portal</title>
+    <title>Binayasa Unit BSN KC Surabaya</title>
     
     <!-- CSS Dependencies -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,140 +11,135 @@
     
     <style>
         :root {
-            --primary: #064e3b;
-            --primary-accent: #059669;
-            --primary-light: #ecfdf5;
-            --dark-navy: #0f172a;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
+            --emerald-bg: #032b1e;
+            --emerald-card: #053b2a;
+            --emerald-card-border: rgba(255, 255, 255, 0.12);
+            --primary-accent: #10b981;
+            --bg-body: #022016;
+            --card-white: #f3f4f6;
             --text-main: #0f172a;
             --text-sub: #64748b;
             --border: #e2e8f0;
-            --radius: 16px;
-            --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
         }
 
         [data-theme="dark"] {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
+            --card-white: #1e293b;
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --border: #334155;
-            --primary-light: #064e3b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg); color: var(--text-main); display: flex; justify-content: center; min-height: 100vh; }
+        body { background-color: var(--bg-body); color: #ffffff; display: flex; justify-content: center; min-height: 100vh; }
 
-        .app-shell { width: 100%; max-width: 480px; background-color: var(--bg); min-height: 100vh; padding: 16px 16px 85px 16px; position: relative; }
+        .app-shell { width: 100%; max-width: 480px; background-color: var(--emerald-bg); min-height: 100vh; padding: 16px 14px 85px 14px; position: relative; overflow-x: hidden; }
 
         /* AUTH SCREEN */
         #auth-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 90vh; }
-        .auth-card { background: var(--card-bg); padding: 32px 24px; border-radius: var(--radius); width: 100%; box-shadow: var(--shadow); border: 1px solid var(--border); text-align: center; }
-        .auth-logo { width: 56px; height: 56px; background: var(--primary-light); color: var(--primary-accent); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 16px auto; }
-        .auth-card h2 { color: var(--dark-navy); font-size: 1.25rem; font-weight: 800; letter-spacing: -0.3px; }
-        [data-theme="dark"] .auth-card h2 { color: #fff; }
-        .auth-card p { color: var(--text-sub); font-size: 0.8rem; margin-bottom: 24px; }
+        .auth-card { background: var(--emerald-card); padding: 32px 24px; border-radius: var(--radius-lg); width: 100%; box-shadow: var(--shadow); border: 1px solid var(--emerald-card-border); text-align: center; color: #fff; }
+        .auth-logo { width: 56px; height: 56px; background: rgba(16, 185, 129, 0.2); color: var(--primary-accent); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 16px auto; }
+        .auth-card h2 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.3px; }
+        .auth-card p { color: #a7f3d0; font-size: 0.8rem; margin-bottom: 24px; }
 
         .form-group { text-align: left; margin-bottom: 14px; }
         .form-group label { display: block; font-size: 0.75rem; font-weight: 700; margin-bottom: 6px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-control { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--card-bg); color: var(--text-main); outline: none; font-size: 0.85rem; transition: border 0.2s; }
+        .form-control { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 12px; background: #ffffff; color: var(--text-main); outline: none; font-size: 0.85rem; transition: border 0.2s; }
         .form-control:focus { border-color: var(--primary-accent); }
 
-        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 16px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.82rem; text-decoration: none; transition: opacity 0.2s; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 16px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.82rem; text-decoration: none; transition: opacity 0.2s; }
         .btn:active { opacity: 0.85; }
-        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary { background: #064e3b; color: #fff; }
         .btn-secondary { background: var(--border); color: var(--text-main); }
         .btn-warning { background: #f59e0b; color: #fff; }
         .btn-danger { background: #ef4444; color: #fff; }
         .btn-pay { background: #10b981; color: #fff; }
-        .btn-icon { width: 38px; height: 38px; border-radius: 10px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); cursor: pointer; }
+        .btn-icon { width: 38px; height: 38px; border-radius: 12px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--emerald-card-border); background: var(--emerald-card); color: #fff; cursor: pointer; }
 
-        /* BUMN HEADER HEADER BAR */
-        .profile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding: 4px 0; }
+        /* HEADER */
+        .profile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
         .header-brand { display: flex; align-items: center; gap: 10px; }
-        .header-logo-icon { width: 38px; height: 38px; background: var(--primary); color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
-        .brand-title { font-size: 0.95rem; font-weight: 800; color: var(--dark-navy); letter-spacing: -0.3px; line-height: 1.2; }
-        [data-theme="dark"] .brand-title { color: #fff; }
+        .header-logo-icon { width: 38px; height: 38px; background: rgba(16, 185, 129, 0.2); color: var(--primary-accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .brand-title { font-size: 0.95rem; font-weight: 800; color: #ffffff; letter-spacing: -0.3px; line-height: 1.2; }
         .brand-sub { font-size: 0.68rem; font-weight: 700; color: var(--primary-accent); letter-spacing: 0.5px; }
 
-        /* EXECUTIVE HERO BANNER */
+        /* HERO AREA HIJAU DENGAN GRAFIK UTILITAS */
         .hero-banner {
-            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
-            border-radius: var(--radius);
-            padding: 18px;
+            background: var(--emerald-card);
+            border-radius: var(--radius-lg);
+            padding: 16px 14px;
             color: #ffffff;
-            box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.3);
-            margin-bottom: 16px;
+            border: 1px solid var(--emerald-card-border);
+            box-shadow: var(--shadow);
+            margin-bottom: 14px;
             position: relative;
             overflow: hidden;
         }
         .hero-banner::after {
-            content: ""; position: absolute; right: -20px; bottom: -20px; width: 120px; height: 120px;
-            background: rgba(255,255,255,0.04); border-radius: 50%; pointer-events: none;
+            content: ""; position: absolute; right: -30px; bottom: -30px; width: 160px; height: 160px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(0,0,0,0) 70%); pointer-events: none;
         }
-        .hero-badge-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .hero-badge { background: rgba(255,255,255,0.15); backdrop-filter: blur(4px); color: #ecfdf5; font-size: 0.65rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .hero-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 2px; letter-spacing: -0.3px; }
-        .hero-sub { font-size: 0.72rem; color: #a7f3d0; margin-bottom: 14px; font-weight: 500; }
 
         .filter-grid-hero {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px;
         }
         .filter-grid-hero select {
-            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; font-size: 0.68rem; padding: 6px; border-radius: 8px; outline: none; font-weight: 600;
+            background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff; font-size: 0.68rem; padding: 7px 6px; border-radius: 10px; outline: none; font-weight: 600;
         }
-        .filter-grid-hero select option { color: #000; }
+        .filter-grid-hero select option { color: #000; background: #fff; }
 
         .hero-alert {
-            background: rgba(255, 255, 255, 0.1); border-left: 3px solid #f59e0b; border-radius: 6px; padding: 8px 10px; font-size: 0.72rem; margin-bottom: 12px; display: none; line-height: 1.3;
+            background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 12px; padding: 10px 12px; font-size: 0.72rem; margin-bottom: 12px; display: none; line-height: 1.4; color: #fef08a;
         }
 
         /* KPI STATS CARDS */
-        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
-        .stat-box { background: var(--card-bg); border-radius: var(--radius); padding: 14px 10px; border: 1px solid var(--border); box-shadow: var(--shadow); }
-        .stat-box-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-        .stat-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
-        .stat-box h3 { font-size: 1.25rem; font-weight: 800; color: var(--text-main); }
-        .stat-box p { font-size: 0.68rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.3px; }
-
-        /* ENTERPRISE GRID MENU */
-        .menu-container-card {
-            background: var(--card-bg); border-radius: var(--radius); padding: 18px 12px; border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 16px;
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+        .stat-box {
+            background: var(--emerald-card); border-radius: var(--radius-md); padding: 14px 12px; border: 1px solid var(--emerald-card-border); box-shadow: var(--shadow); position: relative;
         }
-        .menu-title { font-size: 0.75rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px; padding-left: 4px; }
-        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 8px; }
-        .grid-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-main); cursor: pointer; }
-        .grid-icon-wrapper { width: 46px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; margin-bottom: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .stat-box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .stat-title { font-size: 0.68rem; font-weight: 800; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-icon { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; background: rgba(255,255,255,0.06); }
+        .stat-box h3 { font-size: 1.4rem; font-weight: 800; color: #ffffff; }
+
+        /* CONTAINER MENU UTAMA OPERATIONAL */
+        .menu-container-card {
+            background: var(--card-white); border-radius: var(--radius-lg); padding: 20px 14px; color: var(--text-main); margin-bottom: 14px; box-shadow: var(--shadow);
+        }
+        .menu-title { font-size: 0.75rem; font-weight: 800; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 16px; padding-left: 2px; }
+        .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px 8px; }
+        .grid-item { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+        .grid-icon-wrapper { width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
         .grid-label { font-size: 0.72rem; font-weight: 700; text-align: center; color: var(--text-main); }
 
-        .card { background: var(--card-bg); border-radius: var(--radius); padding: 18px; border: 1px solid var(--border); margin-bottom: 16px; box-shadow: var(--shadow); }
-        .card-title { font-size: 0.88rem; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .card { background: var(--card-white); border-radius: var(--radius-lg); padding: 18px; color: var(--text-main); border: 1px solid var(--border); margin-bottom: 14px; box-shadow: var(--shadow); }
+        .card-title { font-size: 0.88rem; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
 
-        /* SUBPAGE OVERLAY */
-        .sub-page { display: none; position: fixed; inset: 0; max-width: 480px; margin: 0 auto; background: var(--bg); z-index: 500; padding: 16px; overflow-y: auto; }
-        .sub-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        /* SUBPAGE OVERLAY VIEW */
+        .sub-page { display: none; position: fixed; inset: 0; max-width: 480px; margin: 0 auto; background: var(--bg-body); z-index: 500; padding: 16px; overflow-y: auto; color: var(--text-main); }
+        .sub-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; color: #fff; }
         .sub-header h2 { font-size: 0.95rem; font-weight: 800; flex: 1; text-transform: uppercase; letter-spacing: 0.3px; }
 
         .search-box { margin-bottom: 14px; position: relative; }
         .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-sub); font-size: 0.85rem; }
-        .search-box input { padding-left: 36px; border-radius: 10px; }
+        .search-box input { padding-left: 36px; border-radius: 12px; }
 
-        .table-responsive { width: 100%; overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); background: var(--card-bg); }
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 14px; border: 1px solid var(--border); background: var(--card-white); }
         .table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
         .table th, .table td { padding: 11px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; }
-        .table th { background: #f8fafc; color: var(--text-sub); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        [data-theme="dark"] .table th { background: #1e293b; color: #94a3b8; }
+        .table th { background: #e2e8f0; color: var(--text-sub); font-weight: 800; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
 
         .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; }
         .badge-success { background: #dcfce7; color: #15803d; }
         .badge-danger { background: #fee2e2; color: #b91c1c; }
         .badge-warning { background: #fef3c7; color: #b45309; }
 
-        .checklist-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
-        .checklist-title { font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; color: var(--primary-accent); }
+        .checklist-card { background: var(--card-white); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+        .checklist-title { font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; color: #064e3b; }
 
-        .bill-result-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-top: 14px; display: none; }
+        .bill-result-card { background: var(--card-white); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-top: 14px; display: none; }
         .bill-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 0.82rem; }
         .bill-row:last-child { border-bottom: none; }
         .bill-label { color: var(--text-sub); }
@@ -152,22 +147,22 @@
         .bill-total { background: #e0f2fe; padding: 12px; border-radius: 10px; margin-top: 10px; font-weight: 800; color: #0369a1; font-size: 0.95rem; }
 
         /* MODAL POPUP */
-        .modal { display: none; position: fixed; inset: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
-        .modal-content { background: var(--card-bg); border-radius: var(--radius); width: 100%; max-width: 440px; max-height: 85vh; overflow-y: auto; padding: 20px; position: relative; border: 1px solid var(--border); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .modal { display: none; position: fixed; inset: 0; width: 100%; height: 100%; background: rgba(2, 32, 22, 0.8); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
+        .modal-content { background: var(--card-white); border-radius: var(--radius-lg); width: 100%; max-width: 440px; max-height: 85vh; overflow-y: auto; padding: 20px; position: relative; color: var(--text-main); border: 1px solid var(--border); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .close-modal { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-sub); }
-        .pay-banner { background: var(--primary-light); border: 1px dashed var(--primary-accent); border-radius: 12px; padding: 12px; margin-bottom: 14px; text-align: center; }
+        .pay-banner { background: #ecfdf5; border: 1px dashed var(--primary-accent); border-radius: 12px; padding: 12px; margin-bottom: 14px; text-align: center; }
         .pay-banner-title { font-size: 0.8rem; font-weight: 800; color: var(--primary-accent); margin-bottom: 8px; }
         .pay-banner-btns { display: flex; gap: 8px; justify-content: center; }
         .img-thumb { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
-        .form-section-title { font-size: 0.75rem; font-weight: 800; color: var(--primary-accent); margin: 14px 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+        .form-section-title { font-size: 0.75rem; font-weight: 800; color: #064e3b; margin: 14px 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
 
-        /* BOTTOM NAVBAR NAV CORPORATE */
+        /* BOTTOM NAVBAR */
         .bottom-nav {
             position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px;
-            background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 400;
+            background: var(--bg-body); border-top: 1px solid var(--emerald-card-border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 400;
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 0.65rem; font-weight: 700; cursor: pointer; text-decoration: none; text-transform: uppercase; letter-spacing: 0.3px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.5); font-size: 0.65rem; font-weight: 800; cursor: pointer; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; }
         .nav-item.active { color: var(--primary-accent); }
         .nav-item i { font-size: 1.15rem; margin-bottom: 3px; }
     </style>
@@ -179,19 +174,19 @@
         <!-- AUTH SCREEN -->
         <div id="auth-container">
             <div class="auth-card">
-                <div class="auth-logo"><i class="fa-solid fa-building-shield"></i></div>
-                <h2>BINAYASA PORTAL</h2>
-                <p>BSN KC Surabaya - Unit Management System</p>
+                <div class="auth-logo"><i class="fa-solid fa-building-circle-check"></i></div>
+                <h2>BINAYASA BSN</h2>
+                <p>KC Surabaya Unit Management</p>
                 <form id="login-form">
                     <div class="form-group">
-                        <label>Email Pengguna</label>
+                        <label style="color:#a7f3d0;">Email Pengguna</label>
                         <input type="email" id="login-email" class="form-control" placeholder="admin@bms.com" required>
                     </div>
                     <div class="form-group">
-                        <label>Password</label>
+                        <label style="color:#a7f3d0;">Password</label>
                         <input type="password" id="login-password" class="form-control" placeholder="******" required>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;"><i class="fa-solid fa-right-to-bracket"></i> Masuk Sistem</button>
+                    <button type="submit" class="btn btn-pay" style="width:100%; margin-top:10px;"><i class="fa-solid fa-right-to-bracket"></i> Masuk Sistem</button>
                 </form>
             </div>
         </div>
@@ -199,13 +194,13 @@
         <!-- DASHBOARD MAIN -->
         <div id="app-dashboard" style="display: none;">
             
-            <!-- HEADER EXECUTIVE BAR -->
+            <!-- HEADER BAR -->
             <div class="profile-header">
                 <div class="header-brand">
-                    <div class="header-logo-icon"><i class="fa-solid fa-building-shield"></i></div>
+                    <div class="header-logo-icon"><i class="fa-solid fa-building"></i></div>
                     <div>
                         <div class="brand-title">BINAYASA BSN</div>
-                        <div class="brand-sub">KC SURABAYA PORTAL</div>
+                        <div class="brand-sub">SURABAYA CLUB</div>
                     </div>
                 </div>
                 <div style="display:flex; gap:8px;">
@@ -214,15 +209,8 @@
                 </div>
             </div>
 
-            <!-- HERO CARD: GRAPH UTILITAS -->
+            <!-- HERO CARD GRAFIK UTILITAS -->
             <div class="hero-banner">
-                <div class="hero-badge-row">
-                    <span class="hero-badge">Utilitas Realtime</span>
-                    <span style="font-size:0.68rem; color:#a7f3d0;" id="user-email-display">admin@bms.com</span>
-                </div>
-                <div class="hero-title">Monitoring Biaya Operasional</div>
-                <div class="hero-sub">Unit Kerja BSN KC Surabaya</div>
-
                 <div class="filter-grid-hero">
                     <select id="chart-filter-kantor" onchange="renderChart()">
                         <option value="ALL">Semua Kantor</option>
@@ -243,7 +231,7 @@
                     <b id="alert-trend-title">Status:</b> <span id="alert-trend-text">-</span>
                 </div>
 
-                <div style="position: relative; height: 160px; width: 100%;">
+                <div style="position: relative; height: 165px; width: 100%;">
                     <canvas id="chartRealtime"></canvas>
                 </div>
             </div>
@@ -251,44 +239,44 @@
             <!-- KPI STATS CARDS -->
             <div class="stats-row">
                 <div class="stat-box">
-                    <div class="stat-box-top">
-                        <p>Kantor</p>
-                        <div class="stat-icon" style="background:#ecfdf5; color:#059669;"><i class="fa-solid fa-building"></i></div>
+                    <div class="stat-box-header">
+                        <span class="stat-title">Kantor</span>
+                        <div class="stat-icon" style="color:#10b981;"><i class="fa-solid fa-building"></i></div>
                     </div>
                     <h3 id="stat-kantor">0</h3>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-box-top">
-                        <p>Asset</p>
-                        <div class="stat-icon" style="background:#fff7ed; color:#d97706;"><i class="fa-solid fa-boxes-stacked"></i></div>
+                    <div class="stat-box-header">
+                        <span class="stat-title">Asset</span>
+                        <div class="stat-icon" style="color:#f59e0b;"><i class="fa-solid fa-boxes-stacked"></i></div>
                     </div>
                     <h3 id="stat-asset">0</h3>
                 </div>
                 <div class="stat-box">
-                    <div class="stat-box-top">
-                        <p>ATM</p>
-                        <div class="stat-icon" style="background:#f0f9ff; color:#0284c7;"><i class="fa-solid fa-credit-card"></i></div>
+                    <div class="stat-box-header">
+                        <span class="stat-title">ATM</span>
+                        <div class="stat-icon" style="color:#38bdf8;"><i class="fa-solid fa-credit-card"></i></div>
                     </div>
                     <h3 id="stat-atm">0</h3>
                 </div>
             </div>
 
-            <!-- ENTERPRISE MENU GRID CARD -->
+            <!-- MENU UTAMA OPERATIONAL CONTAINER -->
             <div class="menu-container-card">
                 <div class="menu-title">Menu Utama Operational</div>
                 <div class="app-grid">
                     <div class="grid-item" onclick="openSubPage('kantor')"><div class="grid-icon-wrapper" style="background:#f1f5f9; color:#0f172a;"><i class="fa-solid fa-building"></i></div><span class="grid-label">Kantor</span></div>
-                    <div class="grid-item" onclick="openSubPage('asset')"><div class="grid-icon-wrapper" style="background:#ecfdf5; color:#059669;"><i class="fa-solid fa-boxes-stacked"></i></div><span class="grid-label">Asset</span></div>
-                    <div class="grid-item" onclick="openSubPage('utilitas')"><div class="grid-icon-wrapper" style="background:#f0fdf4; color:#16a34a;"><i class="fa-solid fa-bolt"></i></div><span class="grid-label">Utilitas</span></div>
-                    <div class="grid-item" onclick="openSubPage('cek_tagihan')"><div class="grid-icon-wrapper" style="background:#fffbebf5; color:#d97706;"><i class="fa-solid fa-receipt"></i></div><span class="grid-label">Tagihan</span></div>
-                    <div class="grid-item" onclick="openSubPage('perawatan')"><div class="grid-icon-wrapper" style="background:#fef3c7; color:#b45309;"><i class="fa-solid fa-screwdriver-wrench"></i></div><span class="grid-label">Perawatan</span></div>
-                    <div class="grid-item" onclick="openSubPage('workorder')"><div class="grid-icon-wrapper" style="background:#ecfdf5; color:#059669;"><i class="fa-solid fa-clipboard-list"></i></div><span class="grid-label">Work Order</span></div>
-                    <div class="grid-item" onclick="openSubPage('pemeriksaan_atm')"><div class="grid-icon-wrapper" style="background:#f0f9ff; color:#0284c7;"><i class="fa-solid fa-credit-card"></i></div><span class="grid-label">Cek ATM</span></div>
+                    <div class="grid-item" onclick="openSubPage('asset')"><div class="grid-icon-wrapper" style="background:#dcfce7; color:#15803d;"><i class="fa-solid fa-boxes-stacked"></i></div><span class="grid-label">Asset</span></div>
+                    <div class="grid-item" onclick="openSubPage('utilitas')"><div class="grid-icon-wrapper" style="background:#ecfdf5; color:#10b981;"><i class="fa-solid fa-bolt"></i></div><span class="grid-label">Utilitas</span></div>
+                    <div class="grid-item" onclick="openSubPage('cek_tagihan')"><div class="grid-icon-wrapper" style="background:#fef3c7; color:#b45309;"><i class="fa-solid fa-receipt"></i></div><span class="grid-label">Tagihan</span></div>
+                    <div class="grid-item" onclick="openSubPage('perawatan')"><div class="grid-icon-wrapper" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-screwdriver-wrench"></i></div><span class="grid-label">Perawatan</span></div>
+                    <div class="grid-item" onclick="openSubPage('workorder')"><div class="grid-icon-wrapper" style="background:#dcfce7; color:#16a34a;"><i class="fa-solid fa-clipboard-check"></i></div><span class="grid-label">Work Order</span></div>
+                    <div class="grid-item" onclick="openSubPage('pemeriksaan_atm')"><div class="grid-icon-wrapper" style="background:#e0f2fe; color:#0284c7;"><i class="fa-solid fa-credit-card"></i></div><span class="grid-label">Cek ATM</span></div>
                     <div class="grid-item" onclick="openSubPage('teknisi')"><div class="grid-icon-wrapper" style="background:#f1f5f9; color:#334155;"><i class="fa-solid fa-user-gear"></i></div><span class="grid-label">Teknisi</span></div>
-                    <div class="grid-item" onclick="openSubPage('jadwal')"><div class="grid-icon-wrapper" style="background:#f0fdf4; color:#16a34a;"><i class="fa-solid fa-calendar-days"></i></div><span class="grid-label">Jadwal</span></div>
-                    <div class="grid-item" onclick="openSubPage('laporan')"><div class="grid-icon-wrapper" style="background:#faf5ff; color:#9333ea;"><i class="fa-solid fa-file-invoice"></i></div><span class="grid-label">Laporan</span></div>
-                    <div class="grid-item" onclick="openSubPage('pengaturan')"><div class="grid-icon-wrapper" style="background:#fffbe0; color:#d97706;"><i class="fa-solid fa-gear"></i></div><span class="grid-label">Pengaturan</span></div>
-                    <div class="grid-item" id="btn-logout-grid"><div class="grid-icon-wrapper" style="background:#fef2f2; color:#ef4444;"><i class="fa-solid fa-right-from-bracket"></i></div><span class="grid-label">Keluar</span></div>
+                    <div class="grid-item" onclick="openSubPage('jadwal')"><div class="grid-icon-wrapper" style="background:#dcfce7; color:#15803d;"><i class="fa-solid fa-calendar-days"></i></div><span class="grid-label">Jadwal</span></div>
+                    <div class="grid-item" onclick="openSubPage('laporan')"><div class="grid-icon-wrapper" style="background:#f3e8ff; color:#9333ea;"><i class="fa-solid fa-file-invoice"></i></div><span class="grid-label">Laporan</span></div>
+                    <div class="grid-item" onclick="openSubPage('pengaturan')"><div class="grid-icon-wrapper" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-gear"></i></div><span class="grid-label">Pengaturan</span></div>
+                    <div class="grid-item" id="btn-logout-grid"><div class="grid-icon-wrapper" style="background:#fee2e2; color:#ef4444;"><i class="fa-solid fa-right-from-bracket"></i></div><span class="grid-label">Keluar</span></div>
                 </div>
             </div>
 
@@ -364,9 +352,6 @@
                     currentUser = session.user;
                     document.getElementById('auth-container').style.display = 'none';
                     document.getElementById('app-dashboard').style.display = 'block';
-                    
-                    const emailElem = document.getElementById('user-email-display');
-                    if(emailElem) emailElem.innerText = currentUser.email;
 
                     loadDashboardStats();
                     loadKantorFilter();
@@ -450,7 +435,7 @@
 
         function showActionSheet(options) {
             let htmlOptions = options.map((opt) => `
-                <button onclick="Swal.close(); (${opt.action})();" class="btn" style="width:100%; justify-content:flex-start; background:var(--bg); color:var(--text-main); font-size:0.85rem; padding:10px 14px; margin-bottom:6px; border:1px solid var(--border);">
+                <button onclick="Swal.close(); (${opt.action})();" class="btn" style="width:100%; justify-content:flex-start; background:var(--card-white); color:var(--text-main); font-size:0.85rem; padding:10px 14px; margin-bottom:6px; border:1px solid var(--border);">
                     <i class="${opt.icon}" style="color:${opt.color || 'inherit'}; width:24px;"></i> ${opt.label}
                 </button>
             `).join('');
@@ -581,11 +566,12 @@
                         label: 'Listrik (Rp)',
                         data: dataListrik,
                         borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                        backgroundColor: 'rgba(245, 158, 11, 0.25)',
                         fill: true,
                         tension: 0.3,
                         borderWidth: 2,
-                        pointRadius: 3
+                        pointRadius: 4,
+                        pointBackgroundColor: '#f59e0b'
                     });
                 }
 
@@ -594,11 +580,12 @@
                         label: 'Air PDAM (Rp)',
                         data: dataAir,
                         borderColor: '#38bdf8',
-                        backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                        backgroundColor: 'rgba(56, 189, 248, 0.25)',
                         fill: true,
                         tension: 0.3,
                         borderWidth: 2,
-                        pointRadius: 3
+                        pointRadius: 4,
+                        pointBackgroundColor: '#38bdf8'
                     });
                 }
 
@@ -610,7 +597,7 @@
                         maintainAspectRatio: false,
                         interaction: { intersect: false, mode: 'index' },
                         plugins: {
-                            legend: { display: true, position: 'top', labels: { color: '#ffffff', font: { size: 10 } } },
+                            legend: { display: true, position: 'top', labels: { color: '#ffffff', font: { size: 10, weight: 'bold' } } },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
@@ -698,7 +685,7 @@
 
             searchInput.value = '';
             titleEl.innerText = pageKey.replace('_', ' ').toUpperCase();
-            contentEl.innerHTML = `<p style="text-align:center; padding:30px; color:var(--text-sub);"><i class="fa-solid fa-circle-notch fa-spin"></i> Memuat data enterprise...</p>`;
+            contentEl.innerHTML = `<p style="text-align:center; padding:30px; color:#a7f3d0;"><i class="fa-solid fa-spinner fa-spin"></i> Memuat data...</p>`;
             actionBtn.style.display = 'none';
             kriteriaBtn.style.display = 'none';
             searchContainer.style.display = 'block';
@@ -721,7 +708,7 @@
                                             <td><b>${k.nama}</b></td>
                                             <td>${k.alamat}</td>
                                             <td style="text-align:center;">
-                                                <button class="btn-icon" onclick='showActionSheet([
+                                                <button class="btn-icon" style="background:#f1f5f9; color:#0f172a;" onclick='showActionSheet([
                                                     {icon:"fa-solid fa-eye", color:"#0dcaf0", label:"Detail", action: () => viewGenericDetail("Kantor", "${k.nama}", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-share-nodes", color:"#0d6efd", label:"Bagikan", action: () => shareData("Data Kantor", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-pen-to-square", color:"#ffc107", label:"Edit", action: () => openFormKantor("${k.id}")},
@@ -750,7 +737,7 @@
                                             <td>${a.nama_asset}</td>
                                             <td><span class="badge badge-${a.status === 'Baik' ? 'success' : 'danger'}">${a.status}</span></td>
                                             <td style="text-align:center;">
-                                                <button class="btn-icon" onclick='showActionSheet([
+                                                <button class="btn-icon" style="background:#f1f5f9; color:#0f172a;" onclick='showActionSheet([
                                                     {icon:"fa-solid fa-eye", color:"#0dcaf0", label:"Detail", action: () => viewGenericDetail("Asset", "${a.nama_asset}", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-share-nodes", color:"#0d6efd", label:"Bagikan", action: () => shareData("Data Asset", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-pen-to-square", color:"#ffc107", label:"Edit", action: () => openFormAsset("${a.id}")},
@@ -794,7 +781,7 @@
                                             <td>${u.jumlah_pemakaian} ${u.satuan}</td>
                                             <td>Rp ${Number(u.biaya).toLocaleString('id-ID')}</td>
                                             <td style="text-align:center;">
-                                                <button class="btn-icon" onclick='showActionSheet([
+                                                <button class="btn-icon" style="background:#f1f5f9; color:#0f172a;" onclick='showActionSheet([
                                                     ${(u.jenis === 'Listrik' || u.jenis === 'Air') ? `{icon:"fa-solid fa-credit-card", color:"#10b981", label:"Bayar", action: () => processPaymentRedirect("${u.jenis}", "${u.id_pelanggan}")},` : ''}
                                                     {icon:"fa-solid fa-eye", color:"#0dcaf0", label:"Detail", action: () => viewGenericDetail("Utilitas", "${u.jenis}", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-share-nodes", color:"#0d6efd", label:"Bagikan", action: () => shareData("Data Utilitas", \`${detailStr}\`)},
@@ -825,7 +812,7 @@
                                             <td>${m.foto_after ? `<img src="${m.foto_after}" class="img-thumb">` : '-'}</td>
                                             <td>Rp ${Number(m.biaya).toLocaleString('id-ID')}</td>
                                             <td style="text-align:center;">
-                                                <button class="btn-icon" onclick='showActionSheet([
+                                                <button class="btn-icon" style="background:#f1f5f9; color:#0f172a;" onclick='showActionSheet([
                                                     {icon:"fa-solid fa-eye", color:"#0dcaf0", label:"Detail", action: () => viewGenericDetail("Hasil Perawatan", "${m.work_orders ? m.work_orders.judul : '-'}", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-share-nodes", color:"#0d6efd", label:"Bagikan", action: () => shareData("Laporan Perawatan", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-trash", color:"#dc3545", label:"Hapus", action: () => deleteRecord("maintenances","${m.id}","perawatan")}
@@ -854,7 +841,7 @@
                                             <td><span class="badge badge-success">${atm.kategori_atm}</span></td>
                                             <td>${atm.periode_minggu}</td>
                                             <td style="text-align:center;">
-                                                <button class="btn-icon" onclick='showActionSheet([
+                                                <button class="btn-icon" style="background:#f1f5f9; color:#0f172a;" onclick='showActionSheet([
                                                     {icon:"fa-solid fa-eye", color:"#0dcaf0", label:"Detail Inspeksi", action: () => viewDetailATM("${atm.id}", "${atm.kantor ? atm.kantor.nama : ''}", "${atm.periode_minggu}")},
                                                     {icon:"fa-solid fa-file-pdf", color:"#198754", label:"Unduh PDF", action: () => exportATMPDF("${atm.id}")},
                                                     {icon:"fa-solid fa-share-nodes", color:"#0d6efd", label:"Bagikan", action: () => shareData("Laporan Pemeriksaan ATM", \`${detailStr}\`)},
@@ -897,7 +884,7 @@
 
                         <div class="card">
                             <div class="card-title"><i class="fa-solid fa-file-export"></i> Ekspor Laporan Custom</div>
-                            <p style="font-size:0.78rem; color:var(--text-sub); margin-bottom:12px;">Atur parameter periode laporan BUMN yang ingin dicetak:</p>
+                            <p style="font-size:0.78rem; color:var(--text-sub); margin-bottom:12px;">Atur parameter periode laporan yang ingin dicetak:</p>
                             
                             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:12px;">
                                 <div class="form-group" style="margin-bottom:0;">
@@ -962,7 +949,7 @@
                                             <td>${w.asset ? w.asset.nama_asset : '-'}</td>
                                             <td><span class="badge badge-warning">${w.status}</span></td>
                                             <td style="text-align:center;">
-                                                <button class="btn-icon" onclick='showActionSheet([
+                                                <button class="btn-icon" style="background:#f1f5f9; color:#0f172a;" onclick='showActionSheet([
                                                     {icon:"fa-solid fa-eye", color:"#0dcaf0", label:"Detail", action: () => viewGenericDetail("Work Order", "${w.judul}", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-share-nodes", color:"#0d6efd", label:"Bagikan", action: () => shareData("Work Order", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-pen-to-square", color:"#ffc107", label:"Edit", action: () => openFormWO("${w.id}")},
@@ -991,7 +978,7 @@
                                             <td>${t.spesialisasi}</td>
                                             <td><span class="badge badge-success">${t.status}</span></td>
                                             <td style="text-align:center;">
-                                                <button class="btn-icon" onclick='showActionSheet([
+                                                <button class="btn-icon" style="background:#f1f5f9; color:#0f172a;" onclick='showActionSheet([
                                                     {icon:"fa-solid fa-eye", color:"#0dcaf0", label:"Detail", action: () => viewGenericDetail("Teknisi", "${t.nama}", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-share-nodes", color:"#0d6efd", label:"Bagikan", action: () => shareData("Data Teknisi", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-pen-to-square", color:"#ffc107", label:"Edit", action: () => openFormTeknisi("${t.id}")},
@@ -1021,7 +1008,7 @@
                                             <td>${j.tanggal || '-'}</td>
                                             <td><span class="badge badge-${j.status === 'Selesai' ? 'success' : 'warning'}">${j.status}</span></td>
                                             <td style="text-align:center;">
-                                                <button class="btn-icon" onclick='showActionSheet([
+                                                <button class="btn-icon" style="background:#f1f5f9; color:#0f172a;" onclick='showActionSheet([
                                                     {icon:"fa-solid fa-eye", color:"#0dcaf0", label:"Detail", action: () => viewGenericDetail("Jadwal", "${j.judul}", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-share-nodes", color:"#0d6efd", label:"Bagikan", action: () => shareData("Jadwal Kegiatan", \`${detailStr}\`)},
                                                     {icon:"fa-solid fa-pen-to-square", color:"#ffc107", label:"Edit", action: () => openFormJadwal("${j.id}")},
@@ -1151,7 +1138,7 @@
                     };
                 }
             } catch (err) {
-                contentEl.innerHTML = `<p style="text-align:center; padding:20px; color:#dc3545;"><i class="fa-solid fa-triangle-exclamation"></i> Gagal memuat data: ${err.message}</p>`;
+                contentEl.innerHTML = `<p style="text-align:center; padding:20px; color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Gagal memuat data: ${err.message}</p>`;
             }
         }
 
@@ -1325,7 +1312,7 @@
                     head: [["No", "Kriteria Inspeksi", "Status Kelayakan"]],
                     body: tableBody,
                     theme: 'striped',
-                    headStyles: { fillColor: [6, 78, 59] }
+                    headStyles: { fillColor: [3, 43, 30] }
                 });
 
                 doc.save(`Audit_ATM_${header.periode_minggu}.pdf`);
@@ -1469,8 +1456,8 @@
                     data: {
                         labels: labels,
                         datasets: [
-                            { label: 'Listrik (Rp)', data: dataListrik, backgroundColor: '#059669', borderRadius: 4 },
-                            { label: 'Air (Rp)', data: dataAir, backgroundColor: '#0284c7', borderRadius: 4 }
+                            { label: 'Listrik (Rp)', data: dataListrik, backgroundColor: '#10b981', borderRadius: 4 },
+                            { label: 'Air (Rp)', data: dataAir, backgroundColor: '#38bdf8', borderRadius: 4 }
                         ]
                     },
                     options: { responsive: true, maintainAspectRatio: false }
@@ -1549,7 +1536,7 @@
 
                 if (format === 'excel') {
                     const excelRows = [];
-                    excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": "LAPORAN EVALUASI BIAYA & OPERASIONAL BUMN" });
+                    excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": "LAPORAN EVALUASI BIAYA & OPERASIONAL" });
                     excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": `PERIODE: BULAN ${selBulan} - TAHUN ${selTahun}` });
                     excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": `STATUS: ${analysis.hook}` });
                     excelRows.push({}); 
@@ -1588,7 +1575,7 @@
 
                     doc.setFontSize(12);
                     doc.setFont("helvetica", "bold");
-                    doc.setTextColor(6, 78, 59);
+                    doc.setTextColor(3, 43, 30);
                     doc.text(`LAPORAN REKAP ${type.toUpperCase()} - BINAYASA UNIT BSN KC SURABAYA`, 14, 15);
                     
                     doc.setFontSize(9);
@@ -1597,12 +1584,12 @@
                     doc.text(`Periode Filter: Bulan ${selBulan} / Tahun ${selTahun}`, 14, 21);
 
                     doc.setFillColor(236, 253, 245);
-                    doc.setDrawColor(5, 150, 105);
+                    doc.setDrawColor(16, 185, 129);
                     doc.roundedRect(14, 25, 182, 14, 2, 2, 'FD');
                     
                     doc.setFontSize(8);
                     doc.setFont("helvetica", "bold");
-                    doc.setTextColor(6, 78, 59);
+                    doc.setTextColor(3, 43, 30);
                     doc.text(doc.splitTextToSize(analysis.hook, 176), 18, 32);
 
                     let yPos = 46;
@@ -1651,7 +1638,7 @@
                         head: tableHeaders,
                         body: tableBody,
                         theme: 'striped',
-                        headStyles: { fillColor: [6, 78, 59] },
+                        headStyles: { fillColor: [3, 43, 30] },
                         styles: { fontSize: 8, font: "helvetica" }
                     });
 
@@ -1761,15 +1748,15 @@
                     </div>
                     <div class="form-group">
                         <label>Nama Pelanggan (Otomatis)</label>
-                        <input type="text" id="fu-nama-pelanggan" class="form-control" placeholder="Otomatis terisi..." style="background-color: var(--primary-light); font-weight: bold;" readonly>
+                        <input type="text" id="fu-nama-pelanggan" class="form-control" placeholder="Otomatis terisi..." style="background-color: #e2e8f0; font-weight: bold;" readonly>
                     </div>
                     <div class="form-group">
                         <label>ID Pelanggan (Otomatis)</label>
-                        <input type="text" id="fu-id-pelanggan" class="form-control" value="${editData.id_pelanggan || ''}" placeholder="ID Pelanggan PLN / PDAM" style="background-color: var(--primary-light); font-weight: bold;" readonly>
+                        <input type="text" id="fu-id-pelanggan" class="form-control" value="${editData.id_pelanggan || ''}" placeholder="ID Pelanggan PLN / PDAM" style="background-color: #e2e8f0; font-weight: bold;" readonly>
                     </div>
                     <div class="form-group">
                         <label>Tarif / Daya (Otomatis)</label>
-                        <input type="text" id="fu-tarif-daya" class="form-control" placeholder="Otomatis terisi..." style="background-color: var(--primary-light); font-weight: bold;" readonly>
+                        <input type="text" id="fu-tarif-daya" class="form-control" placeholder="Otomatis terisi..." style="background-color: #e2e8f0; font-weight: bold;" readonly>
                     </div>
                     <div class="form-group">
                         <label>Periode Bulan</label>
