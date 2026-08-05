@@ -1100,15 +1100,60 @@
             }
         }
 
-        // FUNGSI HELPER UNTUK UNGGAH FILE KE SUPABASE STORAGE
+        // FUNGSI OTO-KOMPRES GAMBAR KE ~200KB DENGAN CANVAS RESIZER
+        async function compressImageTo200KB(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        const maxDimension = 1200;
+                        if (width > height) {
+                            if (width > maxDimension) {
+                                height = Math.round((height * maxDimension) / width);
+                                width = maxDimension;
+                            }
+                        } else {
+                            if (height > maxDimension) {
+                                width = Math.round((width * maxDimension) / height);
+                                height = maxDimension;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('canvas');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob((blob) => {
+                            resolve(blob);
+                        }, 'image/jpeg', 0.65);
+                    };
+                };
+            });
+        }
+
+        // UNGGAH DENGAN PASUKAN KOMPRESI DAHULU
         async function uploadFileToSupabase(fileInput) {
             if (!fileInput || !fileInput.files || fileInput.files.length === 0) return null;
-            const file = fileInput.files[0];
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+            
+            const rawFile = fileInput.files[0];
+            const compressedBlob = await compressImageTo200KB(rawFile);
+            
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.jpg`;
             const filePath = `maintenances/${fileName}`;
 
-            const { data, error } = await db.storage.from('maintenances').upload(filePath, file);
+            const { data, error } = await db.storage.from('maintenances').upload(filePath, compressedBlob, {
+                contentType: 'image/jpeg'
+            });
+
             if (error) {
                 console.error("Gagal Upload Storage:", error.message);
                 return null;
@@ -1118,7 +1163,7 @@
             return publicUrlData.publicUrl;
         }
 
-        // FORM PERAWATAN LENGKAP DENGAN UPLOAD FILE LANGSUNG KANVAS/KAMERA HP
+        // FORM PERAWATAN DENGAN UNGGAH SERTA OTO-KOMPRES BIAYA PERALATAN
         async function openFormPerawatan() {
             try {
                 const [woRes, tekRes] = await Promise.all([
@@ -1152,12 +1197,12 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Foto Before (Kondisi Awal / File)</label>
+                            <label>Foto Before (Oto-Compress ~200KB)</label>
                             <input type="file" id="fm-before-file" class="form-control" accept="image/*" capture="environment">
                         </div>
 
                         <div class="form-group">
-                            <label>Foto After (Hasil Perawatan / File)</label>
+                            <label>Foto After (Oto-Compress ~200KB)</label>
                             <input type="file" id="fm-after-file" class="form-control" accept="image/*" capture="environment">
                         </div>
 
@@ -1167,7 +1212,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">
-                            <i class="fa-solid fa-upload"></i> Upload & Simpan Pengerjaan
+                            <i class="fa-solid fa-file-arrow-up"></i> Kompres & Simpan Pengerjaan
                         </button>
                     </form>`;
                 
@@ -1175,7 +1220,7 @@
 
                 document.getElementById('f-main').onsubmit = async (e) => {
                     e.preventDefault();
-                    Swal.fire({ title: 'Mengunggah Foto & Menyimpan Data...', didOpen: () => Swal.showLoading() });
+                    Swal.fire({ title: 'Mengompres Foto (~200KB) & Mengunggah...', didOpen: () => Swal.showLoading() });
 
                     const beforeInput = document.getElementById('fm-before-file');
                     const afterInput = document.getElementById('fm-after-file');
@@ -1198,7 +1243,7 @@
                     } else {
                         await db.from('work_orders').update({ status: 'Selesai' }).eq('id', payload.work_order_id);
 
-                        Swal.fire('Berhasil', 'Hasil perawatan dan foto berhasil diunggah', 'success');
+                        Swal.fire('Berhasil', 'Foto berhasil dikompres dan tersimpan rapi!', 'success');
                         document.getElementById('app-modal').style.display = 'none';
                         openSubPage('perawatan');
                     }
