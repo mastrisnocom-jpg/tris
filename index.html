@@ -1100,7 +1100,25 @@
             }
         }
 
-        // FORM PERAWATAN LENGKAPSESUAI TABEL: WO, TEKNISI, FOTO BEFORE, FOTO AFTER, BIAYA
+        // FUNGSI HELPER UNTUK UNGGAH FILE KE SUPABASE STORAGE
+        async function uploadFileToSupabase(fileInput) {
+            if (!fileInput || !fileInput.files || fileInput.files.length === 0) return null;
+            const file = fileInput.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `maintenances/${fileName}`;
+
+            const { data, error } = await db.storage.from('maintenances').upload(filePath, file);
+            if (error) {
+                console.error("Gagal Upload Storage:", error.message);
+                return null;
+            }
+
+            const { data: publicUrlData } = db.storage.from('maintenances').getPublicUrl(filePath);
+            return publicUrlData.publicUrl;
+        }
+
+        // FORM PERAWATAN LENGKAP DENGAN UPLOAD FILE LANGSUNG KANVAS/KAMERA HP
         async function openFormPerawatan() {
             try {
                 const [woRes, tekRes] = await Promise.all([
@@ -1134,13 +1152,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Foto Before (Kondisi Awal / URL)</label>
-                            <input type="text" id="fm-before" class="form-control" placeholder="URL Foto Before (Contoh: https://...)">
+                            <label>Foto Before (Kondisi Awal / File)</label>
+                            <input type="file" id="fm-before-file" class="form-control" accept="image/*" capture="environment">
                         </div>
 
                         <div class="form-group">
-                            <label>Foto After (Hasil Perawatan / URL)</label>
-                            <input type="text" id="fm-after" class="form-control" placeholder="URL Foto After (Contoh: https://...)">
+                            <label>Foto After (Hasil Perawatan / File)</label>
+                            <input type="file" id="fm-after-file" class="form-control" accept="image/*" capture="environment">
                         </div>
 
                         <div class="form-group">
@@ -1149,7 +1167,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">
-                            <i class="fa-solid fa-floppy-disk"></i> Simpan Pengerjaan
+                            <i class="fa-solid fa-upload"></i> Upload & Simpan Pengerjaan
                         </button>
                     </form>`;
                 
@@ -1157,13 +1175,19 @@
 
                 document.getElementById('f-main').onsubmit = async (e) => {
                     e.preventDefault();
-                    Swal.fire({ title: 'Menyimpan Hasil Perawatan...', didOpen: () => Swal.showLoading() });
+                    Swal.fire({ title: 'Mengunggah Foto & Menyimpan Data...', didOpen: () => Swal.showLoading() });
+
+                    const beforeInput = document.getElementById('fm-before-file');
+                    const afterInput = document.getElementById('fm-after-file');
+
+                    const fotoBeforeUrl = await uploadFileToSupabase(beforeInput);
+                    const fotoAfterUrl = await uploadFileToSupabase(afterInput);
 
                     const payload = {
                         work_order_id: document.getElementById('fm-wo').value,
                         teknisi_id: document.getElementById('fm-teknisi').value || null,
-                        foto_before: document.getElementById('fm-before').value || null,
-                        foto_after: document.getElementById('fm-after').value || null,
+                        foto_before: fotoBeforeUrl,
+                        foto_after: fotoAfterUrl,
                         biaya: document.getElementById('fm-biaya').value || 0
                     };
 
@@ -1172,10 +1196,9 @@
                     if (error) {
                         Swal.fire('Gagal', error.message, 'error');
                     } else {
-                        // Update status Work Order ke Selesai
                         await db.from('work_orders').update({ status: 'Selesai' }).eq('id', payload.work_order_id);
 
-                        Swal.fire('Berhasil', 'Data perawatan berhasil disimpan', 'success');
+                        Swal.fire('Berhasil', 'Hasil perawatan dan foto berhasil diunggah', 'success');
                         document.getElementById('app-modal').style.display = 'none';
                         openSubPage('perawatan');
                     }
