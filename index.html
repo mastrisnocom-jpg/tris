@@ -56,7 +56,7 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.5); 
         }
 
-        /* HEADER FIXED - Sembunyi secara default sebelum login */
+        /* HEADER FIXED - Disembunyikan sebelum login */
         .app-header {
             position: fixed;
             top: 0;
@@ -67,7 +67,7 @@
             height: 65px;
             background: var(--bg);
             z-index: 90;
-            display: none; /* Dikontrol via JS */
+            display: none;
             align-items: center;
             justify-content: space-between;
             padding: 10px 16px;
@@ -75,7 +75,7 @@
             backdrop-filter: blur(10px);
         }
 
-        /* BOTTOM NAV FIXED - Sembunyi secara default sebelum login */
+        /* BOTTOM NAV FIXED - Disembunyikan sebelum login */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -86,7 +86,7 @@
             height: 60px;
             background: #061c12;
             z-index: 150;
-            display: none; /* Dikontrol via JS */
+            display: none;
             justify-content: space-around;
             align-items: center;
             border-top: 1px solid var(--border);
@@ -116,7 +116,6 @@
             padding: 16px;
         }
 
-        /* Margin penyesuaian saat logged-in */
         .logged-in .app-body {
             margin-top: 65px;
             margin-bottom: 60px;
@@ -171,7 +170,7 @@
         .alert-danger-custom { background: rgba(220, 53, 69, 0.2); color: #ff6b6b; border: 1px solid rgba(220, 53, 69, 0.4); }
         .alert-success-custom { background: rgba(16, 185, 129, 0.2); color: #20c997; border: 1px solid rgba(16, 185, 129, 0.4); }
 
-        /* SUBPAGE OVERLAY (TERJEPIT DI ANTARA HEADER & BOTTOM NAV) */
+        /* SUBPAGE OVERLAY */
         .sub-page { 
             display: none; 
             position: fixed; 
@@ -208,9 +207,14 @@
         .badge-danger { background: rgba(220,53,69,0.2); color: #ff6b6b; }
         .badge-warning { background: rgba(255,193,7,0.2); color: #ffc107; }
 
+        .checklist-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+        .checklist-title { font-size: 0.82rem; font-weight: 700; margin-bottom: 4px; color: #20c997; }
+
         .bill-result-card { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-top: 14px; display: none; }
         .bill-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 0.82rem; }
         .bill-row:last-child { border-bottom: none; }
+        .bill-label { color: var(--text-sub); }
+        .bill-val { font-weight: 700; color: var(--text-main); }
         .bill-total { background: rgba(16,185,129,0.2); padding: 10px; border-radius: 8px; margin-top: 8px; font-weight: 800; color: #20c997; font-size: 0.95rem; }
 
         /* MODAL */
@@ -218,6 +222,9 @@
         .modal-content { background: #0d3320; border-radius: var(--radius); width: 100%; max-width: 440px; max-height: 85vh; overflow-y: auto; padding: 20px; position: relative; border: 1px solid var(--border); color: #fff; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .close-modal { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-sub); }
+        .pay-banner { background: var(--primary-light); border: 1px dashed var(--primary); border-radius: 12px; padding: 12px; margin-bottom: 14px; text-align: center; }
+        .pay-banner-title { font-size: 0.8rem; font-weight: 700; color: #20c997; margin-bottom: 8px; }
+        .pay-banner-btns { display: flex; gap: 8px; justify-content: center; }
         .img-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); }
         .form-section-title { font-size: 0.78rem; font-weight: 700; color: #20c997; margin: 10px 0 6px 0; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 2px; }
     </style>
@@ -349,6 +356,7 @@
                 <button class="btn-icon" onclick="closeSubPage()"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 id="sub-page-title">Detail Page</h2>
                 <div id="sub-header-actions" style="display:flex; gap:6px;">
+                    <button class="btn btn-warning" id="btn-manage-kriteria" style="display:none;" onclick="openManageKriteria()"><i class="fa-solid fa-list-check"></i> Kriteria</button>
                     <button class="btn-icon" id="sub-action-btn" style="background:var(--primary); color:#fff; display:none;"><i class="fa-solid fa-plus"></i></button>
                 </div>
             </div>
@@ -383,20 +391,23 @@
             <div id="modal-body"></div>
         </div>
     </div>
+
     <!-- External Script Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
     <script>
         const SUPABASE_URL = "https://pykkfcszdihobpwhqinq.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5a2tmY3N6ZGlob2Jwd2hxaW5xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3OTEyNjEsImV4cCI6MjEwMTM2NzI2MX0.Ig1GsJvn0jDobVCBGlp2lLwTLvtn6eAkzKKf3VxMFiA";
         
         const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let currentUser = null;
+        let qrScanner = null;
         let chartInstance = null;
         let chartLaporanInstance = null;
 
@@ -432,7 +443,6 @@
                     document.getElementById('app-dashboard').style.display = 'block';
                     document.getElementById('user-email').innerText = currentUser.email;
 
-                    // Tampilkan Header dan Nav Bottom jika sudah login
                     header.style.display = 'flex';
                     bottomNav.style.display = 'flex';
                     appShell.classList.add('logged-in');
@@ -443,7 +453,6 @@
                     document.getElementById('auth-container').style.display = 'flex';
                     document.getElementById('app-dashboard').style.display = 'none';
 
-                    // Sembunyikan Header dan Nav Bottom jika belum login
                     header.style.display = 'none';
                     bottomNav.style.display = 'none';
                     appShell.classList.remove('logged-in');
@@ -481,6 +490,7 @@
             });
 
             document.getElementById('btn-close-modal').addEventListener('click', () => {
+                stopQRScanner();
                 document.getElementById('app-modal').style.display = 'none';
             });
         }
@@ -511,58 +521,140 @@
             renderChart();
         }
 
+        function processPaymentRedirect(type, idPelanggan) {
+            const cleanId = (idPelanggan || '').trim();
+            const targetUrl = type === 'Listrik' 
+                ? 'https://www.sepulsa.com/transaction/pln?type=postpaid' 
+                : 'https://www.sepulsa.com/transaction/pdam';
+
+            if (cleanId && cleanId !== '-') {
+                navigator.clipboard.writeText(cleanId).then(() => {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: `ID ${cleanId} disalin!`,
+                        text: 'Tempelkan di situs Sepulsa',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }).catch(() => {});
+            }
+            window.open(targetUrl, '_blank');
+        }
+
+        async function shareData(title, text, url = null) {
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title: title, text: text, url: url || window.location.href });
+                } catch (err) {}
+            } else {
+                navigator.clipboard.writeText(title + "\n" + text);
+                Swal.fire('Tersalin!', 'Detail data berhasil disalin ke clipboard.', 'success');
+            }
+        }
+
         async function renderChart() {
             const ctx = document.getElementById('chartRealtime').getContext('2d');
             const selectedKantor = document.getElementById('chart-filter-kantor').value;
             const selectedTahun = document.getElementById('chart-filter-tahun').value;
             const selectedJenis = document.getElementById('chart-filter-jenis').value;
 
-            let labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-            let dataListrik = new Array(12).fill(0);
-            let dataAir = new Array(12).fill(0);
+            let labels = [];
+            let dataListrik = [];
+            let dataAir = [];
+            let kantorStats = {};
+
+            if (selectedTahun === 'LAST_12') {
+                const now = new Date();
+                for (let i = 11; i >= 0; i--) {
+                    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                    const mName = d.toLocaleString('id-ID', { month: 'short' });
+                    const yShort = d.getFullYear().toString().slice(-2);
+                    labels.push(`${mName} '${yShort}`);
+                    dataListrik.push(0);
+                    dataAir.push(0);
+                }
+            } else {
+                labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                dataListrik = new Array(12).fill(0);
+                dataAir = new Array(12).fill(0);
+            }
+
+            labels.forEach((_, idx) => { kantorStats[idx] = {}; });
 
             try {
                 let query = db.from('utilitas').select('*, kantor(nama)');
-                if (selectedKantor !== 'ALL') query = query.eq('kantor_id', selectedKantor);
+                if (selectedKantor !== 'ALL') {
+                    query = query.eq('kantor_id', selectedKantor);
+                }
 
                 const { data } = await query;
 
                 if (data && data.length > 0) {
                     data.forEach(item => {
                         if (!item.bulan_tahun) return;
+                        
                         const dateObj = new Date(item.bulan_tahun);
                         const itemYear = dateObj.getFullYear().toString();
                         const itemMonth = dateObj.getMonth();
+                        const kantorNama = item.kantor ? item.kantor.nama : 'Kantor Unassigned';
                         const biayaVal = Number(item.biaya || 0);
 
-                        if (selectedTahun === 'ALL' || itemYear === selectedTahun) {
-                            if (item.jenis === 'Listrik') dataListrik[itemMonth] += biayaVal;
-                            if (item.jenis === 'Air') dataAir[itemMonth] += biayaVal;
+                        let targetIdx = -1;
+
+                        if (selectedTahun === 'LAST_12') {
+                            const now = new Date();
+                            const diffMonths = (now.getFullYear() - dateObj.getFullYear()) * 12 + (now.getMonth() - dateObj.getMonth());
+                            if (diffMonths >= 0 && diffMonths < 12) {
+                                targetIdx = 11 - diffMonths;
+                            }
+                        } else if (itemYear === selectedTahun) {
+                            targetIdx = itemMonth;
+                        }
+
+                        if (targetIdx !== -1) {
+                            if (selectedJenis === 'ALL' || selectedJenis === item.jenis) {
+                                kantorStats[targetIdx][kantorNama] = (kantorStats[targetIdx][kantorNama] || 0) + biayaVal;
+                            }
+
+                            if (item.jenis === 'Listrik') dataListrik[targetIdx] += biayaVal;
+                            if (item.jenis === 'Air') dataAir[targetIdx] += biayaVal;
                         }
                     });
                 }
 
-                if (chartInstance) chartInstance.destroy();
+                checkTrendAlert(dataListrik, dataAir, labels, kantorStats, selectedKantor);
+
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
 
                 const datasets = [];
+                
                 if (selectedJenis === 'ALL' || selectedJenis === 'Listrik') {
                     datasets.push({
                         label: 'Listrik (Rp)',
                         data: dataListrik,
-                        borderColor: '#ffc107',
-                        backgroundColor: 'rgba(255, 193, 7, 0.2)',
+                        borderColor: '#198754',
+                        backgroundColor: 'rgba(25, 135, 84, 0.15)',
                         fill: true,
-                        tension: 0.3
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointRadius: 4
                     });
                 }
+
                 if (selectedJenis === 'ALL' || selectedJenis === 'Air') {
                     datasets.push({
                         label: 'Air PDAM (Rp)',
                         data: dataAir,
                         borderColor: '#0dcaf0',
-                        backgroundColor: 'rgba(13, 202, 240, 0.2)',
+                        backgroundColor: 'rgba(13, 202, 240, 0.15)',
                         fill: true,
-                        tension: 0.3
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointRadius: 4
                     });
                 }
 
@@ -572,10 +664,32 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { display: true, labels: { color: '#fff' } } },
+                        interaction: { intersect: false, mode: 'index' },
+                        plugins: {
+                            legend: { display: true, position: 'top' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) label += ': ';
+                                        if (context.parsed.y !== null) {
+                                            label += 'Rp ' + context.parsed.y.toLocaleString('id-ID');
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
                         scales: {
-                            x: { ticks: { color: '#a3b8cc' } },
-                            y: { ticks: { color: '#a3b8cc', callback: (val) => val >= 1000000 ? (val/1000000).toFixed(1) + 'Jt' : val } }
+                            y: {
+                                ticks: {
+                                    callback: function(val) {
+                                        if (val >= 1000000) return 'Rp ' + (val / 1000000).toFixed(1) + 'Jt';
+                                        if (val >= 1000) return 'Rp ' + (val / 1000) + 'rb';
+                                        return 'Rp ' + val;
+                                    }
+                                }
+                            }
                         }
                     }
                 });
@@ -584,11 +698,58 @@
             }
         }
 
+        function checkTrendAlert(listrikArr, airArr, labels, kantorStats, selectedKantor) {
+            const alertBox = document.getElementById('alert-trend');
+            const alertText = document.getElementById('alert-trend-text');
+            const alertIcon = document.getElementById('alert-trend-icon');
+
+            let lastIdx = -1;
+            for (let i = labels.length - 1; i >= 0; i--) {
+                if (listrikArr[i] > 0 || airArr[i] > 0) {
+                    lastIdx = i;
+                    break;
+                }
+            }
+
+            if (lastIdx > 0) {
+                const prevTotal = listrikArr[lastIdx - 1] + airArr[lastIdx - 1];
+                const currTotal = listrikArr[lastIdx] + airArr[lastIdx];
+
+                if (prevTotal > 0) {
+                    const diff = currTotal - prevTotal;
+                    const percent = Math.round((diff / prevTotal) * 100);
+
+                    alertBox.style.display = 'flex';
+
+                    let detailMsg = "";
+                    if (percent > 0) {
+                        alertBox.className = 'alert-box alert-danger-custom';
+                        alertIcon.className = 'fa-solid fa-arrow-trend-up';
+                        detailMsg = `Total biaya periode <b>${labels[lastIdx]}</b> NAIK <b>${percent}%</b> (+Rp ${diff.toLocaleString('id-ID')}) dibanding <b>${labels[lastIdx-1]}</b>.`;
+                    } else if (percent < 0) {
+                        alertBox.className = 'alert-box alert-success-custom';
+                        alertIcon.className = 'fa-solid fa-arrow-trend-down';
+                        detailMsg = `Total biaya periode <b>${labels[lastIdx]}</b> TURUN <b>${Math.abs(percent)}%</b> (-Rp ${Math.abs(diff).toLocaleString('id-ID')}) dibanding <b>${labels[lastIdx-1]}</b>.`;
+                    } else {
+                        alertBox.style.display = 'none';
+                        return;
+                    }
+
+                    alertText.innerHTML = detailMsg;
+                } else {
+                    alertBox.style.display = 'none';
+                }
+            } else {
+                alertBox.style.display = 'none';
+            }
+        }
+
         async function openSubPage(pageKey) {
             const overlay = document.getElementById('sub-page-overlay');
             const titleEl = document.getElementById('sub-page-title');
             const contentEl = document.getElementById('sub-page-content');
             const actionBtn = document.getElementById('sub-action-btn');
+            const kriteriaBtn = document.getElementById('btn-manage-kriteria');
 
             document.querySelectorAll('.bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
             if (pageKey === 'pemeriksaan_atm') document.querySelectorAll('.bottom-nav .nav-item')[1].classList.add('active');
@@ -597,6 +758,7 @@
             titleEl.innerText = pageKey.replace('_', ' ').toUpperCase();
             contentEl.innerHTML = `<p style="text-align:center; padding:20px; color:var(--text-sub);"><i class="fa-solid fa-spinner fa-spin"></i> Memuat data...</p>`;
             actionBtn.style.display = 'none';
+            kriteriaBtn.style.display = 'none';
             overlay.style.display = 'block';
 
             try {
@@ -607,17 +769,27 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Nama Kantor</th><th>Alamat</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <thead><tr><th>Nama</th><th>Alamat</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
-                                    ${data && data.length > 0 ? data.map(k => `
+                                    ${data && data.length > 0 ? data.map(k => {
+                                        const detailStr = `Nama: ${k.nama}\nAlamat: ${k.alamat}\n\n[PLN]\nPelanggan: ${k.nama_pelanggan_pln || '-'}\nID: ${k.id_pelanggan_pln || '-'}\nTarif/Daya: ${k.tarif_daya_pln || '-'}\n\n[PDAM]\nPelanggan: ${k.nama_pelanggan_pdam || '-'}\nID: ${k.id_pelanggan_pdam || '-'}\nTarif/Daya: ${k.tarif_daya_pdam || '-'}`;
+                                        return `
                                         <tr>
                                             <td><b>${k.nama}</b></td>
                                             <td>${k.alamat}</td>
                                             <td style="text-align:center;">
-                                                <button class="btn btn-warning" onclick="openFormKantor('${k.id}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fa-solid fa-pen"></i> Edit</button>
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Kantor', '${k.nama}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Data Kantor', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormKantor('${k.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('kantor','${k.id}','kantor')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
-                                    `).join('') : '<tr><td colspan="3" style="text-align:center;">Tidak ada data</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="3" style="text-align:center;">Belum ada data kantor</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -630,79 +802,79 @@
                             <table class="table">
                                 <thead><tr><th>Kode</th><th>Nama Asset</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
-                                    ${data && data.length > 0 ? data.map(a => `
+                                    ${data && data.length > 0 ? data.map(a => {
+                                        const detailStr = `Kode Asset: ${a.kode_asset}\nNama Asset: ${a.nama_asset}\nKantor: ${a.kantor ? a.kantor.nama : '-'}\nKategori: ${a.kategori}\nStatus: ${a.status}`;
+                                        return `
                                         <tr>
                                             <td><b>${a.kode_asset}</b></td>
                                             <td>${a.nama_asset}</td>
                                             <td><span class="badge badge-${a.status === 'Baik' ? 'success' : 'danger'}">${a.status}</span></td>
                                             <td style="text-align:center;">
-                                                <button class="btn btn-warning" onclick="openFormAsset('${a.id}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fa-solid fa-pen"></i></button>
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Asset', '${a.nama_asset}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Data Asset', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormAsset('${a.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('asset','${a.id}','asset')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
-                                    `).join('') : '<tr><td colspan="4" style="text-align:center;">Tidak ada data</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada data asset</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
                 } else if (pageKey === 'utilitas') {
                     actionBtn.style.display = 'inline-flex';
                     actionBtn.onclick = () => openFormUtilitas();
-                    const { data } = await db.from('utilitas').select('*, kantor(nama)').order('created_at', {ascending:false});
+                    const { data } = await db.from('utilitas').select('*, kantor(*)').order('created_at', {ascending:false});
                     contentEl.innerHTML = `
+                        <div class="pay-banner">
+                            <div class="pay-banner-title"><i class="fa-solid fa-up-right-from-square"></i> Pembayaran Cepat via Sepulsa</div>
+                            <div class="pay-banner-btns">
+                                <button class="btn btn-pay" onclick="processPaymentRedirect('Listrik')"><i class="fa-solid fa-bolt"></i> Bayar Listrik</button>
+                                <button class="btn btn-pay" onclick="processPaymentRedirect('Air')"><i class="fa-solid fa-droplet"></i> Bayar PDAM</button>
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Layanan</th><th>Kantor</th><th>Biaya (Rp)</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <thead><tr><th>Jenis</th><th>ID Pelanggan</th><th>Pemakaian</th><th>Biaya (Rp)</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
-                                    ${data && data.length > 0 ? data.map(u => `
+                                    ${data && data.length > 0 ? data.map(u => {
+                                        const k = u.kantor || {};
+                                        const isPLN = u.jenis === 'Listrik';
+                                        const namaPel = isPLN ? k.nama_pelanggan_pln : k.nama_pelanggan_pdam;
+                                        const tarifDaya = isPLN ? k.tarif_daya_pln : k.tarif_daya_pdam;
+                                        
+                                        const detailStr = `Jenis Utilitas: ${u.jenis}\nKantor: ${k.nama || '-'}\nNama Pelanggan: ${namaPel || '-'}\nID Pelanggan: ${u.id_pelanggan || '-'}\nPeriode Bulan: ${u.periode_bulan || '-'}\nTarif/Daya: ${tarifDaya || '-'}\nPemakaian: ${u.jumlah_pemakaian} ${u.satuan}\nBiaya: Rp ${Number(u.biaya).toLocaleString('id-ID')}\nTanggal Input: ${u.bulan_tahun || '-'}`;
+                                        
+                                        return `
                                         <tr>
-                                            <td><b>${u.jenis}</b></td>
-                                            <td>${u.kantor ? u.kantor.nama : '-'}</td>
+                                            <td><b>${u.jenis}</b><br><small style="color:var(--text-sub);">${k.nama || '-'}</small></td>
+                                            <td><span class="badge badge-warning">${u.id_pelanggan || '-'}</span></td>
+                                            <td>${u.jumlah_pemakaian} ${u.satuan}</td>
                                             <td>Rp ${Number(u.biaya).toLocaleString('id-ID')}</td>
                                             <td style="text-align:center;">
-                                                <button class="btn btn-warning" onclick="openFormUtilitas('${u.id}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fa-solid fa-pen"></i></button>
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        ${(u.jenis === 'Listrik' || u.jenis === 'Air') ? `
+                                                            <button onclick="processPaymentRedirect('${u.jenis}', '${u.id_pelanggan}')"><i class="fa-solid fa-credit-card" style="color:#10b981;"></i> Bayar</button>
+                                                        ` : ''}
+                                                        <button onclick="viewGenericDetail('Utilitas', '${u.jenis}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Data Utilitas', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormUtilitas('${u.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('utilitas','${u.id}','utilitas')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
-                                    `).join('') : '<tr><td colspan="4" style="text-align:center;">Tidak ada data</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="5" style="text-align:center;">Belum ada data utilitas</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
-                } else if (pageKey === 'cek_tagihan') {
-                    contentEl.innerHTML = `
-                        <div class="card">
-                            <div class="card-title"><i class="fa-solid fa-receipt"></i> Cek Tagihan PLN & PDAM</div>
-                            <form id="f-cek-tagihan">
-                                <div class="form-group">
-                                    <label>Jenis Layanan</label>
-                                    <select id="ft-layanan" class="form-control">
-                                        <option value="PLN">PLN (Listrik Pascapayar)</option>
-                                        <option value="PDAM">PDAM (Air Minum)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>ID Pelanggan / Nomor Meter</label>
-                                    <input type="number" id="ft-id-pelanggan" class="form-control" placeholder="Contoh: 531234567890" required>
-                                </div>
-                                <button type="submit" class="btn btn-warning" style="width:100%; margin-top:6px;"><i class="fa-solid fa-magnifying-glass"></i> Cek Tagihan Sekarang</button>
-                            </form>
-
-                            <div id="bill-result" class="bill-result-card">
-                                <div class="bill-row"><span class="bill-label">ID Pelanggan:</span><span id="res-id-pel">-</span></div>
-                                <div class="bill-row"><span class="bill-label">Nama:</span><span id="res-nama">-</span></div>
-                                <div class="bill-total" id="res-total">TOTAL TAGIHAN: Rp 0</div>
-                            </div>
-                        </div>`;
-
-                    document.getElementById('f-cek-tagihan').onsubmit = (e) => {
-                        e.preventDefault();
-                        const idPel = document.getElementById('ft-id-pelanggan').value;
-                        Swal.fire({ title: 'Memeriksa...', didOpen: () => Swal.showLoading() });
-                        setTimeout(() => {
-                            Swal.close();
-                            document.getElementById('bill-result').style.display = 'block';
-                            document.getElementById('res-id-pel').innerText = idPel;
-                            document.getElementById('res-nama').innerText = "PT BINAYASA PURABATARA";
-                            document.getElementById('res-total').innerText = "TOTAL TAGIHAN: Rp 352.500";
-                        }, 1000);
-                    };
                 } else if (pageKey === 'perawatan') {
                     actionBtn.style.display = 'inline-flex';
                     actionBtn.onclick = () => openFormPerawatan();
@@ -710,15 +882,145 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>WO</th><th>Teknisi</th><th>Biaya</th></tr></thead>
+                                <thead><tr><th>WO</th><th>Before</th><th>After</th><th>Biaya</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
-                                    ${data && data.length > 0 ? data.map(m => `
+                                    ${data && data.length > 0 ? data.map(m => {
+                                        const detailStr = `Work Order: ${m.work_orders ? m.work_orders.judul : '-'}\nTeknisi: ${m.teknisi ? m.teknisi.nama : '-'}\nBiaya Perawatan: Rp ${Number(m.biaya).toLocaleString('id-ID')}\nFoto Before: ${m.foto_before ? 'Ada' : 'Tidak Ada'}\nFoto After: ${m.foto_after ? 'Ada' : 'Tidak Ada'}`;
+                                        return `
                                         <tr>
-                                            <td><b>${m.work_orders ? m.work_orders.judul : '-'}</b></td>
-                                            <td>${m.teknisi ? m.teknisi.nama : '-'}</td>
+                                            <td><b>${m.work_orders ? m.work_orders.judul : '-'}</b><br><small>Teknisi: ${m.teknisi ? m.teknisi.nama : '-'}</small></td>
+                                            <td>${m.foto_before ? `<img src="${m.foto_before}" class="img-thumb">` : '-'}</td>
+                                            <td>${m.foto_after ? `<img src="${m.foto_after}" class="img-thumb">` : '-'}</td>
                                             <td>Rp ${Number(m.biaya).toLocaleString('id-ID')}</td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Hasil Perawatan', '${m.work_orders ? m.work_orders.judul : '-'}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Laporan Perawatan', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="deleteRecord('maintenances','${m.id}','perawatan')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
                                         </tr>
-                                    `).join('') : '<tr><td colspan="3" style="text-align:center;">Tidak ada data perawatan</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="5" style="text-align:center;">Belum ada data pengerjaan</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'laporan') {
+                    const { data: kantorList } = await db.from('kantor').select('id, nama');
+                    const currentYear = new Date().getFullYear();
+
+                    contentEl.innerHTML = `
+                        <!-- CARD GRAFIK REKAP LAPORAN -->
+                        <div class="card">
+                            <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+                                <span><i class="fa-solid fa-chart-bar" style="color:var(--primary);"></i> Visualisasi Tren Biaya</span>
+                            </div>
+                            
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:12px;">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label>Kantor</label>
+                                    <select id="lap-filter-kantor" class="form-control" style="font-size:0.78rem;" onchange="renderLaporanChart()">
+                                        <option value="ALL">Semua Kantor</option>
+                                        ${kantorList ? kantorList.map(k => `<option value="${k.id}">${k.nama}</option>`).join('') : ''}
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label>Tipe Rekap Grafik</label>
+                                    <select id="lap-filter-tipe" class="form-control" style="font-size:0.78rem;" onchange="renderLaporanChart()">
+                                        <option value="BULANAN">Bulanan (Tahun ${currentYear})</option>
+                                        <option value="TAHUNAN">Tahunan (Multi-Tahun)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="position: relative; height: 180px; width: 100%; margin-bottom: 10px;">
+                                <canvas id="chartLaporan"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- PUSAT EKSPOR LAPORAN CUSTOM -->
+                        <div class="card">
+                            <div class="card-title"><i class="fa-solid fa-file-export"></i> Pusat Ekspor Laporan Custom</div>
+                            <p style="font-size:0.78rem; color:var(--text-sub); margin-bottom:12px;">Atur parameter periode laporan yang ingin dicetak:</p>
+                            
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:12px;">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label>Filter Periode Bulan</label>
+                                    <select id="exp-bulan" class="form-control" style="font-size:0.8rem;">
+                                        <option value="ALL">Semua Bulan (Full Year)</option>
+                                        <option value="01">Januari</option>
+                                        <option value="02">Februari</option>
+                                        <option value="03">Maret</option>
+                                        <option value="04">April</option>
+                                        <option value="05">Mei</option>
+                                        <option value="06">Juni</option>
+                                        <option value="07">Juli</option>
+                                        <option value="08" selected>Agustus</option>
+                                        <option value="09">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11">November</option>
+                                        <option value="12">Desember</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label>Filter Tahun</label>
+                                    <select id="exp-tahun" class="form-control" style="font-size:0.8rem;">
+                                        <option value="2026" selected>2026</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2024">2024</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+                                    <button class="btn btn-primary" onclick="generateReport('utilitas', 'excel')"><i class="fa-solid fa-file-excel"></i> Utilitas (Excel)</button>
+                                    <button class="btn btn-danger" onclick="generateReport('utilitas', 'pdf')"><i class="fa-solid fa-file-pdf"></i> Utilitas (PDF)</button>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+                                    <button class="btn btn-primary" onclick="generateReport('asset', 'excel')"><i class="fa-solid fa-boxes-stacked"></i> Asset (Excel)</button>
+                                    <button class="btn btn-danger" onclick="generateReport('asset', 'pdf')"><i class="fa-solid fa-file-pdf"></i> Asset (PDF)</button>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+                                    <button class="btn btn-primary" onclick="generateReport('work_orders', 'excel')"><i class="fa-solid fa-clipboard-list"></i> Work Order (Excel)</button>
+                                    <button class="btn btn-danger" onclick="generateReport('work_orders', 'pdf')"><i class="fa-solid fa-file-pdf"></i> Work Order (PDF)</button>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    setTimeout(() => { renderLaporanChart(); }, 100);
+                } else if (pageKey === 'pemeriksaan_atm') {
+                    actionBtn.style.display = 'inline-flex';
+                    kriteriaBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormPemeriksaanATM();
+                    const { data } = await db.from('pemeriksaan_atm').select('*, kantor(nama)').order('created_at', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Lokasi/KCP</th><th>Kategori</th><th>Periode</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(atm => {
+                                        const detailStr = `Lokasi/KCP: ${atm.kantor ? atm.kantor.nama : '-'}\nKategori: ${atm.kategori_atm}\nPeriode: ${atm.periode_minggu}\nPetugas: ${atm.petugas_nama || '-'}\nSupervisor: ${atm.supervisor_nama || '-'}`;
+                                        return `
+                                        <tr>
+                                            <td><b>${atm.kantor ? atm.kantor.nama : '-'}</b></td>
+                                            <td><span class="badge badge-success">${atm.kategori_atm}</span></td>
+                                            <td>${atm.periode_minggu}</td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Pemeriksaan ATM', '${atm.kantor ? atm.kantor.nama : ''}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Laporan Pemeriksaan ATM', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormPemeriksaanATM('${atm.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('pemeriksaan_atm','${atm.id}','pemeriksaan_atm')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada pemeriksaan ATM</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -731,16 +1033,26 @@
                             <table class="table">
                                 <thead><tr><th>Judul</th><th>Asset</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
-                                    ${data && data.length > 0 ? data.map(w => `
+                                    ${data && data.length > 0 ? data.map(w => {
+                                        const detailStr = `Judul Work Order: ${w.judul}\nAsset Terkait: ${w.asset ? w.asset.nama_asset : '-'}\nStatus: ${w.status}`;
+                                        return `
                                         <tr>
                                             <td><b>${w.judul}</b></td>
                                             <td>${w.asset ? w.asset.nama_asset : '-'}</td>
                                             <td><span class="badge badge-warning">${w.status}</span></td>
                                             <td style="text-align:center;">
-                                                <button class="btn btn-warning" onclick="openFormWO('${w.id}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fa-solid fa-pen"></i></button>
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Work Order', '${w.judul}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Work Order', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormWO('${w.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('work_orders','${w.id}','workorder')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
-                                    `).join('') : '<tr><td colspan="4" style="text-align:center;">Tidak ada Work Order</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada Work Order</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -753,16 +1065,26 @@
                             <table class="table">
                                 <thead><tr><th>Nama</th><th>Spesialisasi</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
-                                    ${data && data.length > 0 ? data.map(t => `
+                                    ${data && data.length > 0 ? data.map(t => {
+                                        const detailStr = `Nama Teknisi: ${t.nama}\nSpesialisasi: ${t.spesialisasi}\nStatus Saat Ini: ${t.status}`;
+                                        return `
                                         <tr>
                                             <td><b>${t.nama}</b></td>
                                             <td>${t.spesialisasi}</td>
                                             <td><span class="badge badge-success">${t.status}</span></td>
                                             <td style="text-align:center;">
-                                                <button class="btn btn-warning" onclick="openFormTeknisi('${t.id}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fa-solid fa-pen"></i></button>
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Teknisi', '${t.nama}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Data Teknisi', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormTeknisi('${t.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('teknisi','${t.id}','teknisi')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
-                                    `).join('') : '<tr><td colspan="4" style="text-align:center;">Tidak ada data teknisi</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="4" style="text-align:center;">Belum ada data teknisi</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -773,71 +1095,605 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Judul</th><th>Kategori</th><th>Tanggal</th><th>Status</th></tr></thead>
+                                <thead><tr><th>Judul Kegiatan</th><th>Kategori</th><th>Tanggal</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
-                                    ${data && data.length > 0 ? data.map(j => `
+                                    ${data && data.length > 0 ? data.map(j => {
+                                        const detailStr = `Kegiatan: ${j.judul}\nKategori: ${j.kategori || '-'}\nTanggal: ${j.tanggal || '-'}\nStatus: ${j.status}\nKeterangan: ${j.keterangan || '-'}`;
+                                        return `
                                         <tr>
-                                            <td><b>${j.judul}</b></td>
+                                            <td><b>${j.judul}</b><br><small style="color:var(--text-sub);">${j.keterangan || ''}</small></td>
                                             <td>${j.kategori || '-'}</td>
                                             <td>${j.tanggal || '-'}</td>
-                                            <td><span class="badge badge-success">${j.status}</span></td>
+                                            <td><span class="badge badge-${j.status === 'Selesai' ? 'success' : 'warning'}">${j.status}</span></td>
+                                            <td style="text-align:center;">
+                                                <div class="dropdown-action">
+                                                    <button class="btn-action-trigger" onclick="toggleDropdownMenu(this)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <div class="dropdown-menu-content">
+                                                        <button onclick="viewGenericDetail('Jadwal', '${j.judul}', \`${detailStr}\`)"><i class="fa-solid fa-eye" style="color:#0dcaf0;"></i> Detail</button>
+                                                        <button onclick="shareData('Jadwal Kegiatan', \`${detailStr}\`)"><i class="fa-solid fa-share-nodes" style="color:#0d6efd;"></i> Bagikan</button>
+                                                        <button onclick="openFormJadwal('${j.id}')"><i class="fa-solid fa-pen-to-square" style="color:#ffc107;"></i> Edit</button>
+                                                        <button onclick="deleteRecord('jadwal','${j.id}','jadwal')"><i class="fa-solid fa-trash" style="color:#dc3545;"></i> Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </td>
                                         </tr>
-                                    `).join('') : '<tr><td colspan="4" style="text-align:center;">Tidak ada jadwal</td></tr>'}
+                                    `}).join('') : '<tr><td colspan="5" style="text-align:center;">Belum ada jadwal pemeliharaan</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
-                } else if (pageKey === 'pemeriksaan_atm') {
-                    actionBtn.style.display = 'inline-flex';
-                    actionBtn.onclick = () => openFormPemeriksaanATM();
-                    const { data } = await db.from('pemeriksaan_atm').select('*, kantor(nama)').order('created_at', {ascending:false});
-                    contentEl.innerHTML = `
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead><tr><th>Lokasi</th><th>Kategori</th><th>Periode</th></tr></thead>
-                                <tbody>
-                                    ${data && data.length > 0 ? data.map(atm => `
-                                        <tr>
-                                            <td><b>${atm.kantor ? atm.kantor.nama : '-'}</b></td>
-                                            <td><span class="badge badge-success">${atm.kategori_atm || 'Onsite'}</span></td>
-                                            <td>${atm.periode_minggu || '-'}</td>
-                                        </tr>
-                                    `).join('') : '<tr><td colspan="3" style="text-align:center;">Tidak ada data pemeriksaan ATM</td></tr>'}
-                                </tbody>
-                            </table>
-                        </div>`;
-                } else if (pageKey === 'laporan') {
+                } else if (pageKey === 'cek_tagihan') {
                     contentEl.innerHTML = `
                         <div class="card">
-                            <div class="card-title"><i class="fa-solid fa-file-export"></i> Ekspor Laporan Data</div>
-                            <p style="font-size:0.8rem; color:var(--text-sub); margin-bottom:12px;">Pilih jenis laporan yang ingin diunduh:</p>
-                            <div style="display:flex; flex-direction:column; gap:8px;">
-                                <button class="btn btn-primary" onclick="Swal.fire('Info', 'Fitur Ekspor Utilitas siap', 'info')"><i class="fa-solid fa-file-excel"></i> Unduh Laporan Utilitas (Excel)</button>
-                                <button class="btn btn-warning" onclick="Swal.fire('Info', 'Fitur Ekspor Asset siap', 'info')"><i class="fa-solid fa-file-pdf"></i> Unduh Laporan Asset (PDF)</button>
+                            <div class="card-title"><i class="fa-solid fa-receipt"></i> Cek Tagihan PLN & PDAM</div>
+                            <form id="f-cek-tagihan">
+                                <div class="form-group">
+                                    <label>Jenis Layanan</label>
+                                    <select id="ft-layanan" class="form-control" onchange="togglePDAMPicker()">
+                                        <option value="PLN">PLN (Listrik Pascapayar)</option>
+                                        <option value="PDAM">PDAM (Air Minum)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="group-pdam-wilayah" style="display:none;">
+                                    <label>Wilayah PDAM</label>
+                                    <select id="ft-wilayah-pdam" class="form-control">
+                                        <option value="PDAM Kota Surabaya">PDAM Kota Surabaya</option>
+                                        <option value="PDAM Kab. Sidoarjo">PDAM Kab. Sidoarjo</option>
+                                        <option value="PDAM Kota Jakarta (PAM Jaya)">PDAM Kota Jakarta (PAM Jaya)</option>
+                                        <option value="PDAM Kota Bandung">PDAM Kota Bandung</option>
+                                        <option value="PDAM Kota Semarang">PDAM Kota Semarang</option>
+                                        <option value="PDAM Kota Medan">PDAM Kota Medan</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>ID Pelanggan / Nomor Meter</label>
+                                    <input type="number" id="ft-id-pelanggan" class="form-control" placeholder="Contoh: 531234567890" required>
+                                </div>
+                                <button type="submit" class="btn btn-warning" style="width:100%; margin-top:6px;"><i class="fa-solid fa-magnifying-glass"></i> Cek Tagihan Sekarang</button>
+                            </form>
+
+                            <div id="bill-result" class="bill-result-card">
+                                <div class="checklist-title" id="res-layanan-title">HASIL PENGECEKAN TAGIHAN</div>
+                                <div class="bill-row"><span class="bill-label">ID Pelanggan:</span><span class="bill-val" id="res-id-pel">-</span></div>
+                                <div class="bill-row"><span class="bill-label">Nama Pelanggan:</span><span class="bill-val" id="res-nama">-</span></div>
+                                <div class="bill-row"><span class="bill-label">Periode Tagihan:</span><span class="bill-val" id="res-periode">-</span></div>
+                                <div class="bill-row"><span class="bill-label">Pemakaian / Daya:</span><span class="bill-val" id="res-pemakaian">-</span></div>
+                                <div class="bill-row"><span class="bill-label">Status Bayar:</span><span class="bill-val" id="res-status">-</span></div>
+                                <div class="bill-row"><span class="bill-label">Biaya Admin:</span><span class="bill-val" id="res-admin">Rp 2.500</span></div>
+                                <div class="bill-total" id="res-total">TOTAL TAGIHAN: Rp 0</div>
+                                
+                                <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+                                    <button id="btn-redirect-pay" class="btn btn-pay" style="width:100%;"><i class="fa-solid fa-credit-card"></i> Bayar Sekarang via Sepulsa</button>
+                                    <button class="btn btn-share" style="width:100%;" onclick="shareBillResult()"><i class="fa-solid fa-share-nodes"></i> Bagikan Tagihan</button>
+                                </div>
                             </div>
                         </div>`;
+
+                    document.getElementById('f-cek-tagihan').onsubmit = (e) => {
+                        e.preventDefault();
+                        const layanan = document.getElementById('ft-layanan').value;
+                        const idPel = document.getElementById('ft-id-pelanggan').value;
+                        const wilayah = document.getElementById('ft-wilayah-pdam').value;
+
+                        if (!idPel) return Swal.fire('Peringatan', 'Masukkan ID Pelanggan!', 'warning');
+
+                        Swal.fire({ title: 'Menghubungkan Server Cek Tagihan...', didOpen: () => Swal.showLoading() });
+
+                        setTimeout(() => {
+                            Swal.close();
+                            const billCard = document.getElementById('bill-result');
+                            billCard.style.display = 'block';
+
+                            const mockNames = ['PT BINAYASA PURABATARA', 'GEDUNG BSN KCP MULYOSARI', 'KCP RUNGKUT MERR', 'KANTOR CABANG BTN'];
+                            const selectedName = mockNames[Math.floor(Math.random() * mockNames.length)];
+                            const mockUsage = layanan === 'PLN' ? 'R1M / 1300 VA (342 kWh)' : 'Golongan IIB (32 m³)';
+                            const mockAmount = Math.floor(Math.random() * (450000 - 150000 + 1)) + 150000;
+                            const totalAmount = mockAmount + 2500;
+
+                            document.getElementById('res-layanan-title').innerText = `TAGIHAN ${layanan} ${layanan === 'PDAM' ? '(' + wilayah + ')' : ''}`;
+                            document.getElementById('res-id-pel').innerText = idPel;
+                            document.getElementById('res-nama').innerText = selectedName;
+                            document.getElementById('res-periode').innerText = 'Agustus 2026';
+                            document.getElementById('res-pemakaian').innerText = mockUsage;
+                            document.getElementById('res-status').innerHTML = `<span class="badge badge-danger">BELUM DIBAYAR</span>`;
+                            document.getElementById('res-total').innerText = `TOTAL TAGIHAN: Rp ${totalAmount.toLocaleString('id-ID')}`;
+                            
+                            const payBtn = document.getElementById('btn-redirect-pay');
+                            payBtn.onclick = () => processPaymentRedirect(layanan === 'PLN' ? 'Listrik' : 'Air', idPel);
+
+                            window.lastBillData = {
+                                layanan: layanan,
+                                idPel: idPel,
+                                nama: selectedName,
+                                total: totalAmount
+                            };
+                        }, 1200);
+                    };
                 } else if (pageKey === 'pengaturan') {
                     contentEl.innerHTML = `
                         <div class="card">
-                            <div class="card-title"><i class="fa-solid fa-user-gear"></i> Pengaturan Akun</div>
-                            <form id="f-profile">
+                            <div class="card-title"><i class="fa-solid fa-user-gear"></i> Pengaturan Akun & Profil</div>
+                            <form id="f-profile" style="margin-bottom:20px;">
                                 <div class="form-group"><label>Email Akun</label><input type="email" class="form-control" value="${currentUser ? currentUser.email : ''}" readonly></div>
-                                <div class="form-group"><label>Password Baru</label><input type="password" id="p-new-password" class="form-control" placeholder="Ubah password..."></div>
+                                <div class="form-group"><label>Password Baru</label><input type="password" id="p-new-password" class="form-control" placeholder="Masukkan password baru..."></div>
                                 <button type="submit" class="btn btn-primary" style="width:100%;">Update Password</button>
                             </form>
+                            
+                            <div class="card-title"><i class="fa-solid fa-sliders"></i> Pengaturan Tampilan</div>
+                            <button class="btn btn-secondary" onclick="document.body.toggleAttribute('data-theme','dark')" style="width:100%;">Ganti Tema (Dark/Light)</button>
                         </div>`;
+
+                    document.getElementById('f-profile').onsubmit = async (e) => {
+                        e.preventDefault();
+                        const newPass = document.getElementById('p-new-password').value;
+                        if (!newPass || newPass.length < 6) return Swal.fire('Peringatan', 'Password minimal 6 karakter', 'warning');
+                        
+                        Swal.fire({ title: 'Memproses update password...', didOpen: () => Swal.showLoading() });
+                        const { error } = await db.auth.updateUser({ password: newPass });
+                        if (error) Swal.fire('Gagal', error.message, 'error');
+                        else {
+                            Swal.fire('Berhasil', 'Password berhasil diubah!', 'success');
+                            document.getElementById('p-new-password').value = '';
+                        }
+                    };
                 }
             } catch (err) {
-                contentEl.innerHTML = `<p style="text-align:center; padding:20px; color:#dc3545;">Gagal memuat data: ${err.message}</p>`;
+                contentEl.innerHTML = `<p style="text-align:center; padding:20px; color:#dc3545;"><i class="fa-solid fa-triangle-exclamation"></i> Gagal memuat data: ${err.message}</p>`;
             }
         }
 
-        function closeSubPage() {
-            document.getElementById('sub-page-overlay').style.display = 'none';
-            document.querySelectorAll('.bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.bottom-nav .nav-item')[0].classList.add('active');
+        async function compressImageTo200KB(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        const maxDimension = 1200;
+                        if (width > height) {
+                            if (width > maxDimension) {
+                                height = Math.round((height * maxDimension) / width);
+                                width = maxDimension;
+                            }
+                        } else {
+                            if (height > maxDimension) {
+                                width = Math.round((width * maxDimension) / height);
+                                height = maxDimension;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('canvas');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob((blob) => {
+                            resolve(blob);
+                        }, 'image/jpeg', 0.65);
+                    };
+                };
+            });
         }
 
-        // FORM KANTOR LENGKAP DENGAN PLN & PDAM
+        async function uploadFileToSupabase(fileInput) {
+            if (!fileInput || !fileInput.files || fileInput.files.length === 0) return null;
+            
+            const rawFile = fileInput.files[0];
+            const compressedBlob = await compressImageTo200KB(rawFile);
+            
+            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.jpg`;
+            const filePath = `maintenances/${fileName}`;
+
+            const { data, error } = await db.storage.from('maintenances').upload(filePath, compressedBlob, {
+                contentType: 'image/jpeg'
+            });
+
+            if (error) {
+                console.error("Gagal Upload Storage:", error.message);
+                return null;
+            }
+
+            const { data: publicUrlData } = db.storage.from('maintenances').getPublicUrl(filePath);
+            return publicUrlData.publicUrl;
+        }
+
+        async function openFormPerawatan() {
+            try {
+                const [woRes, tekRes] = await Promise.all([
+                    db.from('work_orders').select('id, judul').order('created_at', { ascending: false }),
+                    db.from('teknisi').select('id, nama').order('nama', { ascending: true })
+                ]);
+
+                const woList = woRes.data || [];
+                const teknisiList = tekRes.data || [];
+
+                if (woList.length === 0) {
+                    return Swal.fire('Peringatan', 'Buat Work Order (WO) terlebih dahulu!', 'warning');
+                }
+
+                document.getElementById('modal-title').innerText = "Input Hasil Perawatan";
+                document.getElementById('modal-body').innerHTML = `
+                    <form id="f-main">
+                        <div class="form-group">
+                            <label>Work Order (WO)</label>
+                            <select id="fm-wo" class="form-control" required>
+                                ${woList.map(w => `<option value="${w.id}">${w.judul}</option>`).join('')}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Teknisi Penanggung Jawab</label>
+                            <select id="fm-teknisi" class="form-control">
+                                <option value="">-- Pilih Teknisi (Opsional) --</option>
+                                ${teknisiList.map(t => `<option value="${t.id}">${t.nama}</option>`).join('')}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Foto Before (Oto-Compress ~200KB)</label>
+                            <input type="file" id="fm-before-file" class="form-control" accept="image/*" capture="environment">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Foto After (Oto-Compress ~200KB)</label>
+                            <input type="file" id="fm-after-file" class="form-control" accept="image/*" capture="environment">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Biaya Perawatan (Rp)</label>
+                            <input type="number" id="fm-biaya" class="form-control" value="0" min="0" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">
+                            <i class="fa-solid fa-file-arrow-up"></i> Kompres & Simpan Pengerjaan
+                        </button>
+                    </form>`;
+                
+                document.getElementById('app-modal').style.display = 'flex';
+
+                document.getElementById('f-main').onsubmit = async (e) => {
+                    e.preventDefault();
+                    Swal.fire({ title: 'Mengompres Foto (~200KB) & Mengunggah...', didOpen: () => Swal.showLoading() });
+
+                    const beforeInput = document.getElementById('fm-before-file');
+                    const afterInput = document.getElementById('fm-after-file');
+
+                    const fotoBeforeUrl = await uploadFileToSupabase(beforeInput);
+                    const fotoAfterUrl = await uploadFileToSupabase(afterInput);
+
+                    const payload = {
+                        work_order_id: document.getElementById('fm-wo').value,
+                        teknisi_id: document.getElementById('fm-teknisi').value || null,
+                        foto_before: fotoBeforeUrl,
+                        foto_after: fotoAfterUrl,
+                        biaya: document.getElementById('fm-biaya').value || 0
+                    };
+
+                    const { error } = await db.from('maintenances').insert([payload]);
+
+                    if (error) {
+                        Swal.fire('Gagal', error.message, 'error');
+                    } else {
+                        await db.from('work_orders').update({ status: 'Selesai' }).eq('id', payload.work_order_id);
+
+                        Swal.fire('Berhasil', 'Foto berhasil dikompres dan tersimpan rapi!', 'success');
+                        document.getElementById('app-modal').style.display = 'none';
+                        openSubPage('perawatan');
+                    }
+                };
+            } catch (err) {
+                Swal.fire('Error', err.message, 'error');
+            }
+        }
+
+        async function renderLaporanChart() {
+            const canvasEl = document.getElementById('chartLaporan');
+            if (!canvasEl) return;
+            
+            const ctx = canvasEl.getContext('2d');
+            const selectedKantor = document.getElementById('lap-filter-kantor').value;
+            const selectedTipe = document.getElementById('lap-filter-tipe').value;
+            const currentYear = new Date().getFullYear();
+
+            let labels = [];
+            let dataListrik = [];
+            let dataAir = [];
+
+            if (selectedTipe === 'BULANAN') {
+                labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                dataListrik = new Array(12).fill(0);
+                dataAir = new Array(12).fill(0);
+            } else {
+                labels = [(currentYear - 2).toString(), (currentYear - 1).toString(), currentYear.toString()];
+                dataListrik = new Array(3).fill(0);
+                dataAir = new Array(3).fill(0);
+            }
+
+            try {
+                let query = db.from('utilitas').select('*');
+                if (selectedKantor !== 'ALL') {
+                    query = query.eq('kantor_id', selectedKantor);
+                }
+
+                const { data } = await query;
+
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        if (!item.bulan_tahun) return;
+                        const d = new Date(item.bulan_tahun);
+                        const itemYear = d.getFullYear();
+                        const itemMonth = d.getMonth();
+                        const biaya = Number(item.biaya || 0);
+
+                        if (selectedTipe === 'BULANAN') {
+                            if (itemYear === currentYear) {
+                                if (item.jenis === 'Listrik') dataListrik[itemMonth] += biaya;
+                                if (item.jenis === 'Air') dataAir[itemMonth] += biaya;
+                            }
+                        } else {
+                            const idx = labels.indexOf(itemYear.toString());
+                            if (idx !== -1) {
+                                if (item.jenis === 'Listrik') dataListrik[idx] += biaya;
+                                if (item.jenis === 'Air') dataAir[idx] += biaya;
+                            }
+                        }
+                    });
+                }
+
+                if (chartLaporanInstance) {
+                    chartLaporanInstance.destroy();
+                }
+
+                chartLaporanInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Listrik (Rp)',
+                                data: dataListrik,
+                                backgroundColor: '#198754',
+                                borderRadius: 6
+                            },
+                            {
+                                label: 'Air (Rp)',
+                                data: dataAir,
+                                backgroundColor: '#0dcaf0',
+                                borderRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true, position: 'top' },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => `${ctx.dataset.label}: Rp ${Number(ctx.raw).toLocaleString('id-ID')}`
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: (val) => val >= 1000000 ? (val/1000000).toFixed(1) + 'Jt' : val >= 1000 ? (val/1000) + 'rb' : val
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (err) {
+                console.error("Error renderLaporanChart:", err);
+            }
+        }
+
+        async function analyzeUtilityTrends(dataUtilitas, filterBulan, filterTahun) {
+            let insights = [];
+            let hookMessage = "PERHATIAN: Lakukan pemantauan berkala untuk menjaga efisiensi anggaran operasional.";
+
+            if (!dataUtilitas || dataUtilitas.length === 0) {
+                return { insights: ["Data tidak ditemukan pada periode ini."], hook: "Status: Tidak ada record data pada periode terpilih." };
+            }
+
+            let kantorList = [];
+            dataUtilitas.forEach(u => {
+                const kName = u.kantor ? u.kantor.nama : 'Kantor Unassigned';
+                const totalBiaya = Number(u.biaya || 0);
+                kantorList.push({ nama: kName, biaya: totalBiaya, jenis: u.jenis });
+            });
+
+            kantorList.sort((a, b) => b.biaya - a.biaya);
+
+            const tertinggi = kantorList[0];
+            const terendah = kantorList[kantorList.length - 1];
+
+            if (tertinggi) {
+                insights.push(`[1] KENAIKAN TERTINGGI: ${tertinggi.nama} (${tertinggi.jenis}) mencatatkan biaya terbesar Rp ${tertinggi.biaya.toLocaleString('id-ID')}. Perlu evaluasi penggunaan.`);
+            }
+
+            if (terendah && terendah.nama !== tertinggi.nama) {
+                insights.push(`[2] PEMAKAIAN TERENDAH: ${terendah.nama} (${terendah.jenis}) mencatatkan biaya efisien sebesar Rp ${terendah.biaya.toLocaleString('id-ID')}.`);
+            } else if (terendah) {
+                insights.push(`[2] STATUS PEMAKAIAN: Hanya terdapat 1 record data kantor pada periode ini.`);
+            }
+
+            if (tertinggi && tertinggi.biaya > 1000000) {
+                hookMessage = `PERHATIAN UTAMA: Terdeteksi biaya tinggi di ${tertinggi.nama}! SEGERA LAKUKAN INSPEKSI LAPANGAN untuk mencegah pemborosan!`;
+            } else {
+                hookMessage = `EVALUASI OPERASIONAL: Penggunaan utilitas secara umum terpantau stabil pada periode ini.`;
+            }
+
+            return { insights, hook: hookMessage };
+        }
+
+        async function generateReport(type, format) {
+            const selBulan = document.getElementById('exp-bulan').value;
+            const selTahun = document.getElementById('exp-tahun').value;
+
+            Swal.fire({ title: 'Menyiapkan Laporan...', didOpen: () => Swal.showLoading() });
+
+            try {
+                let query = db.from(type).select(type === 'utilitas' ? '*, kantor(*)' : type === 'asset' ? '*, kantor(*)' : '*');
+                const { data } = await query;
+
+                let filteredData = (data || []).filter(item => {
+                    if (!item.bulan_tahun && !item.created_at) return true;
+                    const targetDate = new Date(item.bulan_tahun || item.created_at);
+                    const yyyy = targetDate.getFullYear().toString();
+                    const mm = (targetDate.getMonth() + 1).toString().padStart(2, '0');
+
+                    const matchYear = selTahun === 'ALL' || yyyy === selTahun;
+                    const matchMonth = selBulan === 'ALL' || mm === selBulan;
+                    return matchYear && matchMonth;
+                });
+
+                if (filteredData.length === 0) {
+                    Swal.close();
+                    return Swal.fire('Data Kosong', `Tidak ada data ${type} untuk periode terpilih (${selBulan}/${selTahun}).`, 'info');
+                }
+
+                const analysis = await analyzeUtilityTrends(filteredData, selBulan, selTahun);
+
+                if (format === 'excel') {
+                    const excelRows = [];
+                    excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": "LAPORAN EVALUASI BIAYA & OPERASIONAL" });
+                    excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": `PERIODE: BULAN ${selBulan} - TAHUN ${selTahun}` });
+                    excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": `STATUS: ${analysis.hook}` });
+                    excelRows.push({}); 
+
+                    excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": "--- CATATAN EVALUASI REKAP ---" });
+                    analysis.insights.forEach(msg => {
+                        excelRows.push({ "BINAYASA UNIT BSN KC SURABAYA": msg });
+                    });
+                    excelRows.push({}); 
+
+                    filteredData.forEach((row, idx) => {
+                        if (type === 'utilitas') {
+                            excelRows.push({
+                                "No": idx + 1,
+                                "Kantor": row.kantor ? row.kantor.nama : '-',
+                                "Jenis Layanan": row.jenis,
+                                "ID Pelanggan": row.id_pelanggan || '-',
+                                "Pemakaian": `${row.jumlah_pemakaian} ${row.satuan}`,
+                                "Biaya (Rp)": Number(row.biaya || 0),
+                                "Tanggal Record": row.bulan_tahun || '-'
+                            });
+                        } else {
+                            excelRows.push(row);
+                        }
+                    });
+
+                    const ws = XLSX.utils.json_to_sheet(excelRows);
+                    const wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, "Binayasa_Report");
+                    XLSX.writeFile(wb, `Laporan_${type}_${selBulan}_${selTahun}.xlsx`);
+                    Swal.close();
+
+                } else if (format === 'pdf') {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
+
+                    doc.setFontSize(13);
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(25, 135, 84);
+                    doc.text(`LAPORAN REKAP ${type.toUpperCase()} - BINAYASA UNIT BSN KC SURABAYA`, 14, 15);
+                    
+                    doc.setFontSize(9);
+                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(100);
+                    doc.text(`Periode Filter: Bulan ${selBulan} / Tahun ${selTahun}`, 14, 21);
+
+                    doc.setFillColor(254, 242, 242);
+                    doc.setDrawColor(239, 68, 68);
+                    doc.roundedRect(14, 25, 182, 14, 2, 2, 'FD');
+                    
+                    doc.setFontSize(8);
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(185, 28, 28);
+                    doc.text(doc.splitTextToSize(analysis.hook, 176), 18, 32);
+
+                    let yPos = 46;
+                    doc.setFontSize(9);
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(0);
+                    doc.text("Catatan Evaluasi Kenaikan / Penurunan Biaya:", 14, yPos);
+                    yPos += 5;
+
+                    doc.setFontSize(8);
+                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(50);
+                    analysis.insights.forEach(insight => {
+                        doc.text(insight, 14, yPos);
+                        yPos += 5;
+                    });
+
+                    yPos += 3;
+
+                    let tableBody = [];
+                    let tableHeaders = [];
+
+                    if (type === 'utilitas') {
+                        tableHeaders = [["No", "Kantor", "Jenis", "ID Pel", "Pemakaian", "Biaya (Rp)"]];
+                        tableBody = filteredData.map((u, i) => [
+                            i + 1,
+                            u.kantor ? u.kantor.nama : '-',
+                            u.jenis,
+                            u.id_pelanggan || '-',
+                            `${u.jumlah_pemakaian} ${u.satuan}`,
+                            `Rp ${Number(u.biaya).toLocaleString('id-ID')}`
+                        ]);
+                    } else {
+                        tableHeaders = [["No", "Kode", "Nama Item / WO", "Kategori", "Status"]];
+                        tableBody = filteredData.map((item, i) => [
+                            i + 1,
+                            item.kode_asset || item.id || '-',
+                            item.nama_asset || item.judul || '-',
+                            item.kategori || '-',
+                            item.status || '-'
+                        ]);
+                    }
+
+                    doc.autoTable({
+                        startY: yPos,
+                        head: tableHeaders,
+                        body: tableBody,
+                        theme: 'striped',
+                        headStyles: { fillColor: [25, 135, 84] },
+                        styles: { fontSize: 8, font: "helvetica" }
+                    });
+
+                    doc.save(`Laporan_${type}_${selBulan}_${selTahun}.pdf`);
+                    Swal.close();
+                }
+            } catch (err) {
+                Swal.fire('Gagal Ekspor', err.message, 'error');
+            }
+        }
+
+        function togglePDAMPicker() {
+            const layanan = document.getElementById('ft-layanan').value;
+            const pdamPicker = document.getElementById('group-pdam-wilayah');
+            if (layanan === 'PDAM') {
+                pdamPicker.style.display = 'block';
+            } else {
+                pdamPicker.style.display = 'none';
+            }
+        }
+
+        function shareBillResult() {
+            if (window.lastBillData) {
+                const b = window.lastBillData;
+                shareData(`Info Tagihan ${b.layanan}`, `ID Pelanggan: ${b.idPel}\nNama: ${b.nama}\nTotal Tagihan: Rp ${b.total.toLocaleString('id-ID')}\nStatus: BELUM DIBAYAR`);
+            }
+        }
+
+        // FORM KANTOR
         async function openFormKantor(id = null) {
             let editData = { 
                 nama: '', alamat: '', 
@@ -856,14 +1712,14 @@
                     <div class="form-group"><label>Alamat</label><textarea id="fk-alamat" class="form-control" required>${editData.alamat}</textarea></div>
                     
                     <div class="form-section-title"><i class="fa-solid fa-bolt"></i> Layanan Listrik (PLN)</div>
-                    <div class="form-group"><label>Nama Pelanggan PLN</label><input type="text" id="fk-pln-nama" class="form-control" value="${editData.nama_pelanggan_pln || ''}"></div>
-                    <div class="form-group"><label>ID Pelanggan PLN</label><input type="text" id="fk-pln-id" class="form-control" value="${editData.id_pelanggan_pln || ''}"></div>
-                    <div class="form-group"><label>Tarif / Daya PLN</label><input type="text" id="fk-pln-tarif" class="form-control" value="${editData.tarif_daya_pln || ''}"></div>
+                    <div class="form-group"><label>Nama Pelanggan PLN</label><input type="text" id="fk-pln-nama" class="form-control" value="${editData.nama_pelanggan_pln || ''}" placeholder="Contoh: PT BINAYASA PURABATARA"></div>
+                    <div class="form-group"><label>ID Pelanggan PLN</label><input type="text" id="fk-pln-id" class="form-control" value="${editData.id_pelanggan_pln || ''}" placeholder="Contoh: 531234567890"></div>
+                    <div class="form-group"><label>Tarif / Daya PLN</label><input type="text" id="fk-pln-tarif" class="form-control" value="${editData.tarif_daya_pln || ''}" placeholder="Contoh: R1M / 1300 VA"></div>
 
                     <div class="form-section-title"><i class="fa-solid fa-droplet"></i> Layanan Air (PDAM)</div>
-                    <div class="form-group"><label>Nama Pelanggan PDAM</label><input type="text" id="fk-pdam-nama" class="form-control" value="${editData.nama_pelanggan_pdam || ''}"></div>
-                    <div class="form-group"><label>ID Pelanggan PDAM</label><input type="text" id="fk-pdam-id" class="form-control" value="${editData.id_pelanggan_pdam || ''}"></div>
-                    <div class="form-group"><label>Golongan Tarif PDAM</label><input type="text" id="fk-pdam-tarif" class="form-control" value="${editData.tarif_daya_pdam || ''}"></div>
+                    <div class="form-group"><label>Nama Pelanggan PDAM</label><input type="text" id="fk-pdam-nama" class="form-control" value="${editData.nama_pelanggan_pdam || ''}" placeholder="Contoh: PT BINAYASA PURABATARA"></div>
+                    <div class="form-group"><label>ID Pelanggan PDAM</label><input type="text" id="fk-pdam-id" class="form-control" value="${editData.id_pelanggan_pdam || ''}" placeholder="Contoh: 00123456"></div>
+                    <div class="form-group"><label>Golongan Tarif PDAM</label><input type="text" id="fk-pdam-tarif" class="form-control" value="${editData.tarif_daya_pdam || ''}" placeholder="Contoh: Golongan IIB"></div>
 
                     <button type="submit" class="btn btn-primary" style="width:100%; margin-top:12px;">${id ? 'Update Kantor' : 'Simpan Kantor'}</button>
                 </form>`;
@@ -902,7 +1758,342 @@
             };
         }
 
-        // FORM ASSET LENGKAP
+        // FORM UTILITAS
+        async function openFormUtilitas(id = null) {
+            const { data: kantorList } = await db.from('kantor').select('*');
+            if (!kantorList || kantorList.length === 0) return Swal.fire('Peringatan', 'Tambah data kantor dulu!', 'warning');
+
+            let editData = { kantor_id: kantorList[0].id, jenis: 'Listrik', id_pelanggan: '', periode_bulan: 'Agustus', jumlah_pemakaian: 0, satuan: 'kWh', biaya: 0, bulan_tahun: '' };
+            if (id) {
+                const { data } = await db.from('utilitas').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            window.kantorMap = {};
+            kantorList.forEach(k => {
+                window.kantorMap[k.id] = k;
+            });
+
+            document.getElementById('modal-title').innerText = id ? "Edit Utilitas" : "Catat Utilitas";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-utilitas">
+                    <div class="form-group">
+                        <label>Kantor</label>
+                        <select id="fu-kantor" class="form-control" onchange="autoFillIDPelanggan()">
+                            ${kantorList.map(k=>`<option value="${k.id}" ${k.id === editData.kantor_id ? 'selected':''}>${k.nama}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Jenis Utilitas</label>
+                        <select id="fu-jenis" class="form-control" onchange="autoFillIDPelanggan()">
+                            <option value="Listrik" ${editData.jenis === 'Listrik' ? 'selected':''}>Listrik</option>
+                            <option value="Air" ${editData.jenis === 'Air' ? 'selected':''}>Air (PDAM)</option>
+                            <option value="Gas" ${editData.jenis === 'Gas' ? 'selected':''}>Gas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Pelanggan (Otomatis)</label>
+                        <input type="text" id="fu-nama-pelanggan" class="form-control" placeholder="Otomatis terisi..." style="background-color: var(--primary-light); font-weight: bold;" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>ID Pelanggan (Otomatis)</label>
+                        <input type="text" id="fu-id-pelanggan" class="form-control" value="${editData.id_pelanggan || ''}" placeholder="ID Pelanggan PLN / PDAM" style="background-color: var(--primary-light); font-weight: bold;" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Tarif / Daya (Otomatis)</label>
+                        <input type="text" id="fu-tarif-daya" class="form-control" placeholder="Otomatis terisi..." style="background-color: var(--primary-light); font-weight: bold;" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Periode Bulan</label>
+                        <select id="fu-periode-bulan" class="form-control" required>
+                            <option value="Januari" ${editData.periode_bulan === 'Januari' ? 'selected':''}>Januari</option>
+                            <option value="Februari" ${editData.periode_bulan === 'Februari' ? 'selected':''}>Februari</option>
+                            <option value="Maret" ${editData.periode_bulan === 'Maret' ? 'selected':''}>Maret</option>
+                            <option value="April" ${editData.periode_bulan === 'April' ? 'selected':''}>April</option>
+                            <option value="Mei" ${editData.periode_bulan === 'Mei' ? 'selected':''}>Mei</option>
+                            <option value="Juni" ${editData.periode_bulan === 'Juni' ? 'selected':''}>Juni</option>
+                            <option value="Juli" ${editData.periode_bulan === 'Juli' ? 'selected':''}>Juli</option>
+                            <option value="Agustus" ${editData.periode_bulan === 'Agustus' || !editData.periode_bulan ? 'selected':''}>Agustus</option>
+                            <option value="September" ${editData.periode_bulan === 'September' ? 'selected':''}>September</option>
+                            <option value="Oktober" ${editData.periode_bulan === 'Oktober' ? 'selected':''}>Oktober</option>
+                            <option value="November" ${editData.periode_bulan === 'November' ? 'selected':''}>November</option>
+                            <option value="Desember" ${editData.periode_bulan === 'Desember' ? 'selected':''}>Desember</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pemakaian</label>
+                        <input type="number" id="fu-jumlah" class="form-control" value="${editData.jumlah_pemakaian}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Satuan</label>
+                        <input type="text" id="fu-satuan" class="form-control" value="${editData.satuan}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Biaya (Rp)</label>
+                        <input type="number" id="fu-biaya" class="form-control" value="${editData.biaya}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal / Bulan</label>
+                        <input type="date" id="fu-bulan" class="form-control" value="${editData.bulan_tahun}" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Utilitas' : 'Simpan Utilitas'}</button>
+                </form>`;
+            
+            document.getElementById('app-modal').style.display = 'flex';
+            autoFillIDPelanggan();
+
+            document.getElementById('f-utilitas').onsubmit = async (e) => {
+                e.preventDefault();
+
+                const kantorId = document.getElementById('fu-kantor').value;
+                const jenisVal = document.getElementById('fu-jenis').value;
+                const bulanVal = document.getElementById('fu-bulan').value;
+                const yyyyMm = bulanVal.slice(0, 7);
+
+                Swal.fire({ title: 'Memeriksa Data...', didOpen: () => Swal.showLoading() });
+
+                if (!id) {
+                    const { data: existing, error: checkErr } = await db
+                        .from('utilitas')
+                        .select('id, bulan_tahun')
+                        .eq('kantor_id', kantorId)
+                        .eq('jenis', jenisVal);
+
+                    if (!checkErr && existing && existing.length > 0) {
+                        const isDuplicate = existing.some(item => item.bulan_tahun && item.bulan_tahun.startsWith(yyyyMm));
+                        if (isDuplicate) {
+                            const selectedKantorName = document.getElementById('fu-kantor').options[document.getElementById('fu-kantor').selectedIndex].text;
+                            return Swal.fire({
+                                icon: 'warning',
+                                title: 'Gagal Input!',
+                                text: `Data ${jenisVal} untuk ${selectedKantorName} periode ${yyyyMm} sudah pernah diinput sebelumnya.`
+                            });
+                        }
+                    }
+                }
+
+                const payload = {
+                    kantor_id: kantorId,
+                    jenis: jenisVal,
+                    id_pelanggan: document.getElementById('fu-id-pelanggan').value,
+                    periode_bulan: document.getElementById('fu-periode-bulan').value,
+                    jumlah_pemakaian: document.getElementById('fu-jumlah').value,
+                    satuan: document.getElementById('fu-satuan').value,
+                    biaya: document.getElementById('fu-biaya').value,
+                    bulan_tahun: bulanVal
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('utilitas').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('utilitas').insert([payload]);
+                    err = error;
+                }
+
+                if (err) {
+                    Swal.fire('Gagal', err.message, 'error');
+                } else {
+                    Swal.fire('Berhasil', 'Utilitas berhasil tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('utilitas');
+                    renderChart();
+                }
+            };
+        }
+
+        function autoFillIDPelanggan() {
+            const kantorId = document.getElementById('fu-kantor').value;
+            const jenis = document.getElementById('fu-jenis').value;
+            
+            const idPelInput = document.getElementById('fu-id-pelanggan');
+            const namaPelInput = document.getElementById('fu-nama-pelanggan');
+            const tarifDayaInput = document.getElementById('fu-tarif-daya');
+            const satuanInput = document.getElementById('fu-satuan');
+
+            if (window.kantorMap && window.kantorMap[kantorId]) {
+                const infoKantor = window.kantorMap[kantorId];
+
+                if (jenis === 'Listrik') {
+                    namaPelInput.value = infoKantor.nama_pelanggan_pln || infoKantor.nama || '-';
+                    idPelInput.value = infoKantor.id_pelanggan_pln || '-';
+                    tarifDayaInput.value = infoKantor.tarif_daya_pln || 'R1M / 1300 VA';
+                    satuanInput.value = 'kWh';
+                } else if (jenis === 'Air') {
+                    namaPelInput.value = infoKantor.nama_pelanggan_pdam || infoKantor.nama || '-';
+                    idPelInput.value = infoKantor.id_pelanggan_pdam || '-';
+                    tarifDayaInput.value = infoKantor.tarif_daya_pdam || 'Golongan IIB';
+                    satuanInput.value = 'm³';
+                } else {
+                    namaPelInput.value = infoKantor.nama || '-';
+                    idPelInput.value = '-';
+                    tarifDayaInput.value = '-';
+                    satuanInput.value = 'Unit';
+                }
+            }
+        }
+
+        // FORM JADWAL
+        async function openFormJadwal(id = null) {
+            let editData = { judul: '', kategori: 'Pemeliharaan', tanggal: '', keterangan: '', status: 'Terjadwal' };
+            if (id) {
+                const { data } = await db.from('jadwal').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Jadwal" : "Tambah Jadwal Pemeliharaan";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-jadwal">
+                    <div class="form-group"><label>Judul Kegiatan</label><input type="text" id="fj-judul" class="form-control" value="${editData.judul}" required></div>
+                    <div class="form-group"><label>Kategori</label><input type="text" id="fj-kategori" class="form-control" value="${editData.kategori}" placeholder="Lift, AC, Kebersihan ATM" required></div>
+                    <div class="form-group"><label>Tanggal Pelaksanaan</label><input type="date" id="fj-tanggal" class="form-control" value="${editData.tanggal}" required></div>
+                    <div class="form-group"><label>Status</label>
+                        <select id="fj-status" class="form-control">
+                            <option value="Terjadwal" ${editData.status === 'Terjadwal' ? 'selected':''}>Terjadwal</option>
+                            <option value="Selesai" ${editData.status === 'Selesai' ? 'selected':''}>Selesai</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Keterangan Tambahan</label><textarea id="fj-ket" class="form-control">${editData.keterangan || ''}</textarea></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Jadwal' : 'Simpan Jadwal'}</button>
+                </form>`;
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-jadwal').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = {
+                    judul: document.getElementById('fj-judul').value,
+                    kategori: document.getElementById('fj-kategori').value,
+                    tanggal: document.getElementById('fj-tanggal').value,
+                    status: document.getElementById('fj-status').value,
+                    keterangan: document.getElementById('fj-ket').value
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('jadwal').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('jadwal').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'Jadwal berhasil disimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('jadwal');
+                }
+            };
+        }
+
+        // FORM WORK ORDER
+        async function openFormWO(id = null) {
+            const { data: assetList } = await db.from('asset').select('id, nama_asset');
+            if (!assetList || assetList.length === 0) return Swal.fire('Peringatan', 'Tambah data asset dulu!', 'warning');
+
+            let editData = { asset_id: '', judul: '', status: 'Pending' };
+            if (id) {
+                const { data } = await db.from('work_orders').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Work Order" : "Buat Work Order";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-wo">
+                    <div class="form-group"><label>Asset</label><select id="fw-asset" class="form-control">${assetList.map(a=>`<option value="${a.id}" ${a.id === editData.asset_id ? 'selected':''}>${a.nama_asset}</option>`).join('')}</select></div>
+                    <div class="form-group"><label>Judul Pekerjaan</label><input type="text" id="fw-judul" class="form-control" value="${editData.judul}" required></div>
+                    <div class="form-group"><label>Status</label>
+                        <select id="fw-status" class="form-control">
+                            <option value="Pending" ${editData.status === 'Pending' ? 'selected':''}>Pending</option>
+                            <option value="Proses" ${editData.status === 'Proses' ? 'selected':''}>Proses</option>
+                            <option value="Selesai" ${editData.status === 'Selesai' ? 'selected':''}>Selesai</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update WO' : 'Simpan Work Order'}</button>
+                </form>`;
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-wo').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = {
+                    asset_id: document.getElementById('fw-asset').value,
+                    judul: document.getElementById('fw-judul').value,
+                    status: document.getElementById('fw-status').value
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('work_orders').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('work_orders').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'WO tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('workorder');
+                    loadDashboardStats();
+                }
+            };
+        }
+
+        // FORM TEKNISI
+        async function openFormTeknisi(id = null) {
+            let editData = { nama: '', spesialisasi: '', status: 'Tersedia' };
+            if (id) {
+                const { data } = await db.from('teknisi').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Teknisi" : "Tambah Teknisi";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-teknisi">
+                    <div class="form-group"><label>Nama Lengkap</label><input type="text" id="ft-nama" class="form-control" value="${editData.nama}" required></div>
+                    <div class="form-group"><label>Spesialisasi</label><input type="text" id="ft-spesialisasi" class="form-control" value="${editData.spesialisasi}" placeholder="AC, Electrical" required></div>
+                    <div class="form-group"><label>Status</label>
+                        <select id="ft-status" class="form-control">
+                            <option value="Tersedia" ${editData.status === 'Tersedia' ? 'selected':''}>Tersedia</option>
+                            <option value="Bertugas" ${editData.status === 'Bertugas' ? 'selected':''}>Bertugas</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Teknisi' : 'Simpan Teknisi'}</button>
+                </form>`;
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-teknisi').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = {
+                    nama: document.getElementById('ft-nama').value,
+                    spesialisasi: document.getElementById('ft-spesialisasi').value,
+                    status: document.getElementById('ft-status').value
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('teknisi').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('teknisi').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'Teknisi tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('teknisi');
+                }
+            };
+        }
+
+        // FORM ASSET
         async function openFormAsset(id = null) {
             const { data: kantorList } = await db.from('kantor').select('id, nama');
             if (!kantorList || kantorList.length === 0) return Swal.fire('Peringatan', 'Tambah Data Kantor dulu!', 'warning');
@@ -966,324 +2157,67 @@
             };
         }
 
-        // FORM UTILITAS LENGKAP
-        async function openFormUtilitas(id = null) {
-            const { data: kantorList } = await db.from('kantor').select('*');
-            if (!kantorList || kantorList.length === 0) return Swal.fire('Peringatan', 'Tambah data kantor dulu!', 'warning');
+        function openFormPemeriksaanATM(id = null) {
+            Promise.all([
+                db.from('kantor').select('id, nama'),
+                db.from('kriteria_atm').select('*').order('no_kriteria', {ascending:true})
+            ]).then(([kantorRes, kriteriaRes]) => {
+                const kantorList = kantorRes.data;
+                const kriteriaList = kriteriaRes.data;
 
-            let editData = { kantor_id: kantorList[0].id, jenis: 'Listrik', id_pelanggan: '', periode_bulan: 'Agustus', jumlah_pemakaian: 0, satuan: 'kWh', biaya: 0, bulan_tahun: '' };
-            if (id) {
-                const { data } = await db.from('utilitas').select('*').eq('id', id).single();
-                if (data) editData = data;
+                if (!kantorList || kantorList.length === 0) return Swal.fire('Peringatan', 'Tambah Kantor dulu!', 'warning');
+                if (!kriteriaList || kriteriaList.length === 0) return Swal.fire('Peringatan', 'Kriteria ATM kosong!', 'warning');
+
+                document.getElementById('modal-title').innerText = "Form Pemeriksaan ATM";
+                document.getElementById('modal-body').innerHTML = `
+                    <form id="f-atm">
+                        <div class="form-group"><label>Kantor / KCP</label><select id="fa-kantor" class="form-control">${kantorList.map(k=>`<option value="${k.id}">${k.nama}</option>`).join('')}</select></div>
+                        <div class="form-group"><label>Kategori</label><select id="fa-kat" class="form-control"><option value="Onsite">Onsite</option><option value="Offsite">Offsite</option></select></div>
+                        <div class="form-group"><label>Periode</label><input type="text" id="fa-periode" class="form-control" placeholder="Minggu 1 Agustus" required></div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Simpan Pemeriksaan</button>
+                    </form>`;
+                document.getElementById('app-modal').style.display = 'flex';
+            });
+        }
+
+        function closeSubPage() {
+            document.getElementById('sub-page-overlay').style.display = 'none';
+        }
+
+        function viewGenericDetail(title, subject, bodyText) {
+            document.getElementById('modal-title').innerText = `Detail ${title}: ${subject}`;
+            document.getElementById('modal-body').innerHTML = `
+                <div class="checklist-card">
+                    <div class="checklist-title">${subject}</div>
+                    <div style="white-space: pre-line; font-size:0.85rem; margin-top:8px;">${bodyText}</div>
+                </div>
+            `;
+            document.getElementById('app-modal').style.display = 'flex';
+        }
+
+        async function deleteRecord(table, id, page) {
+            if (confirm('Hapus data ini?')) {
+                await db.from(table).delete().eq('id', id);
+                openSubPage(page);
+                loadDashboardStats();
             }
-
-            document.getElementById('modal-title').innerText = id ? "Edit Utilitas" : "Catat Utilitas";
-            document.getElementById('modal-body').innerHTML = `
-                <form id="f-utilitas">
-                    <div class="form-group">
-                        <label>Kantor</label>
-                        <select id="fu-kantor" class="form-control">
-                            ${kantorList.map(k=>`<option value="${k.id}" ${k.id === editData.kantor_id ? 'selected':''}>${k.nama}</option>`).join('')}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Jenis Utilitas</label>
-                        <select id="fu-jenis" class="form-control">
-                            <option value="Listrik" ${editData.jenis === 'Listrik' ? 'selected':''}>Listrik</option>
-                            <option value="Air" ${editData.jenis === 'Air' ? 'selected':''}>Air (PDAM)</option>
-                        </select>
-                    </div>
-                    <div class="form-group"><label>Pemakaian</label><input type="number" id="fu-jumlah" class="form-control" value="${editData.jumlah_pemakaian}" required></div>
-                    <div class="form-group"><label>Satuan</label><input type="text" id="fu-satuan" class="form-control" value="${editData.satuan}" required></div>
-                    <div class="form-group"><label>Biaya (Rp)</label><input type="number" id="fu-biaya" class="form-control" value="${editData.biaya}" required></div>
-                    <div class="form-group"><label>Tanggal Input</label><input type="date" id="fu-bulan" class="form-control" value="${editData.bulan_tahun}" required></div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Utilitas' : 'Simpan Utilitas'}</button>
-                </form>`;
-            
-            document.getElementById('app-modal').style.display = 'flex';
-
-            document.getElementById('f-utilitas').onsubmit = async (e) => {
-                e.preventDefault();
-                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
-                const payload = {
-                    kantor_id: document.getElementById('fu-kantor').value,
-                    jenis: document.getElementById('fu-jenis').value,
-                    jumlah_pemakaian: document.getElementById('fu-jumlah').value,
-                    satuan: document.getElementById('fu-satuan').value,
-                    biaya: document.getElementById('fu-biaya').value,
-                    bulan_tahun: document.getElementById('fu-bulan').value
-                };
-
-                let err = null;
-                if (id) {
-                    const { error } = await db.from('utilitas').update(payload).eq('id', id);
-                    err = error;
-                } else {
-                    const { error } = await db.from('utilitas').insert([payload]);
-                    err = error;
-                }
-
-                if (err) Swal.fire('Gagal', err.message, 'error');
-                else {
-                    Swal.fire('Berhasil', 'Utilitas tersimpan', 'success');
-                    document.getElementById('app-modal').style.display = 'none';
-                    openSubPage('utilitas');
-                    renderChart();
-                }
-            };
         }
 
-        // FORM WORK ORDER LENGKAP
-        async function openFormWO(id = null) {
-            const { data: assetList } = await db.from('asset').select('id, nama_asset');
-            if (!assetList || assetList.length === 0) return Swal.fire('Peringatan', 'Tambah data asset dulu!', 'warning');
+        function scanQRModal() {
+            document.getElementById('modal-title').innerText = "Scan QR Code Asset";
+            document.getElementById('modal-body').innerHTML = `<div id="qr-reader" style="width:100%;"></div>`;
+            document.getElementById('app-modal').style.display = 'flex';
+            qrScanner = new Html5Qrcode("qr-reader");
+            qrScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 220 }, (decodedText) => {
+                stopQRScanner();
+                Swal.fire('QR Code Terdeteksi', `Kode: <b>${decodedText}</b>`, 'success');
+            }).catch(() => {});
+        }
 
-            let editData = { asset_id: '', judul: '', status: 'Pending' };
-            if (id) {
-                const { data } = await db.from('work_orders').select('*').eq('id', id).single();
-                if (data) editData = data;
+        function stopQRScanner() {
+            if (qrScanner) {
+                qrScanner.stop().then(() => { qrScanner.clear(); qrScanner = null; }).catch(() => {});
             }
-
-            document.getElementById('modal-title').innerText = id ? "Edit Work Order" : "Buat Work Order";
-            document.getElementById('modal-body').innerHTML = `
-                <form id="f-wo">
-                    <div class="form-group"><label>Asset</label><select id="fw-asset" class="form-control">${assetList.map(a=>`<option value="${a.id}" ${a.id === editData.asset_id ? 'selected':''}>${a.nama_asset}</option>`).join('')}</select></div>
-                    <div class="form-group"><label>Judul Pekerjaan</label><input type="text" id="fw-judul" class="form-control" value="${editData.judul}" required></div>
-                    <div class="form-group"><label>Status</label>
-                        <select id="fw-status" class="form-control">
-                            <option value="Pending" ${editData.status === 'Pending' ? 'selected':''}>Pending</option>
-                            <option value="Proses" ${editData.status === 'Proses' ? 'selected':''}>Proses</option>
-                            <option value="Selesai" ${editData.status === 'Selesai' ? 'selected':''}>Selesai</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update WO' : 'Simpan Work Order'}</button>
-                </form>`;
-            document.getElementById('app-modal').style.display = 'flex';
-
-            document.getElementById('f-wo').onsubmit = async (e) => {
-                e.preventDefault();
-                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
-                const payload = {
-                    asset_id: document.getElementById('fw-asset').value,
-                    judul: document.getElementById('fw-judul').value,
-                    status: document.getElementById('fw-status').value
-                };
-
-                let err = null;
-                if (id) {
-                    const { error } = await db.from('work_orders').update(payload).eq('id', id);
-                    err = error;
-                } else {
-                    const { error } = await db.from('work_orders').insert([payload]);
-                    err = error;
-                }
-
-                if (err) Swal.fire('Gagal', err.message, 'error');
-                else {
-                    Swal.fire('Berhasil', 'WO tersimpan', 'success');
-                    document.getElementById('app-modal').style.display = 'none';
-                    openSubPage('workorder');
-                }
-            };
-        }
-
-        // FORM TEKNISI LENGKAP
-        async function openFormTeknisi(id = null) {
-            let editData = { nama: '', spesialisasi: '', status: 'Tersedia' };
-            if (id) {
-                const { data } = await db.from('teknisi').select('*').eq('id', id).single();
-                if (data) editData = data;
-            }
-
-            document.getElementById('modal-title').innerText = id ? "Edit Teknisi" : "Tambah Teknisi";
-            document.getElementById('modal-body').innerHTML = `
-                <form id="f-teknisi">
-                    <div class="form-group"><label>Nama Lengkap</label><input type="text" id="ft-nama" class="form-control" value="${editData.nama}" required></div>
-                    <div class="form-group"><label>Spesialisasi</label><input type="text" id="ft-spesialisasi" class="form-control" value="${editData.spesialisasi}" placeholder="AC, Electrical" required></div>
-                    <div class="form-group"><label>Status</label>
-                        <select id="ft-status" class="form-control">
-                            <option value="Tersedia" ${editData.status === 'Tersedia' ? 'selected':''}>Tersedia</option>
-                            <option value="Bertugas" ${editData.status === 'Bertugas' ? 'selected':''}>Bertugas</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Teknisi' : 'Simpan Teknisi'}</button>
-                </form>`;
-            document.getElementById('app-modal').style.display = 'flex';
-
-            document.getElementById('f-teknisi').onsubmit = async (e) => {
-                e.preventDefault();
-                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
-                const payload = {
-                    nama: document.getElementById('ft-nama').value,
-                    spesialisasi: document.getElementById('ft-spesialisasi').value,
-                    status: document.getElementById('ft-status').value
-                };
-
-                let err = null;
-                if (id) {
-                    const { error } = await db.from('teknisi').update(payload).eq('id', id);
-                    err = error;
-                } else {
-                    const { error } = await db.from('teknisi').insert([payload]);
-                    err = error;
-                }
-
-                if (err) Swal.fire('Gagal', err.message, 'error');
-                else {
-                    Swal.fire('Berhasil', 'Teknisi tersimpan', 'success');
-                    document.getElementById('app-modal').style.display = 'none';
-                    openSubPage('teknisi');
-                }
-            };
-        }
-
-        // FORM JADWAL LENGKAP
-        async function openFormJadwal(id = null) {
-            let editData = { judul: '', kategori: 'Pemeliharaan', tanggal: '', keterangan: '', status: 'Terjadwal' };
-            if (id) {
-                const { data } = await db.from('jadwal').select('*').eq('id', id).single();
-                if (data) editData = data;
-            }
-
-            document.getElementById('modal-title').innerText = id ? "Edit Jadwal" : "Tambah Jadwal Pemeliharaan";
-            document.getElementById('modal-body').innerHTML = `
-                <form id="f-jadwal">
-                    <div class="form-group"><label>Judul Kegiatan</label><input type="text" id="fj-judul" class="form-control" value="${editData.judul}" required></div>
-                    <div class="form-group"><label>Kategori</label><input type="text" id="fj-kategori" class="form-control" value="${editData.kategori}" required></div>
-                    <div class="form-group"><label>Tanggal Pelaksanaan</label><input type="date" id="fj-tanggal" class="form-control" value="${editData.tanggal}" required></div>
-                    <div class="form-group"><label>Status</label>
-                        <select id="fj-status" class="form-control">
-                            <option value="Terjadwal" ${editData.status === 'Terjadwal' ? 'selected':''}>Terjadwal</option>
-                            <option value="Selesai" ${editData.status === 'Selesai' ? 'selected':''}>Selesai</option>
-                        </select>
-                    </div>
-                    <div class="form-group"><label>Keterangan</label><textarea id="fj-ket" class="form-control">${editData.keterangan || ''}</textarea></div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Jadwal' : 'Simpan Jadwal'}</button>
-                </form>`;
-            document.getElementById('app-modal').style.display = 'flex';
-
-            document.getElementById('f-jadwal').onsubmit = async (e) => {
-                e.preventDefault();
-                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
-                const payload = {
-                    judul: document.getElementById('fj-judul').value,
-                    kategori: document.getElementById('fj-kategori').value,
-                    tanggal: document.getElementById('fj-tanggal').value,
-                    status: document.getElementById('fj-status').value,
-                    keterangan: document.getElementById('fj-ket').value
-                };
-
-                let err = null;
-                if (id) {
-                    const { error } = await db.from('jadwal').update(payload).eq('id', id);
-                    err = error;
-                } else {
-                    const { error } = await db.from('jadwal').insert([payload]);
-                    err = error;
-                }
-
-                if (err) Swal.fire('Gagal', err.message, 'error');
-                else {
-                    Swal.fire('Berhasil', 'Jadwal tersimpan', 'success');
-                    document.getElementById('app-modal').style.display = 'none';
-                    openSubPage('jadwal');
-                }
-            };
-        }
-
-        // FORM PERAWATAN
-        async function openFormPerawatan() {
-            const [woRes, tekRes] = await Promise.all([
-                db.from('work_orders').select('id, judul').order('created_at', { ascending: false }),
-                db.from('teknisi').select('id, nama').order('nama', { ascending: true })
-            ]);
-
-            const woList = woRes.data || [];
-            const teknisiList = tekRes.data || [];
-
-            if (woList.length === 0) return Swal.fire('Peringatan', 'Buat Work Order (WO) terlebih dahulu!', 'warning');
-
-            document.getElementById('modal-title').innerText = "Input Hasil Perawatan";
-            document.getElementById('modal-body').innerHTML = `
-                <form id="f-main">
-                    <div class="form-group">
-                        <label>Work Order (WO)</label>
-                        <select id="fm-wo" class="form-control" required>
-                            ${woList.map(w => `<option value="${w.id}">${w.judul}</option>`).join('')}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Teknisi Penanggung Jawab</label>
-                        <select id="fm-teknisi" class="form-control">
-                            <option value="">-- Pilih Teknisi (Opsional) --</option>
-                            ${teknisiList.map(t => `<option value="${t.id}">${t.nama}</option>`).join('')}
-                        </select>
-                    </div>
-                    <div class="form-group"><label>Biaya Perawatan (Rp)</label><input type="number" id="fm-biaya" class="form-control" value="0" required></div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Simpan Perawatan</button>
-                </form>`;
-            
-            document.getElementById('app-modal').style.display = 'flex';
-
-            document.getElementById('f-main').onsubmit = async (e) => {
-                e.preventDefault();
-                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
-                const payload = {
-                    work_order_id: document.getElementById('fm-wo').value,
-                    teknisi_id: document.getElementById('fm-teknisi').value || null,
-                    biaya: document.getElementById('fm-biaya').value || 0
-                };
-
-                const { error } = await db.from('maintenances').insert([payload]);
-                if (error) Swal.fire('Gagal', error.message, 'error');
-                else {
-                    await db.from('work_orders').update({ status: 'Selesai' }).eq('id', payload.work_order_id);
-                    Swal.fire('Berhasil', 'Perawatan tersimpan', 'success');
-                    document.getElementById('app-modal').style.display = 'none';
-                    openSubPage('perawatan');
-                }
-            };
-        }
-
-        // FORM PEMERIKSAAN ATM
-        async function openFormPemeriksaanATM() {
-            const { data: kantorList } = await db.from('kantor').select('id, nama');
-            if (!kantorList || kantorList.length === 0) return Swal.fire('Peringatan', 'Tambah data kantor dulu!', 'warning');
-
-            document.getElementById('modal-title').innerText = "Input Pemeriksaan ATM";
-            document.getElementById('modal-body').innerHTML = `
-                <form id="f-atm">
-                    <div class="form-group">
-                        <label>Lokasi Kantor / KCP</label>
-                        <select id="fa-kantor" class="form-control">
-                            ${kantorList.map(k=>`<option value="${k.id}">${k.nama}</option>`).join('')}
-                        </select>
-                    </div>
-                    <div class="form-group"><label>Kategori ATM</label><select id="fa-kat" class="form-control"><option value="Onsite">Onsite</option><option value="Offsite">Offsite</option></select></div>
-                    <div class="form-group"><label>Periode Minggu</label><input type="text" id="fa-periode" class="form-control" placeholder="Contoh: Minggu 1 Agustus" required></div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Simpan Laporan ATM</button>
-                </form>`;
-            document.getElementById('app-modal').style.display = 'flex';
-
-            document.getElementById('f-atm').onsubmit = async (e) => {
-                e.preventDefault();
-                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
-                const payload = {
-                    kantor_id: document.getElementById('fa-kantor').value,
-                    kategori_atm: document.getElementById('fa-kat').value,
-                    periode_minggu: document.getElementById('fa-periode').value
-                };
-
-                const { error } = await db.from('pemeriksaan_atm').insert([payload]);
-
-                if (error) Swal.fire('Gagal', error.message, 'error');
-                else {
-                    Swal.fire('Berhasil', 'Pemeriksaan ATM tersimpan', 'success');
-                    document.getElementById('app-modal').style.display = 'none';
-                    openSubPage('pemeriksaan_atm');
-                    loadDashboardStats();
-                }
-            };
         }
     </script>
 </body>
