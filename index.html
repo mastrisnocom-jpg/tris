@@ -56,7 +56,7 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.5); 
         }
 
-        /* HEADER FIXED */
+        /* HEADER FIXED - Sembunyi secara default sebelum login */
         .app-header {
             position: fixed;
             top: 0;
@@ -67,7 +67,7 @@
             height: 65px;
             background: var(--bg);
             z-index: 90;
-            display: flex;
+            display: none; /* Dikontrol via JS */
             align-items: center;
             justify-content: space-between;
             padding: 10px 16px;
@@ -75,7 +75,7 @@
             backdrop-filter: blur(10px);
         }
 
-        /* BOTTOM NAV FIXED */
+        /* BOTTOM NAV FIXED - Sembunyi secara default sebelum login */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -85,8 +85,8 @@
             max-width: 480px;
             height: 60px;
             background: #061c12;
-            z-index: 150; /* Selalu di atas sub-page */
-            display: flex;
+            z-index: 150;
+            display: none; /* Dikontrol via JS */
             justify-content: space-around;
             align-items: center;
             border-top: 1px solid var(--border);
@@ -112,14 +112,18 @@
         /* SCROLLABLE MAIN CONTENT AREA */
         .app-body {
             flex: 1;
-            margin-top: 65px;
-            margin-bottom: 60px;
             overflow-y: auto;
             padding: 16px;
         }
 
+        /* Margin penyesuaian saat logged-in */
+        .logged-in .app-body {
+            margin-top: 65px;
+            margin-bottom: 60px;
+        }
+
         /* AUTH SCREEN */
-        #auth-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 80vh; }
+        #auth-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 90vh; }
         .auth-card { background: var(--card-bg); padding: 24px; border-radius: var(--radius); width: 100%; box-shadow: var(--shadow); border: 1px solid var(--border); text-align: center; }
         .auth-card h2 { color: #20c997; margin-bottom: 6px; font-size: 1.1rem; }
         .auth-card p { color: var(--text-sub); font-size: 0.85rem; margin-bottom: 16px; }
@@ -134,6 +138,7 @@
         .btn-warning { background: #ffc107; color: #000; }
         .btn-danger { background: #dc3545; color: #fff; }
         .btn-pay { background: #10b981; color: #fff; }
+        .btn-share { background: #0d6efd; color: #fff; }
         .btn-icon { width: 36px; height: 36px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); cursor: pointer; }
 
         .profile-header { display: flex; align-items: center; justify-content: space-between; }
@@ -144,28 +149,14 @@
 
         /* STATS CARDS */
         .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
-        .stat-box { background: rgba(255, 255, 255, 0.05); border-radius: var(--radius); padding: 12px 8px; text-align: left; border: 1px solid var(--border); position: relative; }
+        .stat-box { background: rgba(255, 255, 255, 0.05); border-radius: var(--radius); padding: 12px 8px; text-align: left; border: 1px solid var(--border); position: relative; cursor: pointer; }
         .stat-icon { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
         .stat-box h3 { font-size: 1.4rem; font-weight: 800; margin-top: 10px; }
         .stat-box p { font-size: 0.68rem; color: var(--text-sub); text-transform: uppercase; font-weight: 700; }
 
-        /* WHITE CONTAINER MENU UTAMA */
-        .menu-container {
-            background: #eef2f5;
-            border-radius: 24px;
-            padding: 18px 14px;
-            color: #1f2937;
-            margin-bottom: 20px;
-        }
-
-        .menu-title {
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: #6b7280;
-            margin-bottom: 14px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+        /* CONTAINER MENU UTAMA */
+        .menu-container { background: #eef2f5; border-radius: 24px; padding: 18px 14px; color: #1f2937; margin-bottom: 20px; }
+        .menu-title { font-size: 0.75rem; font-weight: 800; color: #6b7280; margin-bottom: 14px; letter-spacing: 0.5px; text-transform: uppercase; }
 
         .app-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 8px; }
         .grid-item { display: flex; flex-direction: column; align-items: center; color: #374151; cursor: pointer; }
@@ -217,8 +208,13 @@
         .badge-danger { background: rgba(220,53,69,0.2); color: #ff6b6b; }
         .badge-warning { background: rgba(255,193,7,0.2); color: #ffc107; }
 
+        .bill-result-card { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-top: 14px; display: none; }
+        .bill-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 0.82rem; }
+        .bill-row:last-child { border-bottom: none; }
+        .bill-total { background: rgba(16,185,129,0.2); padding: 10px; border-radius: 8px; margin-top: 8px; font-weight: 800; color: #20c997; font-size: 0.95rem; }
+
         /* MODAL */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: #0d3320; border-radius: var(--radius); width: 100%; max-width: 440px; max-height: 85vh; overflow-y: auto; padding: 20px; position: relative; border: 1px solid var(--border); color: #fff; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .close-modal { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-sub); }
@@ -228,10 +224,10 @@
 </head>
 <body>
 
-    <div class="app-shell">
+    <div class="app-shell" id="app-shell">
 
         <!-- HEADER FIXED -->
-        <header class="app-header">
+        <header class="app-header" id="app-header">
             <div class="profile-left">
                 <div class="avatar" id="user-avatar">BS</div>
                 <div class="user-info">
@@ -273,6 +269,7 @@
                 <!-- FILTER & GRAFIK -->
                 <div class="card">
                     <div class="card-title" style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
+                        <span style="font-size:0.95rem; font-weight:700;"><i class="fa-solid fa-chart-line" style="color:#20c997;"></i> Tren Biaya Utilitas</span>
                         <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; width:100%;">
                             <select id="chart-filter-kantor" class="form-control" style="padding: 6px 4px; font-size: 0.72rem;" onchange="renderChart()">
                                 <option value="ALL">Semua Kantor</option>
@@ -281,6 +278,7 @@
                                 <option value="LAST_12">12 Bulan Terakhir</option>
                                 <option value="2026" selected>Tahun 2026</option>
                                 <option value="2025">Tahun 2025</option>
+                                <option value="2024">Tahun 2024</option>
                             </select>
                             <select id="chart-filter-jenis" class="form-control" style="padding: 6px 4px; font-size: 0.72rem;" onchange="renderChart()">
                                 <option value="ALL">Semua Layanan</option>
@@ -358,7 +356,7 @@
         </div>
 
         <!-- BOTTOM NAV FIXED -->
-        <nav class="bottom-nav">
+        <nav class="bottom-nav" id="bottom-nav">
             <div class="nav-item active" onclick="closeSubPage()">
                 <i class="fa-solid fa-house"></i>
                 <span>BERANDA</span>
@@ -424,17 +422,31 @@
         async function checkAuth() {
             try {
                 const { data: { session } } = await db.auth.getSession();
+                const appShell = document.getElementById('app-shell');
+                const header = document.getElementById('app-header');
+                const bottomNav = document.getElementById('bottom-nav');
+
                 if (session) {
                     currentUser = session.user;
                     document.getElementById('auth-container').style.display = 'none';
                     document.getElementById('app-dashboard').style.display = 'block';
                     document.getElementById('user-email').innerText = currentUser.email;
 
+                    // Tampilkan Header dan Nav Bottom jika sudah login
+                    header.style.display = 'flex';
+                    bottomNav.style.display = 'flex';
+                    appShell.classList.add('logged-in');
+
                     loadDashboardStats();
                     loadKantorFilter();
                 } else {
                     document.getElementById('auth-container').style.display = 'flex';
                     document.getElementById('app-dashboard').style.display = 'none';
+
+                    // Sembunyikan Header dan Nav Bottom jika belum login
+                    header.style.display = 'none';
+                    bottomNav.style.display = 'none';
+                    appShell.classList.remove('logged-in');
                 }
             } catch (err) {
                 console.error("Auth Exception:", err);
@@ -578,7 +590,6 @@
             const contentEl = document.getElementById('sub-page-content');
             const actionBtn = document.getElementById('sub-action-btn');
 
-            // Update Nav Active State
             document.querySelectorAll('.bottom-nav .nav-item').forEach(el => el.classList.remove('active'));
             if (pageKey === 'pemeriksaan_atm') document.querySelectorAll('.bottom-nav .nav-item')[1].classList.add('active');
             else if (pageKey === 'laporan') document.querySelectorAll('.bottom-nav .nav-item')[2].classList.add('active');
@@ -603,7 +614,7 @@
                                             <td><b>${k.nama}</b></td>
                                             <td>${k.alamat}</td>
                                             <td style="text-align:center;">
-                                                <button class="btn btn-warning" onclick="openFormKantor('${k.id}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fa-solid fa-pen"></i></button>
+                                                <button class="btn btn-warning" onclick="openFormKantor('${k.id}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fa-solid fa-pen"></i> Edit</button>
                                             </td>
                                         </tr>
                                     `).join('') : '<tr><td colspan="3" style="text-align:center;">Tidak ada data</td></tr>'}
@@ -617,15 +628,18 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Kode</th><th>Nama Asset</th><th>Status</th></tr></thead>
+                                <thead><tr><th>Kode</th><th>Nama Asset</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
                                     ${data && data.length > 0 ? data.map(a => `
                                         <tr>
                                             <td><b>${a.kode_asset}</b></td>
                                             <td>${a.nama_asset}</td>
                                             <td><span class="badge badge-${a.status === 'Baik' ? 'success' : 'danger'}">${a.status}</span></td>
+                                            <td style="text-align:center;">
+                                                <button class="btn btn-warning" onclick="openFormAsset('${a.id}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fa-solid fa-pen"></i></button>
+                                            </td>
                                         </tr>
-                                    `).join('') : '<tr><td colspan="3" style="text-align:center;">Tidak ada data</td></tr>'}
+                                    `).join('') : '<tr><td colspan="4" style="text-align:center;">Tidak ada data</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -636,15 +650,139 @@
                     contentEl.innerHTML = `
                         <div class="table-responsive">
                             <table class="table">
-                                <thead><tr><th>Layanan</th><th>Kantor</th><th>Biaya (Rp)</th></tr></thead>
+                                <thead><tr><th>Layanan</th><th>Kantor</th><th>Biaya (Rp)</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
                                 <tbody>
                                     ${data && data.length > 0 ? data.map(u => `
                                         <tr>
                                             <td><b>${u.jenis}</b></td>
                                             <td>${u.kantor ? u.kantor.nama : '-'}</td>
                                             <td>Rp ${Number(u.biaya).toLocaleString('id-ID')}</td>
+                                            <td style="text-align:center;">
+                                                <button class="btn btn-warning" onclick="openFormUtilitas('${u.id}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fa-solid fa-pen"></i></button>
+                                            </td>
                                         </tr>
-                                    `).join('') : '<tr><td colspan="3" style="text-align:center;">Tidak ada data</td></tr>'}
+                                    `).join('') : '<tr><td colspan="4" style="text-align:center;">Tidak ada data</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'cek_tagihan') {
+                    contentEl.innerHTML = `
+                        <div class="card">
+                            <div class="card-title"><i class="fa-solid fa-receipt"></i> Cek Tagihan PLN & PDAM</div>
+                            <form id="f-cek-tagihan">
+                                <div class="form-group">
+                                    <label>Jenis Layanan</label>
+                                    <select id="ft-layanan" class="form-control">
+                                        <option value="PLN">PLN (Listrik Pascapayar)</option>
+                                        <option value="PDAM">PDAM (Air Minum)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>ID Pelanggan / Nomor Meter</label>
+                                    <input type="number" id="ft-id-pelanggan" class="form-control" placeholder="Contoh: 531234567890" required>
+                                </div>
+                                <button type="submit" class="btn btn-warning" style="width:100%; margin-top:6px;"><i class="fa-solid fa-magnifying-glass"></i> Cek Tagihan Sekarang</button>
+                            </form>
+
+                            <div id="bill-result" class="bill-result-card">
+                                <div class="bill-row"><span class="bill-label">ID Pelanggan:</span><span id="res-id-pel">-</span></div>
+                                <div class="bill-row"><span class="bill-label">Nama:</span><span id="res-nama">-</span></div>
+                                <div class="bill-total" id="res-total">TOTAL TAGIHAN: Rp 0</div>
+                            </div>
+                        </div>`;
+
+                    document.getElementById('f-cek-tagihan').onsubmit = (e) => {
+                        e.preventDefault();
+                        const idPel = document.getElementById('ft-id-pelanggan').value;
+                        Swal.fire({ title: 'Memeriksa...', didOpen: () => Swal.showLoading() });
+                        setTimeout(() => {
+                            Swal.close();
+                            document.getElementById('bill-result').style.display = 'block';
+                            document.getElementById('res-id-pel').innerText = idPel;
+                            document.getElementById('res-nama').innerText = "PT BINAYASA PURABATARA";
+                            document.getElementById('res-total').innerText = "TOTAL TAGIHAN: Rp 352.500";
+                        }, 1000);
+                    };
+                } else if (pageKey === 'perawatan') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormPerawatan();
+                    const { data } = await db.from('maintenances').select('*, work_orders(judul), teknisi(nama)').order('created_at', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>WO</th><th>Teknisi</th><th>Biaya</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(m => `
+                                        <tr>
+                                            <td><b>${m.work_orders ? m.work_orders.judul : '-'}</b></td>
+                                            <td>${m.teknisi ? m.teknisi.nama : '-'}</td>
+                                            <td>Rp ${Number(m.biaya).toLocaleString('id-ID')}</td>
+                                        </tr>
+                                    `).join('') : '<tr><td colspan="3" style="text-align:center;">Tidak ada data perawatan</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'workorder') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormWO();
+                    const { data } = await db.from('work_orders').select('*, asset(nama_asset)').order('created_at', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Judul</th><th>Asset</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(w => `
+                                        <tr>
+                                            <td><b>${w.judul}</b></td>
+                                            <td>${w.asset ? w.asset.nama_asset : '-'}</td>
+                                            <td><span class="badge badge-warning">${w.status}</span></td>
+                                            <td style="text-align:center;">
+                                                <button class="btn btn-warning" onclick="openFormWO('${w.id}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fa-solid fa-pen"></i></button>
+                                            </td>
+                                        </tr>
+                                    `).join('') : '<tr><td colspan="4" style="text-align:center;">Tidak ada Work Order</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'teknisi') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormTeknisi();
+                    const { data } = await db.from('teknisi').select('*').order('created_at', {ascending:false});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Nama</th><th>Spesialisasi</th><th>Status</th><th style="width:40px; text-align:center;">Aksi</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(t => `
+                                        <tr>
+                                            <td><b>${t.nama}</b></td>
+                                            <td>${t.spesialisasi}</td>
+                                            <td><span class="badge badge-success">${t.status}</span></td>
+                                            <td style="text-align:center;">
+                                                <button class="btn btn-warning" onclick="openFormTeknisi('${t.id}')" style="padding:4px 8px; font-size:0.7rem;"><i class="fa-solid fa-pen"></i></button>
+                                            </td>
+                                        </tr>
+                                    `).join('') : '<tr><td colspan="4" style="text-align:center;">Tidak ada data teknisi</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>`;
+                } else if (pageKey === 'jadwal') {
+                    actionBtn.style.display = 'inline-flex';
+                    actionBtn.onclick = () => openFormJadwal();
+                    const { data } = await db.from('jadwal').select('*').order('tanggal', {ascending:true});
+                    contentEl.innerHTML = `
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead><tr><th>Judul</th><th>Kategori</th><th>Tanggal</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    ${data && data.length > 0 ? data.map(j => `
+                                        <tr>
+                                            <td><b>${j.judul}</b></td>
+                                            <td>${j.kategori || '-'}</td>
+                                            <td>${j.tanggal || '-'}</td>
+                                            <td><span class="badge badge-success">${j.status}</span></td>
+                                        </tr>
+                                    `).join('') : '<tr><td colspan="4" style="text-align:center;">Tidak ada jadwal</td></tr>'}
                                 </tbody>
                             </table>
                         </div>`;
@@ -677,8 +815,16 @@
                                 <button class="btn btn-warning" onclick="Swal.fire('Info', 'Fitur Ekspor Asset siap', 'info')"><i class="fa-solid fa-file-pdf"></i> Unduh Laporan Asset (PDF)</button>
                             </div>
                         </div>`;
-                } else {
-                    contentEl.innerHTML = `<div class="card"><p style="text-align:center;">Halaman <b>${pageKey}</b> sedang dalam pengembangan.</p></div>`;
+                } else if (pageKey === 'pengaturan') {
+                    contentEl.innerHTML = `
+                        <div class="card">
+                            <div class="card-title"><i class="fa-solid fa-user-gear"></i> Pengaturan Akun</div>
+                            <form id="f-profile">
+                                <div class="form-group"><label>Email Akun</label><input type="email" class="form-control" value="${currentUser ? currentUser.email : ''}" readonly></div>
+                                <div class="form-group"><label>Password Baru</label><input type="password" id="p-new-password" class="form-control" placeholder="Ubah password..."></div>
+                                <button type="submit" class="btn btn-primary" style="width:100%;">Update Password</button>
+                            </form>
+                        </div>`;
                 }
             } catch (err) {
                 contentEl.innerHTML = `<p style="text-align:center; padding:20px; color:#dc3545;">Gagal memuat data: ${err.message}</p>`;
@@ -691,9 +837,13 @@
             document.querySelectorAll('.bottom-nav .nav-item')[0].classList.add('active');
         }
 
-        // FORM KANTOR
+        // FORM KANTOR LENGKAP DENGAN PLN & PDAM
         async function openFormKantor(id = null) {
-            let editData = { nama: '', alamat: '' };
+            let editData = { 
+                nama: '', alamat: '', 
+                id_pelanggan_pln: '', nama_pelanggan_pln: '', tarif_daya_pln: '',
+                id_pelanggan_pdam: '', nama_pelanggan_pdam: '', tarif_daya_pdam: ''
+            };
             if (id) {
                 const { data } = await db.from('kantor').select('*').eq('id', id).single();
                 if (data) editData = data;
@@ -704,6 +854,17 @@
                 <form id="f-kantor">
                     <div class="form-group"><label>Nama Kantor</label><input type="text" id="fk-nama" class="form-control" value="${editData.nama}" required></div>
                     <div class="form-group"><label>Alamat</label><textarea id="fk-alamat" class="form-control" required>${editData.alamat}</textarea></div>
+                    
+                    <div class="form-section-title"><i class="fa-solid fa-bolt"></i> Layanan Listrik (PLN)</div>
+                    <div class="form-group"><label>Nama Pelanggan PLN</label><input type="text" id="fk-pln-nama" class="form-control" value="${editData.nama_pelanggan_pln || ''}"></div>
+                    <div class="form-group"><label>ID Pelanggan PLN</label><input type="text" id="fk-pln-id" class="form-control" value="${editData.id_pelanggan_pln || ''}"></div>
+                    <div class="form-group"><label>Tarif / Daya PLN</label><input type="text" id="fk-pln-tarif" class="form-control" value="${editData.tarif_daya_pln || ''}"></div>
+
+                    <div class="form-section-title"><i class="fa-solid fa-droplet"></i> Layanan Air (PDAM)</div>
+                    <div class="form-group"><label>Nama Pelanggan PDAM</label><input type="text" id="fk-pdam-nama" class="form-control" value="${editData.nama_pelanggan_pdam || ''}"></div>
+                    <div class="form-group"><label>ID Pelanggan PDAM</label><input type="text" id="fk-pdam-id" class="form-control" value="${editData.id_pelanggan_pdam || ''}"></div>
+                    <div class="form-group"><label>Golongan Tarif PDAM</label><input type="text" id="fk-pdam-tarif" class="form-control" value="${editData.tarif_daya_pdam || ''}"></div>
+
                     <button type="submit" class="btn btn-primary" style="width:100%; margin-top:12px;">${id ? 'Update Kantor' : 'Simpan Kantor'}</button>
                 </form>`;
             document.getElementById('app-modal').style.display = 'flex';
@@ -713,7 +874,13 @@
                 Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
                 const payload = { 
                     nama: document.getElementById('fk-nama').value, 
-                    alamat: document.getElementById('fk-alamat').value 
+                    alamat: document.getElementById('fk-alamat').value,
+                    nama_pelanggan_pln: document.getElementById('fk-pln-nama').value,
+                    id_pelanggan_pln: document.getElementById('fk-pln-id').value,
+                    tarif_daya_pln: document.getElementById('fk-pln-tarif').value,
+                    nama_pelanggan_pdam: document.getElementById('fk-pdam-nama').value,
+                    id_pelanggan_pdam: document.getElementById('fk-pdam-id').value,
+                    tarif_daya_pdam: document.getElementById('fk-pdam-tarif').value
                 };
                 
                 let err = null;
@@ -735,30 +902,37 @@
             };
         }
 
-        // FORM ASSET
-        async function openFormAsset() {
+        // FORM ASSET LENGKAP
+        async function openFormAsset(id = null) {
             const { data: kantorList } = await db.from('kantor').select('id, nama');
             if (!kantorList || kantorList.length === 0) return Swal.fire('Peringatan', 'Tambah Data Kantor dulu!', 'warning');
 
-            document.getElementById('modal-title').innerText = "Tambah Asset Baru";
+            let editData = { kantor_id: '', kode_asset: `AST-${Date.now().toString().slice(-4)}`, nama_asset: '', kategori: '', status: 'Baik' };
+            if (id) {
+                const { data } = await db.from('asset').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Asset" : "Tambah Asset";
             document.getElementById('modal-body').innerHTML = `
                 <form id="f-asset">
                     <div class="form-group">
                         <label>Kantor</label>
                         <select id="fa-kantor" class="form-control" required>
-                            ${kantorList.map(k => `<option value="${k.id}">${k.nama}</option>`).join('')}
+                            ${kantorList.map(k => `<option value="${k.id}" ${k.id === editData.kantor_id ? 'selected' : ''}>${k.nama}</option>`).join('')}
                         </select>
                     </div>
-                    <div class="form-group"><label>Kode Asset</label><input type="text" id="fa-kode" class="form-control" value="AST-${Date.now().toString().slice(-4)}" required></div>
-                    <div class="form-group"><label>Nama Asset</label><input type="text" id="fa-nama" class="form-control" placeholder="AC Split, Komputer, dll" required></div>
+                    <div class="form-group"><label>Kode Asset</label><input type="text" id="fa-kode" class="form-control" value="${editData.kode_asset}" required></div>
+                    <div class="form-group"><label>Nama Asset</label><input type="text" id="fa-nama" class="form-control" value="${editData.nama_asset}" required></div>
+                    <div class="form-group"><label>Kategori</label><input type="text" id="fa-kat" class="form-control" value="${editData.kategori}" required></div>
                     <div class="form-group">
                         <label>Status</label>
                         <select id="fa-status" class="form-control">
-                            <option value="Baik">Baik</option>
-                            <option value="Rusak">Rusak</option>
+                            <option value="Baik" ${editData.status === 'Baik' ? 'selected' : ''}>Baik</option>
+                            <option value="Rusak" ${editData.status === 'Rusak' ? 'selected' : ''}>Rusak</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Simpan Asset</button>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Asset' : 'Simpan Asset'}</button>
                 </form>`;
             document.getElementById('app-modal').style.display = 'flex';
 
@@ -769,12 +943,20 @@
                     kantor_id: document.getElementById('fa-kantor').value,
                     kode_asset: document.getElementById('fa-kode').value,
                     nama_asset: document.getElementById('fa-nama').value,
+                    kategori: document.getElementById('fa-kat').value,
                     status: document.getElementById('fa-status').value
                 };
 
-                const { error } = await db.from('asset').insert([payload]);
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('asset').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('asset').insert([payload]);
+                    err = error;
+                }
 
-                if (error) Swal.fire('Gagal', error.message, 'error');
+                if (err) Swal.fire('Gagal', err.message, 'error');
                 else {
                     Swal.fire('Berhasil', 'Data asset tersimpan', 'success');
                     document.getElementById('app-modal').style.display = 'none';
@@ -784,30 +966,38 @@
             };
         }
 
-        // FORM UTILITAS
-        async function openFormUtilitas() {
-            const { data: kantorList } = await db.from('kantor').select('id, nama');
+        // FORM UTILITAS LENGKAP
+        async function openFormUtilitas(id = null) {
+            const { data: kantorList } = await db.from('kantor').select('*');
             if (!kantorList || kantorList.length === 0) return Swal.fire('Peringatan', 'Tambah data kantor dulu!', 'warning');
 
-            document.getElementById('modal-title').innerText = "Catat Tagihan Utilitas";
+            let editData = { kantor_id: kantorList[0].id, jenis: 'Listrik', id_pelanggan: '', periode_bulan: 'Agustus', jumlah_pemakaian: 0, satuan: 'kWh', biaya: 0, bulan_tahun: '' };
+            if (id) {
+                const { data } = await db.from('utilitas').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Utilitas" : "Catat Utilitas";
             document.getElementById('modal-body').innerHTML = `
                 <form id="f-utilitas">
                     <div class="form-group">
                         <label>Kantor</label>
                         <select id="fu-kantor" class="form-control">
-                            ${kantorList.map(k=>`<option value="${k.id}">${k.nama}</option>`).join('')}
+                            ${kantorList.map(k=>`<option value="${k.id}" ${k.id === editData.kantor_id ? 'selected':''}>${k.nama}</option>`).join('')}
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Jenis Layanan</label>
+                        <label>Jenis Utilitas</label>
                         <select id="fu-jenis" class="form-control">
-                            <option value="Listrik">Listrik (PLN)</option>
-                            <option value="Air">Air (PDAM)</option>
+                            <option value="Listrik" ${editData.jenis === 'Listrik' ? 'selected':''}>Listrik</option>
+                            <option value="Air" ${editData.jenis === 'Air' ? 'selected':''}>Air (PDAM)</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>Biaya (Rp)</label><input type="number" id="fu-biaya" class="form-control" required></div>
-                    <div class="form-group"><label>Tanggal Input</label><input type="date" id="fu-bulan" class="form-control" required></div>
-                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Simpan Utilitas</button>
+                    <div class="form-group"><label>Pemakaian</label><input type="number" id="fu-jumlah" class="form-control" value="${editData.jumlah_pemakaian}" required></div>
+                    <div class="form-group"><label>Satuan</label><input type="text" id="fu-satuan" class="form-control" value="${editData.satuan}" required></div>
+                    <div class="form-group"><label>Biaya (Rp)</label><input type="number" id="fu-biaya" class="form-control" value="${editData.biaya}" required></div>
+                    <div class="form-group"><label>Tanggal Input</label><input type="date" id="fu-bulan" class="form-control" value="${editData.bulan_tahun}" required></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Utilitas' : 'Simpan Utilitas'}</button>
                 </form>`;
             
             document.getElementById('app-modal').style.display = 'flex';
@@ -818,19 +1008,239 @@
                 const payload = {
                     kantor_id: document.getElementById('fu-kantor').value,
                     jenis: document.getElementById('fu-jenis').value,
+                    jumlah_pemakaian: document.getElementById('fu-jumlah').value,
+                    satuan: document.getElementById('fu-satuan').value,
                     biaya: document.getElementById('fu-biaya').value,
                     bulan_tahun: document.getElementById('fu-bulan').value
                 };
 
-                const { error } = await db.from('utilitas').insert([payload]);
-
-                if (error) {
-                    Swal.fire('Gagal', error.message, 'error');
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('utilitas').update(payload).eq('id', id);
+                    err = error;
                 } else {
-                    Swal.fire('Berhasil', 'Pencatatan berhasil tersimpan', 'success');
+                    const { error } = await db.from('utilitas').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'Utilitas tersimpan', 'success');
                     document.getElementById('app-modal').style.display = 'none';
                     openSubPage('utilitas');
                     renderChart();
+                }
+            };
+        }
+
+        // FORM WORK ORDER LENGKAP
+        async function openFormWO(id = null) {
+            const { data: assetList } = await db.from('asset').select('id, nama_asset');
+            if (!assetList || assetList.length === 0) return Swal.fire('Peringatan', 'Tambah data asset dulu!', 'warning');
+
+            let editData = { asset_id: '', judul: '', status: 'Pending' };
+            if (id) {
+                const { data } = await db.from('work_orders').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Work Order" : "Buat Work Order";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-wo">
+                    <div class="form-group"><label>Asset</label><select id="fw-asset" class="form-control">${assetList.map(a=>`<option value="${a.id}" ${a.id === editData.asset_id ? 'selected':''}>${a.nama_asset}</option>`).join('')}</select></div>
+                    <div class="form-group"><label>Judul Pekerjaan</label><input type="text" id="fw-judul" class="form-control" value="${editData.judul}" required></div>
+                    <div class="form-group"><label>Status</label>
+                        <select id="fw-status" class="form-control">
+                            <option value="Pending" ${editData.status === 'Pending' ? 'selected':''}>Pending</option>
+                            <option value="Proses" ${editData.status === 'Proses' ? 'selected':''}>Proses</option>
+                            <option value="Selesai" ${editData.status === 'Selesai' ? 'selected':''}>Selesai</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update WO' : 'Simpan Work Order'}</button>
+                </form>`;
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-wo').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = {
+                    asset_id: document.getElementById('fw-asset').value,
+                    judul: document.getElementById('fw-judul').value,
+                    status: document.getElementById('fw-status').value
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('work_orders').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('work_orders').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'WO tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('workorder');
+                }
+            };
+        }
+
+        // FORM TEKNISI LENGKAP
+        async function openFormTeknisi(id = null) {
+            let editData = { nama: '', spesialisasi: '', status: 'Tersedia' };
+            if (id) {
+                const { data } = await db.from('teknisi').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Teknisi" : "Tambah Teknisi";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-teknisi">
+                    <div class="form-group"><label>Nama Lengkap</label><input type="text" id="ft-nama" class="form-control" value="${editData.nama}" required></div>
+                    <div class="form-group"><label>Spesialisasi</label><input type="text" id="ft-spesialisasi" class="form-control" value="${editData.spesialisasi}" placeholder="AC, Electrical" required></div>
+                    <div class="form-group"><label>Status</label>
+                        <select id="ft-status" class="form-control">
+                            <option value="Tersedia" ${editData.status === 'Tersedia' ? 'selected':''}>Tersedia</option>
+                            <option value="Bertugas" ${editData.status === 'Bertugas' ? 'selected':''}>Bertugas</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Teknisi' : 'Simpan Teknisi'}</button>
+                </form>`;
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-teknisi').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = {
+                    nama: document.getElementById('ft-nama').value,
+                    spesialisasi: document.getElementById('ft-spesialisasi').value,
+                    status: document.getElementById('ft-status').value
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('teknisi').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('teknisi').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'Teknisi tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('teknisi');
+                }
+            };
+        }
+
+        // FORM JADWAL LENGKAP
+        async function openFormJadwal(id = null) {
+            let editData = { judul: '', kategori: 'Pemeliharaan', tanggal: '', keterangan: '', status: 'Terjadwal' };
+            if (id) {
+                const { data } = await db.from('jadwal').select('*').eq('id', id).single();
+                if (data) editData = data;
+            }
+
+            document.getElementById('modal-title').innerText = id ? "Edit Jadwal" : "Tambah Jadwal Pemeliharaan";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-jadwal">
+                    <div class="form-group"><label>Judul Kegiatan</label><input type="text" id="fj-judul" class="form-control" value="${editData.judul}" required></div>
+                    <div class="form-group"><label>Kategori</label><input type="text" id="fj-kategori" class="form-control" value="${editData.kategori}" required></div>
+                    <div class="form-group"><label>Tanggal Pelaksanaan</label><input type="date" id="fj-tanggal" class="form-control" value="${editData.tanggal}" required></div>
+                    <div class="form-group"><label>Status</label>
+                        <select id="fj-status" class="form-control">
+                            <option value="Terjadwal" ${editData.status === 'Terjadwal' ? 'selected':''}>Terjadwal</option>
+                            <option value="Selesai" ${editData.status === 'Selesai' ? 'selected':''}>Selesai</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Keterangan</label><textarea id="fj-ket" class="form-control">${editData.keterangan || ''}</textarea></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">${id ? 'Update Jadwal' : 'Simpan Jadwal'}</button>
+                </form>`;
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-jadwal').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = {
+                    judul: document.getElementById('fj-judul').value,
+                    kategori: document.getElementById('fj-kategori').value,
+                    tanggal: document.getElementById('fj-tanggal').value,
+                    status: document.getElementById('fj-status').value,
+                    keterangan: document.getElementById('fj-ket').value
+                };
+
+                let err = null;
+                if (id) {
+                    const { error } = await db.from('jadwal').update(payload).eq('id', id);
+                    err = error;
+                } else {
+                    const { error } = await db.from('jadwal').insert([payload]);
+                    err = error;
+                }
+
+                if (err) Swal.fire('Gagal', err.message, 'error');
+                else {
+                    Swal.fire('Berhasil', 'Jadwal tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('jadwal');
+                }
+            };
+        }
+
+        // FORM PERAWATAN
+        async function openFormPerawatan() {
+            const [woRes, tekRes] = await Promise.all([
+                db.from('work_orders').select('id, judul').order('created_at', { ascending: false }),
+                db.from('teknisi').select('id, nama').order('nama', { ascending: true })
+            ]);
+
+            const woList = woRes.data || [];
+            const teknisiList = tekRes.data || [];
+
+            if (woList.length === 0) return Swal.fire('Peringatan', 'Buat Work Order (WO) terlebih dahulu!', 'warning');
+
+            document.getElementById('modal-title').innerText = "Input Hasil Perawatan";
+            document.getElementById('modal-body').innerHTML = `
+                <form id="f-main">
+                    <div class="form-group">
+                        <label>Work Order (WO)</label>
+                        <select id="fm-wo" class="form-control" required>
+                            ${woList.map(w => `<option value="${w.id}">${w.judul}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Teknisi Penanggung Jawab</label>
+                        <select id="fm-teknisi" class="form-control">
+                            <option value="">-- Pilih Teknisi (Opsional) --</option>
+                            ${teknisiList.map(t => `<option value="${t.id}">${t.nama}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Biaya Perawatan (Rp)</label><input type="number" id="fm-biaya" class="form-control" value="0" required></div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Simpan Perawatan</button>
+                </form>`;
+            
+            document.getElementById('app-modal').style.display = 'flex';
+
+            document.getElementById('f-main').onsubmit = async (e) => {
+                e.preventDefault();
+                Swal.fire({ title: 'Menyimpan...', didOpen: () => Swal.showLoading() });
+                const payload = {
+                    work_order_id: document.getElementById('fm-wo').value,
+                    teknisi_id: document.getElementById('fm-teknisi').value || null,
+                    biaya: document.getElementById('fm-biaya').value || 0
+                };
+
+                const { error } = await db.from('maintenances').insert([payload]);
+                if (error) Swal.fire('Gagal', error.message, 'error');
+                else {
+                    await db.from('work_orders').update({ status: 'Selesai' }).eq('id', payload.work_order_id);
+                    Swal.fire('Berhasil', 'Perawatan tersimpan', 'success');
+                    document.getElementById('app-modal').style.display = 'none';
+                    openSubPage('perawatan');
                 }
             };
         }
