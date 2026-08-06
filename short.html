@@ -2,36 +2,154 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Auto Short Maker with AI Hook</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Short Maker Pro</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 30px; background: #f4f4f9; }
-        .container { background: white; padding: 20px; border-radius: 10px; display: inline-block; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
-        input, button { padding: 10px; margin: 10px; width: 80%; }
-        button { background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #e84118; }
-        video { margin-top: 15px; border-radius: 5px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+        .phone-container {
+            width: 100%;
+            max-width: 400px;
+            background: #1e293b;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 2px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        h2 {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #38bdf8;
+        }
+        /* PLAYER DI ATAS */
+        .video-box {
+            width: 100%;
+            height: 250px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #475569;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+        .placeholder-text {
+            color: #64748b;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        label {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+        }
+        input[type="text"], input[type="password"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.85rem;
+        }
+        input[type="file"] {
+            padding: 6px;
+            cursor: pointer;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        button:active {
+            opacity: 0.8;
+        }
+        .btn-ai {
+            background: #8b5cf6;
+            color: white;
+        }
+        .btn-render {
+            background: #ec4899;
+            color: white;
+            margin-top: 5px;
+        }
+        #status {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #facc15;
+            min-height: 18px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>AI Short Video Generator</h2>
-        <p>Bikin video short + hook otomatis langsung di browser!</p>
+    <div class="phone-container">
+        <h2>⚡ Auto Short Maker</h2>
 
-        <!-- Input Topik untuk AI -->
-        <input type="text" id="topicInput" placeholder="Masukkan topik video (contoh: Tips Produktif)..."><br>
-        <button onclick="generateAIBook()">Buat Hook dengan AI 🤖</button><br>
+        <!-- 1. PLAYER DI ATAS -->
+        <div class="video-box" id="videoBox">
+            <span class="placeholder-text" id="placeholderText">Preview Video (Belum ada hasil)</span>
+            <video id="outputVideo" controls></video>
+        </div>
 
-        <!-- Hasil Hook dari AI -->
-        <input type="text" id="hookText" placeholder="Teks hook akan muncul di sini..."><br>
+        <p id="status"></p>
 
-        <!-- Upload Video Mentah -->
-        <input type="file" id="uploader" accept="video/*"><br>
-        <button onclick="prosesVideo()">Render Video 🎬</button>
+        <!-- 2. PENGATURAN API GEMINI -->
+        <div class="input-group">
+            <label>Gemini API Key:</label>
+            <input type="password" id="apiKeyInput" placeholder="Tempel Gemini API Key di sini...">
+        </div>
 
-        <p id="status" style="font-weight: bold; color: #009432;"></p>
-        <br>
-        <video id="outputVideo" controls style="display:none; width: 250px;"></video>
+        <!-- 3. INPUT TOPIK & AI HOOK -->
+        <div class="input-group">
+            <label>Topik untuk AI Hook:</label>
+            <input type="text" id="topicInput" placeholder="Cth: Tips hemat uang jajan...">
+            <button class="btn-ai" onclick="generateGeminiHook()">Buat Hook Otomatis 🤖</button>
+        </div>
+
+        <div class="input-group">
+            <label>Teks Hook Terpilih:</label>
+            <input type="text" id="hookText" placeholder="Teks hook akan tampil di sini...">
+        </div>
+
+        <!-- 4. UPLOAD VIDEO DI BAWAH -->
+        <div class="input-group">
+            <label>Upload Video Mentah (Bebas durasi):</label>
+            <input type="file" id="uploader" accept="video/*">
+        </div>
+
+        <!-- TOMBOL PROSES OTOMATIS -->
+        <button class="btn-render" onclick="prosesAutoShort()">🪄 Auto Edit & Buat Short</button>
     </div>
 
     <!-- Pustaka FFmpeg.wasm -->
@@ -40,77 +158,94 @@
         const { createFFmpeg, fetchFile } = FFmpeg;
         const ffmpeg = createFFmpeg({ log: true });
 
-        // 1. Fungsi untuk Meminta Teks Hook ke AI (Contoh menggunakan Groq API / OpenAI API)
-        async function generateAIBook() {
-            const topic = document.getElementById('topicInput').value;
+        // Fungsi Memanggil Google Gemini API
+        async function generateGeminiHook() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            const topic = document.getElementById('topicInput').value.trim();
             const status = document.getElementById('status');
+
+            if (!apiKey) {
+                alert('Masukkan Gemini API Key terlebih dahulu!');
+                return;
+            }
             if (!topic) {
-                alert('Masukkan topik dulu!');
+                alert('Masukkan topik video terlebih dahulu!');
                 return;
             }
 
-            status.innerText = 'AI sedang meracik hook terbaik...';
+            status.innerText = 'Gemini AI sedang meracik hook terbaik...';
 
             try {
-                // Catatan: Untuk produksi, gunakan Backend/Serverless function agar API Key aman.
-                // Atau Anda bisa menggunakan API key gratis yang mendukung CORS (seperti Groq API).
-                const response =ശ്ശ "https://api.openai.com/v1/chat/completions", {
+                // Menggunakan model Gemini 2.5 Flash yang cepat dan akurat
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer GANTI_DENGAN_API_KEY_ANDA"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        model: "gpt-3.5-turbo",
-                        messages: [{ role: "user", content: `Buat 1 kalimat hook pendek yang sangat menarik perhatian untuk video TikTok/Shorts dengan topik: "${topic}". Jawab langsung teksnya saja tanpa tanda kutip.` }],
-                        max_tokens: 30
+                        contents: [{
+                            parts: [{ text: `Buat 1 kalimat hook (kalimat pembuka di 3 detik pertama) yang sangat provokatif, memancing rasa penasaran, dan viral untuk video Short dengan topik: "${topic}". Berikan teksnya saja tanpa tanda kutip dan tanpa penjelasan lain.` }]
+                        }]
                     })
                 });
 
                 const data = await response.json();
-                const aiHook = data.choices[0].message.content.trim();
-                
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+
+                const aiHook = data.candidates[0].content.parts[0].text.trim();
                 document.getElementById('hookText').value = aiHook;
-                status.innerText = 'Hook berhasil dibuat AI!';
+                status.innerText = 'Hook berhasil dibuat!';
             } catch (error) {
                 console.error(error);
-                status.innerText = 'Gagal memanggil AI. Silakan ketik manual.';
+                status.innerText = 'Gagal memanggil Gemini. Cek kembali API Key Anda.';
             }
         }
 
-        // 2. Fungsi Proses Video dengan FFmpeg
-        async function prosesVideo() {
+        // Fungsi Otomatisasi Edit Video (Auto-Short 9:16 + Auto Hook + Auto Crop)
+        async function prosesAutoShort() {
             const fileInput = document.getElementById('uploader').files[0];
-            const hookText = document.getElementById('hookText').value;
+            const hookText = document.getElementById('hookText').value.trim();
             const status = document.getElementById('status');
 
-            if (!fileInput || !hookText) {
-                alert('Pilih video dan pastikan teks hook sudah ada!');
+            if (!fileInput) {
+                alert('Silakan pilih file video mentah terlebih dahulu!');
+                return;
+            }
+            if (!hookText) {
+                alert('Teks hook belum ada! Buat pakai AI atau ketik manual.');
                 return;
             }
 
-            status.innerText = 'Memuat sistem video...';
+            status.innerText = 'Memuat engine video (pertama kali agak lama)...';
             if (!ffmpeg.isLoaded()) {
                 await ffmpeg.load();
             }
 
-            status.innerText = 'Sedang merender video (bisa memakan waktu beberapa detik)...';
+            status.innerText = 'Sedang mengedit otomatis (Crop 9:16 + Potong 15s + Pasang Hook)...';
             
             ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(fileInput));
 
-            // Perintah FFmpeg untuk menempelkan teks hook di atas video
+            // Filter FFmpeg otomatis:
+            // 1. scale & crop otomatis ke ukuran vertikal 9:16 (1080x1920 atau proporsionalnya)
+            // 2. Membatasi durasi otomatis menjadi 15 detik (-t 15)
+            // 3. Menempelkan teks hook bergaya modern dengan kotak transparan di bagian atas
             await ffmpeg.run(
                 '-i', 'input.mp4',
-                '-vf', `drawtext=text='${hookText}':fontcolor=white:fontsize=50:box=1:boxcolor=black@0.5:boxborderw=10:x=(w-text_w)/2:y=100`,
-                '-t', '15', // Potong durasi jadi 15 detik
+                '-vf', `scale=ih*9/16:ih,crop=ih*9/16:ih,drawtext=text='${hookText}':fontcolor=white:fontsize=50:box=1:boxcolor=black@0.6:boxborderw=15:x=(w-text_w)/2:y=150`,
+                '-t', '15',
+                '-c:v', 'libx264',
+                '-preset', 'ultrafast',
                 'output.mp4'
             );
 
-            status.innerText = 'Selesai! Silakan unduh/putar video.';
+            status.innerText = 'Selesai! Video Short Anda siap.';
             const data = ffmpeg.FS('readFile', 'output.mp4');
 
             const video = document.getElementById('outputVideo');
+            const placeholder = document.getElementById('placeholderText');
+            
             video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
+            placeholder.style.display = 'none';
             video.style.display = 'block';
         }
     </script>
