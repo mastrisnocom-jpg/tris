@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Auto Short Maker with AI Hook</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 30px; background: #f4f4f9; }
+        .container { background: white; padding: 20px; border-radius: 10px; display: inline-block; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
+        input, button { padding: 10px; margin: 10px; width: 80%; }
+        button { background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #e84118; }
+        video { margin-top: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>AI Short Video Generator</h2>
+        <p>Bikin video short + hook otomatis langsung di browser!</p>
+
+        <!-- Input Topik untuk AI -->
+        <input type="text" id="topicInput" placeholder="Masukkan topik video (contoh: Tips Produktif)..."><br>
+        <button onclick="generateAIBook()">Buat Hook dengan AI 🤖</button><br>
+
+        <!-- Hasil Hook dari AI -->
+        <input type="text" id="hookText" placeholder="Teks hook akan muncul di sini..."><br>
+
+        <!-- Upload Video Mentah -->
+        <input type="file" id="uploader" accept="video/*"><br>
+        <button onclick="prosesVideo()">Render Video 🎬</button>
+
+        <p id="status" style="font-weight: bold; color: #009432;"></p>
+        <br>
+        <video id="outputVideo" controls style="display:none; width: 250px;"></video>
+    </div>
+
+    <!-- Pustaka FFmpeg.wasm -->
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+    <script>
+        const { createFFmpeg, fetchFile } = FFmpeg;
+        const ffmpeg = createFFmpeg({ log: true });
+
+        // 1. Fungsi untuk Meminta Teks Hook ke AI (Contoh menggunakan Groq API / OpenAI API)
+        async function generateAIBook() {
+            const topic = document.getElementById('topicInput').value;
+            const status = document.getElementById('status');
+            if (!topic) {
+                alert('Masukkan topik dulu!');
+                return;
+            }
+
+            status.innerText = 'AI sedang meracik hook terbaik...';
+
+            try {
+                // Catatan: Untuk produksi, gunakan Backend/Serverless function agar API Key aman.
+                // Atau Anda bisa menggunakan API key gratis yang mendukung CORS (seperti Groq API).
+                const response =ശ്ശ "https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer GANTI_DENGAN_API_KEY_ANDA"
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [{ role: "user", content: `Buat 1 kalimat hook pendek yang sangat menarik perhatian untuk video TikTok/Shorts dengan topik: "${topic}". Jawab langsung teksnya saja tanpa tanda kutip.` }],
+                        max_tokens: 30
+                    })
+                });
+
+                const data = await response.json();
+                const aiHook = data.choices[0].message.content.trim();
+                
+                document.getElementById('hookText').value = aiHook;
+                status.innerText = 'Hook berhasil dibuat AI!';
+            } catch (error) {
+                console.error(error);
+                status.innerText = 'Gagal memanggil AI. Silakan ketik manual.';
+            }
+        }
+
+        // 2. Fungsi Proses Video dengan FFmpeg
+        async function prosesVideo() {
+            const fileInput = document.getElementById('uploader').files[0];
+            const hookText = document.getElementById('hookText').value;
+            const status = document.getElementById('status');
+
+            if (!fileInput || !hookText) {
+                alert('Pilih video dan pastikan teks hook sudah ada!');
+                return;
+            }
+
+            status.innerText = 'Memuat sistem video...';
+            if (!ffmpeg.isLoaded()) {
+                await ffmpeg.load();
+            }
+
+            status.innerText = 'Sedang merender video (bisa memakan waktu beberapa detik)...';
+            
+            ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(fileInput));
+
+            // Perintah FFmpeg untuk menempelkan teks hook di atas video
+            await ffmpeg.run(
+                '-i', 'input.mp4',
+                '-vf', `drawtext=text='${hookText}':fontcolor=white:fontsize=50:box=1:boxcolor=black@0.5:boxborderw=10:x=(w-text_w)/2:y=100`,
+                '-t', '15', // Potong durasi jadi 15 detik
+                'output.mp4'
+            );
+
+            status.innerText = 'Selesai! Silakan unduh/putar video.';
+            const data = ffmpeg.FS('readFile', 'output.mp4');
+
+            const video = document.getElementById('outputVideo');
+            video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
+            video.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
