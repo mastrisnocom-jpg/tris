@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BM Monitoring Dashboard</title>
+  <!-- FontAwesome untuk Ikon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: #f2f5f9;
+      color: #333;
+      padding-bottom: 80px; /* Space untuk bottom nav */
+    }
+
+    /* HEADER SECTION */
+    .header {
+      background-color: #007bff;
+      color: white;
+      padding: 20px 20px 50px 20px;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      position: relative;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .logo-container {
+      background: white;
+      color: #007bff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .icon-btn {
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .greeting {
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .username {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-role {
+      background-color: #ffc107;
+      color: #000;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    .btn-refresh {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    /* CONTAINER & CARDS */
+    .container {
+      padding: 0 16px;
+      margin-top: -30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    /* CARD STATUS */
+    .status-card h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    .status-card p {
+      font-size: 12px;
+      color: #718096;
+      margin-top: 2px;
+    }
+
+    /* CARD BANNER */
+    .banner-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #ffffff;
+      border-left: 5px solid #0056b3;
+    }
+
+    .banner-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0056b3;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .banner-sub {
+      font-size: 11px;
+      color: #6c757d;
+      margin-top: 4px;
+    }
+
+    .badge-access {
+      background-color: #1d4ed8;
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .btn-action {
+      width: 100%;
+      background-color: #0056b3;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 13px;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+
+    /* GRID MENU UTAMA */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px 8px;
+      padding: 10px 0;
+      text-align: center;
+    }
+
+    .menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #2d3748;
+    }
+
+    .icon-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .menu-item:active .icon-circle {
+      transform: scale(0.95);
+    }
+
+    .menu-label {
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    /* WARNA IKON MENU */
+    .bg-red { background: linear-gradient(135deg, #ff5252, #ff1744); }
+    .bg-orange { background: linear-gradient(135deg, #ff9800, #f57c00); }
+    .bg-blue { background: linear-gradient(135deg, #42a5f5, #1e88e5); }
+    .bg-green { background: linear-gradient(135deg, #26a69a, #00897b); }
+    .bg-purple { background: linear-gradient(135deg, #7e57c2, #5e35b1); }
+    .bg-pink { background: linear-gradient(135deg, #ec407a, #d81b60); }
+    .bg-indigo { background: linear-gradient(135deg, #5c6bc0, #3949ab); }
+    .bg-bright-blue { background: linear-gradient(135deg, #29b6f6, #0288d1); }
+
+    /* ANNOUNCEMENT BANNER */
+    .alert-banner {
+      background: linear-gradient(90deg, #ff6d00, #ff9100);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    /* BOTTOM NAVIGATION */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #a0aec0;
+      font-size: 10px;
+    }
+
+    .nav-item i {
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+
+    .nav-item.active {
+      color: #007bff;
+    }
+
+    .nav-item-scan {
+      position: relative;
+      top: -15px;
+    }
+
+    .scan-btn {
+      width: 50px;
+      height: 50px;
+      background: #007bff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+      border: 3px solid white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="top-bar">
+      <div class="logo-container">
+        <i class="fa-solid fa-building"></i> BM Monitoring
+      </div>
+      <div class="user-info">
+        <div class="user-actions">
+          <a href="#" class="icon-btn"><i class="fa-regular fa-bell"></i></a>
+          <a href="#" class="icon-btn"><i class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+        <div class="greeting">Selamat Datang,</div>
+        <div class="username">ADMINISTRATOR UTAMA</div>
+        <span class="badge-role">SUPERADMIN</span> <br>
+        <button class="btn-refresh"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <div class="container">
+    
+    <!-- CARD 1: PANEL KENDALI -->
+    <div class="card status-card">
+      <h2>Panel Kendali BM Monitoring</h2>
+      <p>Total Gedung: 12 | Total Pemeriksaan Hari Ini: 48</p>
+    </div>
+
+    <!-- CARD 2: RINGKASAN LAPORAN -->
+    <div class="card banner-card-wrapper">
+      <div class="banner-card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div class="banner-title"><i class="fa-solid fa-house-laptop"></i> Ringkasan & Operasional</div>
+          <div class="banner-sub">98% Pemeriksaan minggu ini telah terverifikasi.</div>
+        </div>
+        <span class="badge-access">AKSES FULL</span>
+      </div>
+      <button class="btn-action">Buka Management Panel</button>
+    </div>
+
+    <!-- CARD 3: MENU GRID (Sesuai Menu Gambar 1) -->
+    <div class="card">
+      <div class="menu-grid">
+        
+        <a href="?page=dashboard_monitoring" class="menu-item">
+          <div class="icon-circle bg-red">
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+          <div class="menu-label">Dashboard Monitoring</div>
+        </a>
+
+        <a href="?page=kirim_laporan" class="menu-item">
+          <div class="icon-circle bg-orange">
+            <i class="fa-solid fa-file-pen"></i>
+          </div>
+          <div class="menu-label">Kirim Laporan</div>
+        </a>
+
+        <a href="?page=pelaporan_kerusakan" class="menu-item">
+          <div class="icon-circle bg-blue">
+            <i class="fa-solid fa-wrench"></i>
+          </div>
+          <div class="menu-label">Pelaporan Kerusakan</div>
+        </a>
+
+        <a href="?page=upload_bast" class="menu-item">
+          <div class="icon-circle bg-green">
+            <i class="fa-solid fa-file-arrow-up"></i>
+          </div>
+          <div class="menu-label">Upload BAST</div>
+        </a>
+
+        <a href="?page=dashboard_bast" class="menu-item">
+          <div class="icon-circle bg-pink">
+            <i class="fa-solid fa-chart-pie"></i>
+          </div>
+          <div class="menu-label">Dashboard BAST</div>
+        </a>
+
+        <a href="?page=atm" class="menu-item">
+          <div class="icon-circle bg-purple">
+            <i class="fa-solid fa-vault"></i>
+          </div>
+          <div class="menu-label">Pemeriksaan ATM</div>
+        </a>
+
+        <a href="?page=dashboard_atm" class="menu-item">
+          <div class="icon-circle bg-indigo">
+            <i class="fa-solid fa-cash-register"></i>
+          </div>
+          <div class="menu-label">Dashboard ATM</div>
+        </a>
+
+        <a href="?page=semua_menu" class="menu-item">
+          <div class="icon-circle bg-bright-blue">
+            <i class="fa-solid fa-border-all"></i>
+          </div>
+          <div class="menu-label">Semua Menu</div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENT BANNER -->
+    <div class="alert-banner">
+      * Jadwal Pemeliharaan Rutin ATM Setiap Hari Jumat
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <div class="bottom-nav">
+    <a href="#" class="nav-item active">
+      <i class="fa-solid fa-house"></i>
+      <span>Beranda</span>
+    </a>
+    <a href="#" class="nav-item">
+      <i class="fa-regular fa-calendar-check"></i>
+      <span>Presensi</span>
+    </a>
+    <a href="#" class="nav-item nav-item-scan">
+      <div class="scan-btn">
+        <i class="fa-solid fa-qrcode"></i>
+      </div>
+    </a>
+    <a href="#" class="nav-item">
+      <i class="fa-regular fa-file-lines"></i>
+      <span>Laporan</span>
+    </a>
+    <a href="#" class="nav-item">
+      <i class="fa-solid fa-power-off"></i>
+      <span>Keluar</span>
+    </a>
+  </div>
+
+</body>
+</html>
