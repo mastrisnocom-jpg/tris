@@ -2,599 +2,324 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bimbel SAINS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bimbel SAINS Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        *, *::before, *::after {
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: #dbefe6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #eef3f8;
+            max-width: 480px; /* Ukuran tampilan HP */
+            margin: 0 auto;
             min-height: 100vh;
-            margin: 0;
-        }
-
-        /* Container Selular */
-        .app-viewport {
-            width: 100%;
-            max-width: 412px;
-            height: 100vh;
-            max-height: 870px;
-            background-color: #e5f3fa;
-            display: flex;
-            flex-direction: column;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            padding-bottom: 30px;
         }
 
-        @media (min-width: 420px) {
-            .app-viewport {
-                height: 94vh;
-                border-radius: 36px;
-                border: 8px solid #0f172a;
-            }
-        }
-
-        /* =========================================
-           HEADER BARU (Sesuai Screenshot Terakhir)
-           ========================================= */
+        /* --- HEADER BIRU --- */
         .header {
-            background-color: #0b7eea; /* Warna Biru Solid */
-            color: white;
-            padding: 16px 20px 85px 20px; /* Padding bawah untuk area overlap kartu */
-            position: relative;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 16px 16px 40px 16px; /* Padding bawah 40px agar kartu di bawahnya overlap pas */
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+
+        .header-top {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
         }
 
-        /* Bagian Kiri: Logo */
         .logo-box {
-            background: white;
-            padding: 6px 14px;
-            border-radius: 10px;
-            display: inline-flex;
-            flex-direction: column;
-            align-items: flex-start;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: #ffffff;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            color: #007bff;
+            font-size: 14px;
+            display: inline-block;
         }
 
-        .logo-sub {
+        .logo-box span {
+            color: #17a2b8;
+        }
+
+        .user-info {
+            text-align: right;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-text {
             font-size: 11px;
-            font-weight: 800;
-            color: #000;
-            line-height: 1;
-            margin-bottom: 2px;
+            line-height: 1.2;
         }
 
-        .logo-text {
-            font-weight: 900;
-            font-size: 22px;
-            line-height: 1;
-            letter-spacing: -0.5px;
+        .user-name {
+            font-weight: bold;
+            font-size: 13px;
         }
 
-        .logo-s { color: #00bcd4; }
-        .logo-a { color: #8bc34a; }
-        .logo-i { color: #ff9800; }
-        .logo-n { color: #e91e63; }
-        .logo-s2 { color: #00bcd4; }
-
-        /* Bagian Kanan: Ikon, Nama, Muat Ulang */
-        .header-right {
+        .header-actions {
             display: flex;
-            flex-direction: column;
-            align-items: flex-end;
             gap: 10px;
+            align-items: center;
         }
 
-        .header-icons {
-            display: flex;
-            gap: 16px;
-        }
-
-        .icon-btn {
-            background: none;
+        .reload-btn {
+            background: rgba(255, 255, 255, 0.2);
             border: none;
             color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 10px;
             cursor: pointer;
-            padding: 0;
-        }
-
-        .icon-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: white;
-        }
-
-        .user-greeting {
-            text-align: right;
-            color: white;
-        }
-
-        .user-greeting .sub {
-            font-size: 13px;
-            opacity: 0.95;
-            line-height: 1.2;
-        }
-
-        .user-greeting .name {
-            font-weight: 800;
-            font-size: 15px;
-            line-height: 1.2;
-        }
-
-        .reload-badge {
+            margin-top: 4px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            background: rgba(255, 255, 255, 0.25);
-            padding: 4px 10px;
-            border-radius: 12px;
-            cursor: pointer;
+            gap: 4px;
         }
 
-        .reload-icon-box {
-            background: #f59e0b; /* Warna Kuning/Orange */
-            border-radius: 4px;
-            width: 14px;
-            height: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: bold;
-            color: white;
+        /* --- CONTAINER KONTEN (DI BAWAH HEADER) --- */
+        .content {
+            padding: 0 16px;
+            margin-top: -25px; /* Tarik sedikit ke atas agar melayang elegan */
         }
 
-        /* Content Scroll Area */
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding-bottom: 80px;
-        }
-
-        /* Banner Card Status Siswa */
-        .hero-card-container {
-            margin: -60px 16px 14px 16px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .hero-card {
+        /* --- CARD REGULER / PRIVAT --- */
+        .card {
             background: #ffffff;
-            border-radius: 20px;
-            padding: 18px 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             position: relative;
             overflow: hidden;
-            border: 1px solid #f1f5f9;
         }
 
-        .hero-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 4px;
-        }
-
-        .hero-status {
-            font-size: 26px;
+        .card-title {
+            font-size: 18px;
             font-weight: 800;
-            color: #1e293b;
-            line-height: 1.15;
-            margin-bottom: 20px;
-            max-width: 75%;
+            color: #1a202c;
+            margin-bottom: 8px;
         }
 
-        .hero-meta {
+        .card-subtitle {
             font-size: 12px;
-            color: #334155;
+            color: #4a5568;
             font-weight: 600;
         }
 
-        .hero-meta strong {
-            font-size: 14px;
-            color: #0f172a;
-            font-weight: 800;
-        }
-
-        .hero-illustration {
+        .badge-discount {
             position: absolute;
-            right: 0;
-            bottom: 0;
-            width: 100px;
-            height: 100px;
-            background: #2b7bc4;
-            border-radius: 100% 0 0 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .eye-icon {
-            width: 36px;
-            height: 36px;
-            border: 5px solid white;
-            border-radius: 50%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 15px;
-            margin-left: 15px;
-        }
-
-        .eye-pupil {
-            width: 14px;
-            height: 14px;
-            background: white;
-            border-radius: 50%;
-        }
-
-        .slider-dots {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 10px;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #93c5fd;
-        }
-
-        .dot.active {
-            width: 24px;
-            border-radius: 10px;
-            background: white;
-        }
-
-        /* Section Cards */
-        .section-card {
-            background: white;
-            margin: 0 16px 14px 16px;
-            border-radius: 20px;
-            padding: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-            position: relative;
-        }
-
-        /* Badge Diskon */
-        .discount-badge {
-            position: absolute;
-            top: -12px;
+            top: 12px;
             right: 12px;
-            background: #204c86;
+            background: #1e6091;
             color: white;
-            padding: 10px 12px;
-            clip-path: polygon(100% 50%, 85% 65%, 88% 85%, 68% 82%, 50% 100%, 32% 82%, 12% 85%, 15% 65%, 0% 50%, 15% 35%, 12% 15%, 32% 18%, 50% 0%, 68% 18%, 88% 15%, 85% 35%);
-            text-align: center;
-            font-weight: 900;
-            line-height: 1;
-            z-index: 12;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
         }
 
-        .discount-badge .small { font-size: 9px; letter-spacing: 0.5px; }
-        .discount-badge .num { font-size: 16px; margin-top: 2px; }
-
-        .program-title-row {
+        /* --- PROGRAM STUDIKU --- */
+        .program-title {
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #0b50a1;
-            font-weight: 800;
-            font-size: 15px;
+            color: #0056b3;
+            font-weight: bold;
+            font-size: 14px;
             margin-bottom: 4px;
         }
 
         .program-desc {
-            font-size: 12px;
-            color: #475569;
-            margin-bottom: 10px;
+            font-size: 11px;
+            color: #6c757d;
+            margin-bottom: 12px;
         }
 
-        .program-pill-box {
-            background: #0b50a1;
+        .btn-primary {
+            background: #0056b3;
             color: white;
-            padding: 6px 14px;
+            border: none;
+            width: 100%;
+            padding: 10px;
             border-radius: 20px;
+            font-weight: bold;
             font-size: 12px;
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 10px;
+            cursor: pointer;
         }
 
-        .level-tags { font-weight: 800; font-size: 13px; color: #0f172a; }
+        .level-tags {
+            margin-top: 8px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #495057;
+            text-align: center;
+        }
 
-        /* Menu Grid (8 Icons) */
+        /* --- GRID MENU UTAMA --- */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px 8px;
-            text-align: center;
-            margin-top: 4px;
+            gap: 12px;
+            padding: 16px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
         }
 
         .menu-item {
             display: flex;
             flex-direction: column;
             align-items: center;
+            text-align: center;
             gap: 6px;
-            background: none;
-            border: none;
-            cursor: pointer;
+            text-decoration: none;
         }
 
-        .menu-icon-circle {
-            width: 52px;
-            height: 52px;
+        .icon-box {
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-            transition: transform 0.1s ease;
+            font-size: 18px;
         }
 
-        .menu-item:active .menu-icon-circle { transform: scale(0.92); }
-        .menu-label { font-size: 11px; font-weight: 700; color: #1e293b; line-height: 1.2; max-width: 70px; }
+        .menu-label {
+            font-size: 10px;
+            color: #2d3748;
+            font-weight: 600;
+            line-height: 1.2;
+        }
 
-        /* Promo Banner */
-        .promo-banner {
-            background: #f97316;
+        /* Warna Ikon Menu */
+        .bg-blue { background-color: #3182ce; }
+        .bg-purple { background-color: #805ad5; }
+        .bg-teal { background-color: #319795; }
+        .bg-green { background-color: #38a169; }
+        .bg-pink { background-color: #ed64a6; }
+        .bg-dark-green { background-color: #2f855a; }
+        .bg-indigo { background-color: #667eea; }
+        .bg-bright-blue { background-color: #4299e1; }
+
+        /* --- BANNER BAWAH --- */
+        .banner-promo {
+            background: linear-gradient(90deg, #ff6b00, #ff8800);
             color: white;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 8px 16px;
-            margin: 0 16px 14px 16px;
+            text-align: center;
+            padding: 10px;
             border-radius: 8px;
-        }
-
-        /* Navigation Floating Bottom */
-        .bottom-nav {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            height: 65px;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 1px solid #e2e8f0;
-            z-index: 100;
-            padding: 0 4px;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            background: none;
-            border: none;
-            color: #94a3b8;
             font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            width: 20%;
+            font-weight: bold;
         }
-
-        .nav-item.active { color: #0056b3; }
-        .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
-
-        /* Central QRIS Button */
-        .qris-btn-wrapper { position: relative; top: -18px; }
-
-        .qris-btn {
-            width: 56px;
-            height: 56px;
-            background: #004ba0;
-            border: 4px solid #e5f3fa;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            box-shadow: 0 6px 16px rgba(0, 86, 179, 0.4);
-            cursor: pointer;
-        }
-
-        .qris-btn span { font-size: 9px; font-weight: 900; }
-
     </style>
 </head>
 <body>
 
-    <div class="app-viewport">
-        <!-- ==============================
-             BAGIAN HEADER DIPERBARUI
-             ============================== -->
-        <div class="header">
-            <!-- Kolom Kiri: Logo -->
+    <!-- HEADER BIRU -->
+    <div class="header">
+        <div class="header-top">
             <div class="logo-box">
-                <span class="logo-sub">Bimbel</span>
-                <div class="logo-text">
-                    <span class="logo-s">S</span><span class="logo-a">A</span><span class="logo-i">I</span><span class="logo-n">N</span><span class="logo-s2">S</span>
-                </div>
+                Bimbel <span>SAINS</span>
             </div>
-
-            <!-- Kolom Kanan: Ikon, Akun, Muat Ulang -->
-            <div class="header-right">
-                <div class="header-icons">
-                    <!-- Ikon Lonceng Notifikasi -->
-                    <button class="icon-btn">
-                        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-                    </button>
-                    <!-- Ikon Pengaturan / Gear -->
-                    <button class="icon-btn">
-                        <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
-                    </button>
+            
+            <div class="user-info">
+                <div class="header-actions">
+                    <i class="fa-regular fa-bell" style="font-size: 18px;"></i>
+                    <i class="fa-solid fa-gear" style="font-size: 18px;"></i>
                 </div>
-                
-                <div class="user-greeting">
-                    <div class="sub">Selamat Belajar,</div>
-                    <div class="name">SUTRISNO</div>
-                </div>
-
-                <div class="reload-badge" onclick="window.location.reload()">
-                    <span>Muat Ulang</span>
-                    <div class="reload-icon-box">⟳</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Scrollable Main View -->
-        <div class="main-content">
-            <!-- Hero Card: Status Siswa -->
-            <div class="hero-card-container">
-                <div class="hero-card">
-                    <div class="hero-title">Status Siswa</div>
-                    <div class="hero-status">Siswa Reguler / Privat</div>
-                    <div class="hero-meta">Total Pertemuan: <strong>24/30</strong></div>
-
-                    <div class="hero-illustration">
-                        <div class="eye-icon">
-                            <div class="eye-pupil"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="slider-dots">
-                    <div class="dot"></div>
-                    <div class="dot active"></div>
-                    <div class="dot"></div>
-                </div>
-            </div>
-
-            <!-- Program Studi Card -->
-            <div class="section-card">
-                <div class="discount-badge">
-                    <div class="small">DISKON</div>
-                    <div class="num">50%</div>
-                </div>
-
-                <div class="program-title-row">
-                    <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                    Program StudiKu
-                </div>
-                <div class="program-desc">Anda memiliki 2 program studi aktif. <a href="#" style="color:#0b50a1; font-weight:bold; text-decoration:none;">Lihat detail.</a></div>
-
-                <div class="program-pill-box">
-                    Program & Privat (Guru datang ke Rumah)
-                </div>
-
-                <div class="level-tags">
-                    TK, SD, SMP, SMA, SMK, TPA
-                </div>
-            </div>
-
-            <!-- 8 Menu Icons Grid -->
-            <div class="section-card">
-                <div class="menu-grid">
-                    <button class="menu-item">
-                        <div class="menu-icon-circle" style="background: #2b6cb0;">
-                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                        </div>
-                        <span class="menu-label">Pendaftaran Murid Baru</span>
-                    </button>
-
-                    <button class="menu-item">
-                        <div class="menu-icon-circle" style="background: #a855f7;">
-                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
-                        </div>
-                        <span class="menu-label">Materi Belajar</span>
-                    </button>
-
-                    <button class="menu-item">
-                        <div class="menu-icon-circle" style="background: #14b8a6;">
-                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                        </div>
-                        <span class="menu-label">TPA & AKM</span>
-                    </button>
-
-                    <button class="menu-item">
-                        <div class="menu-icon-circle" style="background: #22c55e;">
-                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
-                        </div>
-                        <span class="menu-label">Jadwal Kelas</span>
-                    </button>
-
-                    <button class="menu-item">
-                        <div class="menu-icon-circle" style="background: #ec4899;">
-                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-                        </div>
-                        <span class="menu-label">Pembayaran Biaya</span>
-                    </button>
-
-                    <button class="menu-item">
-                        <div class="menu-icon-circle" style="background: #15803d;">
-                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                        </div>
-                        <span class="menu-label">Berita & Info</span>
-                    </button>
-
-                    <button class="menu-item">
-                        <div class="menu-icon-circle" style="background: #8b5cf6;">
-                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-                        </div>
-                        <span class="menu-label">Konsultasi Guru</span>
-                    </button>
-
-                    <button class="menu-item">
-                        <div class="menu-icon-circle" style="background: #2563eb;">
-                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
-                        </div>
-                        <span class="menu-label">Semua Menu</span>
+                <div>
+                    <div class="user-text">Selamat Belajar,</div>
+                    <div class="user-name">SUTRISNO</div>
+                    <button class="reload-btn">
+                        Muat Ulang <i class="fa-solid fa-rotate-right"></i>
                     </button>
                 </div>
             </div>
-
-            <!-- Promo Banner Bottom -->
-            <div class="promo-banner">
-                * Untuk 10 Pendaftar Pertama di Awal Semester
-            </div>
-        </div>
-
-        <!-- Bottom Navigation -->
-        <div class="bottom-nav">
-            <button class="nav-item active">
-                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                Beranda
-            </button>
-            <button class="nav-item">
-                <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
-                Laporan
-            </button>
-
-            <div class="qris-btn-wrapper">
-                <div class="qris-btn">
-                    <svg style="width:20px;height:20px;fill:white;" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm13 0h3v3h-3zm-3-2h2v2h-2zm0 4h2v4h-2zm2 0h3v2h-3zm0 2h3v2h-3z"/></svg>
-                </div>
-            </div>
-
-            <button class="nav-item">
-                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                Profil
-            </button>
-            <button class="nav-item">
-                <svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-                Keluar
-            </button>
         </div>
     </div>
+
+    <!-- KONTEN UTAMA -->
+    <div class="content">
+        
+        <!-- CARD REGULER / PRIVAT -->
+        <div class="card">
+            <div class="card-title">Siswa Reguler / Privat</div>
+            <div class="card-subtitle">Total Pertemuan: <b>24/30</b></div>
+        </div>
+
+        <!-- CARD PROGRAM STUDIKU -->
+        <div class="card">
+            <div class="badge-discount">DISKON 50%</div>
+            <div class="program-title">
+                <i class="fa-solid fa-house"></i>
+                Program StudiKu
+            </div>
+            <div class="program-desc">
+                Anda memiliki 2 program studi aktif. <a href="#" style="color: #0056b3;">Lihat detail.</a>
+            </div>
+            <button class="btn-primary">
+                Program & Privat (Guru datang ke Rumah)
+            </button>
+            <div class="level-tags">TK, SD, SMP, SMA, SMK, TPA</div>
+        </div>
+
+        <!-- GRID MENU UTAMA -->
+        <div class="menu-grid">
+            <div class="menu-item">
+                <div class="icon-box bg-blue"><i class="fa-solid fa-user-plus"></i></div>
+                <div class="menu-label">Pendaftaran Murid Baru</div>
+            </div>
+            <div class="menu-item">
+                <div class="icon-box bg-purple"><i class="fa-solid fa-book-open"></i></div>
+                <div class="menu-label">Materi Belajar</div>
+            </div>
+            <div class="menu-item">
+                <div class="icon-box bg-teal"><i class="fa-solid fa-file-lines"></i></div>
+                <div class="menu-label">TPA & AKM</div>
+            </div>
+            <div class="menu-item">
+                <div class="icon-box bg-green"><i class="fa-regular fa-clock"></i></div>
+                <div class="menu-label">Jadwal Kelas</div>
+            </div>
+            <div class="menu-item">
+                <div class="icon-box bg-pink"><i class="fa-solid fa-wallet"></i></div>
+                <div class="menu-label">Pembayaran Biaya</div>
+            </div>
+            <div class="menu-item">
+                <div class="icon-box bg-dark-green"><i class="fa-regular fa-envelope"></i></div>
+                <div class="menu-label">Berita & Info</div>
+            </div>
+            <div class="menu-item">
+                <div class="icon-box bg-indigo"><i class="fa-regular fa-comments"></i></div>
+                <div class="menu-label">Konsultasi Guru</div>
+            </div>
+            <div class="menu-item">
+                <div class="icon-box bg-bright-blue"><i class="fa-solid fa-border-all"></i></div>
+                <div class="menu-label">Semua Menu</div>
+            </div>
+        </div>
+
+        <!-- BANNER BOTTOM -->
+        <div class="banner-promo">
+            * Untuk 10 Pendaftar Pertama di Awal Semester
+        </div>
+
+    </div>
+
 </body>
 </html>
