@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Developer - Android & Web App Specialist</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0F172A;
+            --accent: #2563EB;
+            --accent-hover: #1D4ED8;
+            --bg-light: #F8FAFC;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 80px 20px 60px;
+            text-align: center;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #3B82F6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 48px;
+            color: var(--white);
+            border: 4px solid var(--accent);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #94A3B8;
+            margin-bottom: 25px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--white);
+            padding: 12px 28px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .cta-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 40px;
+            color: var(--primary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background: var(--accent);
+            margin: 8px auto 0;
+            border-radius: 2px;
+        }
+
+        /* Services Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #E2E8F0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #EFF6FF;
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        /* Tech Stack */
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 60px;
+        }
+
+        .tech-item {
+            background: var(--white);
+            border: 1px solid #CBD5E1;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Contact Section */
+        .contact-box {
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-btn {
+            color: var(--white);
+            border: 1px solid #334155;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+
+        .contact-btn:hover {
+            background: #1E293B;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="avatar">
+                <i class="fa-solid fa-code"></i>
+            </div>
+            <h1>Nama Anda</h1>
+            <p class="tagline">Android & Full-Stack Web App Developer</p>
+            <a href="#contact" class="cta-btn">Konsultasikan Proyek</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Services Section -->
+        <h2 class="section-title">Layanan Utama</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-store"></i></div>
+                <h3>Solusi Web & App UMKM</h3>
+                <p>Pengembangan aplikasi kasir (POS), toko online, katalog digital, dan sistem manajemen inventaris sederhana yang terjangkau, cepat, dan mudah digunakan.</p>
+                <span class="badge">Efisien & Terjangkau</span>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fa-brands fa-android"></i></div>
+                <h3>Aplikasi Android Native / Cross-Platform</h3>
+                <p>Pembuatan aplikasi mobile berperforma tinggi, responsif, dan terintegrasi dengan Payment Gateway, Maps, atau Push Notification untuk skala bisnis kecil hingga enterprise.</p>
+                <span class="badge">Kotlin / Flutter / React Native</span>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-building"></i></div>
+                <h3>Sistem Enterprise / Perusahaan</h3>
+                <p>Sistem informasi kustom (ERP/CRM), Dashboard Analitik Data, API Integration, serta arsitektur backend scalable berbasis Cloud untuk kebutuhan bisnis berskala besar.</p>
+                <span class="badge">Scalable & Secure</span>
+            </div>
+        </div>
+
+        <!-- Tech Stack -->
+        <h2 class="section-title">Teknologi & Keahlian</h2>
+        <div class="tech-list">
+            <div class="tech-item"><i class="fa-brands fa-android"></i> Android Native (Kotlin)</div>
+            <div class="tech-item"><i class="fa-brands fa-flutter"></i> Flutter</div>
+            <div class="tech-item"><i class="fa-brands fa-react"></i> React.js / Next.js</div>
+            <div class="tech-item"><i class="fa-brands fa-node-js"></i> Node.js / Express</div>
+            <div class="tech-item"><i class="fa-solid fa-database"></i> PostgreSQL / MySQL</div>
+            <div class="tech-item"><i class="fa-solid fa-fire"></i> Firebase</div>
+            <div class="tech-item"><i class="fa-solid fa-cloud"></i> REST API & Microservices</div>
+        </div>
+
+        <!-- Portfolio Highlights -->
+        <h2 class="section-title">Pengalaman Proyek</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>App Kasir & Inventaris UMKM</h3>
+                <p>Aplikasi Android & Web terintegrasi untuk otomatisasi pencatatan transaksi dan cetak resi Bluetooth bagi pemilik toko ritel.</p>
+            </div>
+            <div class="card">
+                <h3>Portal Manajemen Perusahaan</h3>
+                <p>Web dashboard internal enterprise untuk monitoring Key Performance Indicator (KPI) dan otomatisasi laporan operasional bulanan.</p>
+            </div>
+            <div class="card">
+                <h3>Aplikasi Booking Service</h3>
+                <p>Aplikasi mobile Android multi-role (User & Driver/Teknisi) dengan pelacakan lokasi real-time dan gateway pembayaran digital.</p>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="contact-box" id="contact">
+            <h2>Mulai Diskusi Proyek Anda</h2>
+            <p>Siap membantu digitalisasi UMKM atau memperkuat infrastruktur aplikasi perusahaan Anda.</p>
+            <div class="contact-links">
+                <a href="https://wa.me/6281234567890" class="contact-btn" target="_blank">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="mailto:emailanda@domain.com" class="contact-btn">
+                    <i class="fa-solid fa-envelope"></i> Email
+                </a>
+                <a href="https://linkedin.com/in/username" class="contact-btn" target="_blank">
+                    <i class="fa-brands fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="https://github.com/username" class="contact-btn" target="_blank">
+                    <i class="fa-brands fa-github"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Nama Anda. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
