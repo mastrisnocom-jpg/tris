@@ -23,14 +23,15 @@
       padding-bottom: 85px;
     }
 
-    /* HEADER SECTION (PERSIS GAMBAR 2) */
+    /* HEADER SECTION */
     .header {
-      background: #007bff; /* Warna biru terang/vibrant */
+      background: #007bff;
       color: white;
-      padding: 16px 16px 45px 16px;
+      padding: 16px 16px 35px 16px;
       border-bottom-left-radius: 20px;
       border-bottom-right-radius: 20px;
       position: relative;
+      z-index: 1;
     }
 
     .top-bar {
@@ -128,7 +129,9 @@
     /* CONTAINER & CARDS */
     .container {
       padding: 0 16px;
-      margin-top: -28px;
+      margin-top: -20px;
+      position: relative; 
+      z-index: 10;
     }
 
     .card {
@@ -136,7 +139,7 @@
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     /* CARD 1: KONTROL PUSAT */
@@ -194,9 +197,12 @@
       font-size: 12px;
       margin-top: 12px;
       cursor: pointer;
+      text-decoration: none;
+      display: block;
+      text-align: center;
     }
 
-    /* GRID MENU 8 BOTON */
+    /* GRID MENU 8 TOMBOL */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -315,15 +321,13 @@
 </head>
 <body>
 
-  <!-- HEADER (SESUAI GAMBAR 2) -->
+  <!-- HEADER -->
   <div class="header">
     <div class="top-bar">
-      <!-- Logo Pill Kiri -->
       <div class="logo-container">
         BM <span>Monitoring</span>
       </div>
 
-      <!-- Info User Kanan -->
       <div class="user-info">
         <div class="user-actions">
           <a href="#" class="icon-btn"><i class="fa-regular fa-bell"></i></a>
@@ -332,7 +336,7 @@
         <div class="greeting">Selamat Datang,</div>
         <div class="username">ADMINISTRATOR UTAMA</div>
         <span class="badge-role">SUPERADMIN</span>
-        <button class="btn-refresh">Refresh <i class="fa-solid fa-rotate-right"></i></button>
+        <button class="btn-refresh" onclick="location.reload()">Refresh <i class="fa-solid fa-rotate-right"></i></button>
       </div>
     </div>
   </div>
@@ -355,63 +359,71 @@
         </div>
         <span class="badge-access">AKSES FULL</span>
       </div>
-      <button class="btn-action">Buka Management Panel</button>
+      <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec?page=dashboard" class="btn-action">Buka Management Panel</a>
     </div>
 
-    <!-- CARD 3: MENU GRID (Sesuai Struktur Gambar 1 dengan Tampilan Gambar 2) -->
+    <!-- CARD 3: MENU GRID (LINK SUDAH DIPASANG) -->
     <div class="card">
       <div class="menu-grid">
         
-        <a href="?page=dashboard_monitoring" class="menu-item">
+        <!-- 1. Dashboard Monitoring -->
+        <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec?page=dashboard" class="menu-item">
           <div class="icon-circle bg-red">
             <i class="fa-solid fa-chart-line"></i>
           </div>
           <div class="menu-label">Dashboard Monitoring</div>
         </a>
 
-        <a href="?page=kirim_laporan" class="menu-item">
+        <!-- 2. Kirim Laporan -->
+        <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec" class="menu-item">
           <div class="icon-circle bg-orange">
             <i class="fa-solid fa-file-pen"></i>
           </div>
           <div class="menu-label">Kirim Laporan</div>
         </a>
 
-        <a href="?page=pelaporan_kerusakan" class="menu-item">
+        <!-- 3. Pelaporan Kerusakan -->
+        <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec?page=kerusakan" class="menu-item">
           <div class="icon-circle bg-blue">
             <i class="fa-solid fa-wrench"></i>
           </div>
           <div class="menu-label">Pelaporan Kerusakan</div>
         </a>
 
-        <a href="?page=upload_bast" class="menu-item">
+        <!-- 4. Upload BAST -->
+        <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec?page=bast" class="menu-item">
           <div class="icon-circle bg-green">
             <i class="fa-solid fa-file-arrow-up"></i>
           </div>
           <div class="menu-label">Upload BAST</div>
         </a>
 
-        <a href="?page=dashboard_bast" class="menu-item">
+        <!-- 5. Dashboard BAST -->
+        <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec?page=dashboard-bast" class="menu-item">
           <div class="icon-circle bg-pink">
             <i class="fa-solid fa-chart-pie"></i>
           </div>
           <div class="menu-label">Dashboard BAST</div>
         </a>
 
-        <a href="?page=atm" class="menu-item">
+        <!-- 6. Pemeriksaan ATM -->
+        <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec?page=atm" class="menu-item">
           <div class="icon-circle bg-purple">
             <i class="fa-solid fa-vault"></i>
           </div>
           <div class="menu-label">Pemeriksaan ATM</div>
         </a>
 
-        <a href="?page=dashboard_atm" class="menu-item">
+        <!-- 7. Dashboard ATM -->
+        <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec?page=dashboard-atm" class="menu-item">
           <div class="icon-circle bg-indigo">
             <i class="fa-solid fa-cash-register"></i>
           </div>
           <div class="menu-label">Dashboard ATM</div>
         </a>
 
-        <a href="?page=semua_menu" class="menu-item">
+        <!-- 8. Semua Menu -->
+        <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec?page=dashboard" class="menu-item">
           <div class="icon-circle bg-bright-blue">
             <i class="fa-solid fa-border-all"></i>
           </div>
@@ -421,7 +433,7 @@
       </div>
     </div>
 
-    <!-- INFORMASI/ANNOUNCEMENT BANNER -->
+    <!-- INFORMASI BANNER -->
     <div class="alert-banner">
       * Jadwal Pemeliharaan Rutin ATM Setiap Hari Jumat
     </div>
@@ -430,7 +442,7 @@
 
   <!-- BOTTOM NAVIGATION BAR -->
   <div class="bottom-nav">
-    <a href="#" class="nav-item active">
+    <a href="https://script.google.com/macros/s/AKfycbwBnM-oi29uwN1lQjBk7ad-nNIhRSAngNty2TVxnjyDwZkO3UC5315skPv06vnvXh8zbw/exec?page=dashboard" class="nav-item active">
       <i class="fa-solid fa-house"></i>
       <span>Beranda</span>
     </a>
