@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bimbingan Belajar SAINS | Premium Education & Excellence</title>
+    <title>Aplikasi Bimbel SAINS | Dashboard Terpadu</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Supabase JS CDN -->
@@ -29,244 +29,250 @@
 </head>
 <body class="bg-sainsDark text-gray-100 font-sans antialiased selection:bg-sainsYellow selection:text-sainsDark">
 
-    <!-- HEADER / NAVBAR -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-sainsDark/90 backdrop-blur-md border-b border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-2 sm:space-x-3">
-                <span class="text-xl sm:text-2xl font-extrabold tracking-wider text-sainsYellow">SAINS</span>
-                <span class="hidden xs:inline-block text-[10px] sm:text-xs uppercase tracking-widest text-gray-400 border-l border-gray-700 pl-2 sm:pl-3">Bimbel</span>
+    <!-- LOGIN VIEW (Default muncul jika belum login) -->
+    <div id="view-login" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-red-950/40 via-sainsDark to-sainsDark">
+        <div class="max-w-md w-full bg-gray-900 p-8 rounded-3xl border border-gray-800 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-gradient-to-l from-sainsRed to-red-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-bl-xl">
+                PORTAL SAINS
             </div>
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
-                <a href="#tentang" class="hover:text-sainsYellow transition">Tentang</a>
-                <a href="#program" class="hover:text-sainsYellow transition">Program</a>
-                <a href="#jadwal" class="hover:text-sainsYellow transition">Jadwal</a>
-            </nav>
-            <a href="#pendaftaran" class="bg-gradient-to-r from-sainsRed to-red-600 text-white font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm hover:opacity-90 transition shadow-lg shadow-sainsRed/20">
-                Daftar
-            </a>
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-extrabold tracking-wider text-sainsYellow mb-2">SAINS</h1>
+                <p class="text-gray-400 text-xs uppercase tracking-widest">Sistem Informasi Akademik</p>
+            </div>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Email / Username</label>
+                    <input type="text" id="loginEmail" required placeholder="admin@sains.com" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sainsYellow transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sainsYellow transition">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-sainsRed to-red-600 text-white font-extrabold py-3.5 rounded-xl hover:opacity-90 transition shadow-lg shadow-sainsRed/30 text-sm">
+                    Masuk Aplikasi
+                </button>
+                <p id="loginMessage" class="text-center text-xs mt-3 hidden text-red-400"></p>
+            </form>
         </div>
-    </header>
+    </div>
 
-    <!-- HERO SECTION -->
-    <section class="relative pt-28 pb-16 sm:pt-36 sm:pb-24 overflow-hidden bg-gradient-to-b from-red-950/40 via-sainsDark to-sainsDark">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#FACC15_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div class="text-center lg:text-left">
-                <div class="inline-flex items-center space-x-2 bg-sainsYellow/10 border border-sainsYellow/30 px-3 py-1 rounded-full text-sainsYellow text-xs font-semibold mb-4 sm:mb-6 uppercase tracking-wider">
-                    <span>🔥 Diskon Eksklusif 50%</span>
+    <!-- MAIN APP CONTAINER (Tersembunyi sebelum login) -->
+    <div id="view-app" class="hidden min-h-screen flex flex-col md:flex-row">
+        
+        <!-- SIDEBAR / MOBILE NAVBAR -->
+        <aside class="w-full md:w-64 bg-gray-900 border-r border-gray-800 flex flex-col justify-between z-40 sticky top-0 md:h-screen">
+            <div>
+                <div class="p-5 flex items-center justify-between border-b border-gray-800">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xl font-extrabold tracking-wider text-sainsYellow">SAINS</span>
+                        <span class="text-[10px] uppercase tracking-widest text-gray-400 border-l border-gray-700 pl-2">App</span>
+                    </div>
+                    <button onclick="logout()" class="text-xs text-red-400 hover:text-red-300 font-semibold md:hidden">Keluar</button>
                 </div>
-                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-4 sm:mb-6">
-                    Masa Depan Gemilang Dimulai <span class="text-sainsYellow">Dari Sini.</span>
-                </h1>
-                <p class="text-gray-300 text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 leading-relaxed">
-                    Smart, Attitude, Innovative, Nice dan Smile. Metode belajar eksklusif untuk TK, SD, SMP, hingga SMA/SMK dengan pengajar profesional.
-                </p>
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4">
-                    <a href="#pendaftaran" class="bg-gradient-to-r from-sainsRed to-red-600 text-white font-bold text-center px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:opacity-90 transition shadow-xl shadow-sainsRed/30 text-sm sm:text-base">
-                        Amankan Kursi Anda
-                    </a>
-                    <a href="#jadwal" class="border border-gray-700 text-center text-gray-300 font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:border-gray-500 transition text-sm sm:text-base">
-                        Cek Jadwal Kelas
-                    </a>
-                </div>
+                <nav class="p-4 space-y-1 overflow-x-auto md:overflow-y-auto flex md:flex-col space-x-2 md:space-x-0 whitespace-nowrap">
+                    <button onclick="switchTab('dashboard')" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition bg-sainsRed text-white flex items-center space-x-3" data-target="dashboard">
+                        <span>📊</span> <span>Dashboard</span>
+                    </button>
+                    <button onclick="switchTab('siswa')" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3" data-target="siswa">
+                        <span>👨‍🎓</span> <span>Data Siswa</span>
+                    </button>
+                    <button onclick="switchTab('guru')" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3" data-target="guru">
+                        <span>👩‍🏫</span> <span>Data Guru</span>
+                    </button>
+                    <button onclick="switchTab('orangtua')" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3" data-target="orangtua">
+                        <span>👪</span> <span>Orang Tua</span>
+                    </button>
+                    <button onclick="switchTab('jadwal')" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3" data-target="jadwal">
+                        <span>📅</span> <span>Jadwal Kelas</span>
+                    </button>
+                    <button onclick="switchTab('absensi')" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3" data-target="absensi">
+                        <span>📋</span> <span>Absensi</span>
+                    </button>
+                    <button onclick="switchTab('nilai')" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3" data-target="nilai">
+                        <span>📈</span> <span>Nilai Siswa</span>
+                    </button>
+                    <button onclick="switchTab('pembayaran')" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3" data-target="pembayaran">
+                        <span>💳</span> <span>Pembayaran SPP</span>
+                    </button>
+                    <button onclick="switchTab('ujian')" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3" data-target="ujian">
+                        <span>📝</span> <span>Ujian / Tryout</span>
+                    </button>
+                    <button onclick="switchTab('pengumuman')" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3" data-target="pengumuman">
+                        <span>📢</span> <span>Pengumuman</span>
+                    </button>
+                    <button onclick="switchTab('laporan')" class="tab-btn w-full text-left px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition text-gray-300 hover:bg-gray-800 hover:text-white flex items-center space-x-3" data-target="laporan">
+                        <span>📑</span> <span>Laporan Akademik</span>
+                    </button>
+                </nav>
             </div>
-            <div class="relative mt-4 lg:mt-0">
-                <div class="relative rounded-2xl overflow-hidden border border-gray-800 shadow-2xl">
-                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80" alt="Anak Berprestasi" class="w-full h-[280px] sm:h-[380px] object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-sainsDark via-transparent to-transparent"></div>
-                    <div class="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-gray-900/90 backdrop-blur-md p-3.5 sm:p-4 rounded-xl border border-gray-800">
-                        <p class="text-xs sm:text-sm font-semibold text-sainsYellow">Pekan Prestasi Anak Indonesia</p>
-                        <p class="text-[11px] sm:text-xs text-gray-400">Melahirkan generasi unggul, cerdas, dan kompetitif.</p>
+            <div class="p-4 border-t border-gray-800 hidden md:block">
+                <button onclick="logout()" class="w-full bg-red-950/40 border border-red-900/50 text-red-400 hover:bg-red-900/40 py-2.5 rounded-xl text-xs font-semibold transition">
+                    Keluar Aplikasi
+                </button>
+            </div>
+        </aside>
+
+        <!-- CONTENT AREA -->
+        <main class="flex-1 p-4 sm:p-8 overflow-y-auto">
+            
+            <!-- 1. DASHBOARD -->
+            <div id="tab-dashboard" class="tab-content space-y-6">
+                <h2 class="text-2xl font-extrabold">Dashboard Overview</h2>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-gray-900 p-5 rounded-2xl border border-gray-800">
+                        <p class="text-xs text-gray-400 mb-1">Total Siswa</p>
+                        <h3 class="text-2xl font-bold text-sainsYellow">120</h3>
+                    </div>
+                    <div class="bg-gray-900 p-5 rounded-2xl border border-gray-800">
+                        <p class="text-xs text-gray-400 mb-1">Total Guru</p>
+                        <h3 class="text-2xl font-bold text-sainsRed">15</h3>
+                    </div>
+                    <div class="bg-gray-900 p-5 rounded-2xl border border-gray-800">
+                        <p class="text-xs text-gray-400 mb-1">Kelas Aktif</p>
+                        <h3 class="text-2xl font-bold text-white">8</h3>
+                    </div>
+                    <div class="bg-gray-900 p-5 rounded-2xl border border-gray-800">
+                        <p class="text-xs text-gray-400 mb-1">Kehadiran Hari Ini</p>
+                        <h3 class="text-2xl font-bold text-green-400">95%</h3>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- PROGRAM & FASILITAS -->
-    <section id="program" class="py-16 sm:py-20 bg-gray-900/60 border-t border-b border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <div class="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
-                <h2 class="text-2xl sm:text-3xl font-extrabold mb-3">Program Unggulan</h2>
-                <p class="text-gray-400 text-sm sm:text-base">Dirancang khusus untuk mengoptimalkan potensi akademik siswa.</p>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                <div class="bg-gray-900 p-6 sm:p-8 rounded-2xl border border-gray-800 hover:border-sainsRed/50 transition">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-sainsRed/10 rounded-xl flex items-center justify-center text-sainsRed font-bold text-lg sm:text-xl mb-4 sm:mb-6">01</div>
-                    <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3">Kelas & Privat</h3>
-                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Pilihan belajar kelompok interaktif atau privat eksklusif (guru bisa datang ke rumah).</p>
+            <!-- 2. SISWA -->
+            <div id="tab-siswa" class="tab-content hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-extrabold">Data Siswa</h2>
+                    <button class="bg-sainsRed text-white text-xs font-bold px-4 py-2 rounded-xl">Tambah Siswa</button>
                 </div>
-                <div class="bg-gray-900 p-6 sm:p-8 rounded-2xl border border-gray-800 hover:border-sainsRed/50 transition">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-sainsRed/10 rounded-xl flex items-center justify-center text-sainsRed font-bold text-lg sm:text-xl mb-4 sm:mb-6">02</div>
-                    <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3">Persiapan Ujian & TPA</h3>
-                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Fokus mendalam pada Ujian Sekolah, AKM, dan Test Potensi Akademik (TPA).</p>
-                </div>
-                <div class="bg-gray-900 p-6 sm:p-8 rounded-2xl border border-gray-800 hover:border-sainsRed/50 transition sm:col-span-2 lg:col-span-1">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-sainsRed/10 rounded-xl flex items-center justify-center text-sainsRed font-bold text-lg sm:text-xl mb-4 sm:mb-6">03</div>
-                    <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-3">Fasilitas Modern</h3>
-                    <p class="text-gray-400 text-xs sm:text-sm leading-relaxed">Ruang belajar nyaman, metode pembelajaran modern, konsultasi eksklusif, dan Free Wi-Fi.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- JADWAL KELAS -->
-    <section id="jadwal" class="py-16 sm:py-20">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6">
-            <div class="text-center mb-10 sm:mb-12">
-                <h2 class="text-2xl sm:text-3xl font-extrabold mb-2">Jadwal Kelas Reguler</h2>
-                <p class="text-gray-400 text-sm">Pilih sesi waktu belajar yang paling fleksibel.</p>
-            </div>
-            <div class="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden shadow-2xl">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-[320px]">
-                        <thead>
-                            <tr class="bg-red-950/40 border-b border-gray-800 text-sainsYellow text-xs sm:text-sm uppercase tracking-wider">
-                                <th class="p-4 sm:p-5 font-bold">Sesi</th>
-                                <th class="p-4 sm:p-5 font-bold">Waktu & Hari</th>
-                            </tr>
+                <div class="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                        <thead class="bg-gray-800/50 text-sainsYellow uppercase">
+                            <tr><th class="p-4">Nama</th><th class="p-4">Jenjang</th><th class="p-4">No. WA</th></tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-800 text-xs sm:text-sm text-gray-300">
-                            <tr>
-                                <td class="p-4 sm:p-5 font-semibold text-white">PAGI</td>
-                                <td class="p-4 sm:p-5">SENIN - KAMIS (08.00 - 09.30)</td>
-                            </tr>
-                            <tr>
-                                <td class="p-4 sm:p-5 font-semibold text-white">SIANG</td>
-                                <td class="p-4 sm:p-5">SENIN - KAMIS (13.00 - 14.30)</td>
-                            </tr>
-                            <tr>
-                                <td class="p-4 sm:p-5 font-semibold text-white">SORE</td>
-                                <td class="p-4 sm:p-5">SENIN - KAMIS (16.30 - 18.00)</td>
-                            </tr>
-                            <tr>
-                                <td class="p-4 sm:p-5 font-semibold text-white">MALAM</td>
-                                <td class="p-4 sm:p-5">SENIN - KAMIS (18.30 - 20.00)</td>
-                            </tr>
+                        <tbody class="divide-y divide-gray-800 text-gray-300">
+                            <tr><td class="p-4 font-semibold text-white">Ahmad Fauzi</td><td class="p-4">SD Kelas 5</td><td class="p-4">08123456789</td></tr>
+                            <tr><td class="p-4 font-semibold text-white">Siti Rahma</td><td class="p-4">SMP Kelas 8</td><td class="p-4">08987654321</td></tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="bg-gray-900/80 p-4 text-center text-xs text-gray-400 border-t border-gray-800">
-                    Buka: Senin s/d Jum'at (10.00 - 20.00 WIB)
+            </div>
+
+            <!-- 3. GURU -->
+            <div id="tab-guru" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-extrabold">Data Pengajar / Guru</h2>
+                <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                    <p class="text-sm text-gray-400">Modul pengelolaan data pengajar bimbel SAINS.</p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- FORM PENDAFTARAN -->
-    <section id="pendaftaran" class="py-16 sm:py-20 bg-gradient-to-t from-gray-900 to-sainsDark border-t border-gray-800">
-        <div class="max-w-2xl mx-auto px-4 sm:px-6">
-            <div class="bg-gray-900 p-6 sm:p-10 rounded-3xl border border-gray-800 shadow-2xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 bg-gradient-to-l from-sainsRed to-red-600 text-white text-[10px] sm:text-xs font-extrabold px-3.5 py-1.5 rounded-bl-xl shadow">
-                    DISKON 50%
+            <!-- 4. ORANG TUA -->
+            <div id="tab-orangtua" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-extrabold">Data Orang Tua / Wali</h2>
+                <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                    <p class="text-sm text-gray-400">Informasi kontak dan relasi orang tua siswa.</p>
                 </div>
-                <div class="text-center mb-8">
-                    <h2 class="text-2xl sm:text-3xl font-extrabold mb-2">Pendaftaran Murid Baru</h2>
-                    <p class="text-gray-400 text-xs sm:text-sm">Isi data di bawah ini untuk mengamankan slot diskon terbatas.</p>
+            </div>
+
+            <!-- 5. JADWAL -->
+            <div id="tab-jadwal" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-extrabold">Jadwal Kelas</h2>
+                <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                    <p class="text-sm text-gray-400">Daftar jadwal sesi Pagi, Siang, Sore, dan Malam.</p>
                 </div>
-
-                <form id="registrationForm" class="space-y-4 sm:space-y-5">
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Nama Lengkap Murid</label>
-                        <input type="text" id="nama" required class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sainsYellow transition">
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                        <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Jenjang Pendidikan</label>
-                            <select id="jenjang" required class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sainsYellow transition">
-                                <option value="" disabled selected>Pilih Jenjang</option>
-                                <option value="TK">TK</option>
-                                <option value="SD">SD</option>
-                                <option value="SMP">SMP</option>
-                                <option value="SMA/SMK Kelas 1">1 SMA / SMK</option>
-                                <option value="SMA/SMK Kelas 2">2 SMA / SMK</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Nomor WhatsApp</label>
-                            <input type="tel" id="whatsapp" required placeholder="08xxxxxxxxxx" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sainsYellow transition">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Pilih Program / Sesi</label>
-                        <select id="program_pilihan" required class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sainsYellow transition">
-                            <option value="" disabled selected>Pilih Sesi Kelas</option>
-                            <option value="Reguler Pagi">Reguler Pagi (Senin - Kamis)</option>
-                            <option value="Reguler Siang">Reguler Siang (Senin - Kamis)</option>
-                            <option value="Reguler Sore">Reguler Sore (Senin - Kamis)</option>
-                            <option value="Reguler Malam">Reguler Malam (Senin - Kamis)</option>
-                            <option value="Privat (Datang ke Rumah)">Privat (Guru Datang ke Rumah)</option>
-                        </select>
-                    </div>
-                    <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-sainsRed to-red-600 text-white font-extrabold py-3.5 sm:py-4 rounded-xl hover:opacity-90 transition shadow-lg shadow-sainsRed/30 text-sm sm:text-base">
-                        Kirim Pendaftaran Sekarang
-                    </button>
-                    <p id="formMessage" class="text-center text-xs sm:text-sm mt-3 hidden"></p>
-                </form>
             </div>
-        </div>
-    </section>
 
-    <!-- FOOTER / LOKASI -->
-    <footer class="bg-gray-950 border-t border-gray-800 py-10 text-gray-400 text-xs sm:text-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            <div>
-                <h3 class="text-white font-bold text-base mb-3 text-sainsYellow">Lembaga Bimbingan Belajar SAINS</h3>
-                <p class="mb-2">📍 Jl. Sedati Agung 2 RT 01 RW 03 No 6, Sedati Agung - Sidoarjo</p>
-                <p class="mb-2">📍 Jl. Kalidami No. 40, Surabaya</p>
-                <p class="mb-2">📞 Telp/WA: 081336909060</p>
-            </div>
-            <div class="flex flex-col md:items-end justify-center pt-4 md:pt-0 border-t md:border-0 border-gray-800">
-                <div class="bg-gray-900 border border-gray-800 px-3.5 py-1.5 rounded-lg inline-flex items-center space-x-2 text-white mb-3 text-xs">
-                    <span>📶 Free Wi-Fi Available</span>
+            <!-- 6. ABSENSI -->
+            <div id="tab-absensi" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-extrabold">Absensi Kehadiran</h2>
+                <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                    <p class="text-sm text-gray-400">Rekapitulasi kehadiran harian siswa.</p>
                 </div>
-                <p class="text-[11px] sm:text-xs text-gray-500">&copy; 2026 Bimbel SAINS. All rights reserved.</p>
             </div>
-        </div>
-    </footer>
 
-    <!-- SCRIPT SUPABASE CONFIG & INTERACTION -->
+            <!-- 7. NILAI -->
+            <div id="tab-nilai" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-extrabold">Nilai Akademik Siswa</h2>
+                <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                    <p class="text-sm text-gray-400">Input dan rekap nilai ulangan harian serta tryout.</p>
+                </div>
+            </div>
+
+            <!-- 8. PEMBAYARAN -->
+            <div id="tab-pembayaran" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-extrabold">Pembayaran SPP</h2>
+                <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                    <p class="text-sm text-gray-400">Status pembayaran bulanan siswa.</p>
+                </div>
+            </div>
+
+            <!-- 9. UJIAN -->
+            <div id="tab-ujian" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-extrabold">Ujian & Tryout</h2>
+                <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                    <p class="text-sm text-gray-400">Pengelolaan bank soal dan jadwal ujian.</p>
+                </div>
+            </div>
+
+            <!-- 10. PENGUMUMAN -->
+            <div id="tab-pengumuman" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-extrabold">Pengumuman</h2>
+                <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                    <p class="text-sm text-gray-400">Informasi penting untuk siswa dan orang tua.</p>
+                </div>
+            </div>
+
+            <!-- 11. LAPORAN -->
+            <div id="tab-laporan" class="tab-content hidden space-y-6">
+                <h2 class="text-2xl font-extrabold">Laporan Akademik</h2>
+                <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                    <p class="text-sm text-gray-400">Cetak laporan perkembangan belajar bulanan.</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- SCRIPT CONTROLLER -->
     <script>
-        // Konfigurasi Supabase (Ganti URL dan Anon Key dengan kredensial project Supabase Anda)
+        // Konfigurasi Supabase
         const SUPABASE_URL = 'https://URL_SUPABASE_ANDA.supabase.co';
         const SUPABASE_ANON_KEY = 'ANON_KEY_SUPABASE_ANDA';
-        
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const form = document.getElementById('registrationForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const formMessage = document.getElementById('formMessage');
-
-        form.addEventListener('submit', async (e) => {
+        // Simulasi Login SPA (Bisa disesuaikan dengan auth Supabase asli)
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Mengirim Data...';
-
-            const nama = document.getElementById('nama').value;
-            const jenjang = document.getElementById('jenjang').value;
-            const whatsapp = document.getElementById('whatsapp').value;
-            const program_pilihan = document.getElementById('program_pilihan').value;
-
-            try {
-                const { data, error } = await _supabase
-                    .from('pendaftaran_sains')
-                    .insert([{ nama, jenjang, whatsapp, program_pilihan }]);
-
-                if (error) throw error;
-
-                formMessage.textContent = 'Pendaftaran berhasil! Tim kami akan segera menghubungi Anda via WhatsApp.';
-                formMessage.className = 'text-center text-xs sm:text-sm mt-3 text-green-400 font-semibold';
-                form.reset();
-            } catch (err) {
-                console.error(err);
-                formMessage.textContent = 'Gagal mengirim data. Silakan hubungi langsung via WhatsApp 081336909060.';
-                formMessage.className = 'text-center text-xs sm:text-sm mt-3 text-red-400 font-semibold';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Kirim Pendaftaran Sekarang';
-                formMessage.classList.remove('hidden');
-            }
+            // Shortcut masuk aplikasi
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-app').classList.remove('hidden');
         });
+
+        function logout() {
+            document.getElementById('view-app').classList.add('hidden');
+            document.getElementById('view-login').classList.remove('hidden');
+        }
+
+        // Tab Switcher Function
+        function switchTab(targetId) {
+            // Sembunyikan semua tab konten
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(el => el.classList.add('hidden'));
+
+            // Tampilkan target konten
+            document.getElementById('tab-' + targetId).classList.remove('hidden');
+
+            // Ubah state aktif tombol navigasi
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                if(btn.getAttribute('data-target') === targetId) {
+                    btn.classList.add('bg-sainsRed', 'text-white');
+                    btn.classList.remove('text-gray-300', 'hover:bg-gray-800');
+                } else {
+                    btn.classList.remove('bg-sainsRed', 'text-white');
+                    btn.classList.add('text-gray-300', 'hover:bg-gray-800');
+                }
+            });
+        }
     </script>
 </body>
 </html>
