@@ -3,32 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bimbel SAINS Dashboard</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Bimbel SAINS - Dashboard</title>
+    <!-- Font Awesome CDN untuk Ikon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #eef3f8;
-            max-width: 480px; /* Ukuran tampilan HP */
+            background-color: #f0f4f8;
+            max-width: 480px; /* Ukuran Tampilan Mobile */
             margin: 0 auto;
             min-height: 100vh;
             position: relative;
-            padding-bottom: 30px;
+            padding-bottom: 90px; /* Jarak agar konten paling bawah tidak tertutup Bottom Nav */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
         }
 
-        /* --- HEADER BIRU --- */
+        /* ================= HEADER BIRU ================= */
         .header {
             background-color: #007bff;
             color: #ffffff;
-            padding: 16px 16px 40px 16px; /* Padding bawah 40px agar kartu di bawahnya overlap pas */
-            border-bottom-left-radius: 0px;
-            border-bottom-right-radius: 0px;
+            padding: 20px 16px 50px 16px; /* Bottom padding memberi ruang untuk card overlay */
         }
 
         .header-top {
@@ -39,143 +40,176 @@
 
         .logo-box {
             background: #ffffff;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 800;
             color: #007bff;
-            font-size: 14px;
-            display: inline-block;
+            font-size: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
         .logo-box span {
             color: #17a2b8;
         }
 
-        .user-info {
-            text-align: right;
+        .user-section {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
         }
 
-        .user-text {
+        .header-icons {
+            display: flex;
+            gap: 10px;
+            margin-top: 2px;
+        }
+
+        .header-icons i {
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-greeting {
             font-size: 11px;
+            opacity: 0.9;
             line-height: 1.2;
         }
 
         .user-name {
-            font-weight: bold;
-            font-size: 13px;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: 0.5px;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .reload-btn {
-            background: rgba(255, 255, 255, 0.2);
+        .btn-reload {
+            background: rgba(255, 255, 255, 0.25);
             border: none;
-            color: white;
+            color: #ffffff;
             padding: 4px 10px;
-            border-radius: 15px;
+            border-radius: 12px;
             font-size: 10px;
+            font-weight: 600;
             cursor: pointer;
             margin-top: 4px;
             display: inline-flex;
             align-items: center;
             gap: 4px;
+            backdrop-filter: blur(4px);
         }
 
-        /* --- CONTAINER KONTEN (DI BAWAH HEADER) --- */
-        .content {
+        /* ================= KONTEN UTAMA ================= */
+        .container {
             padding: 0 16px;
-            margin-top: -25px; /* Tarik sedikit ke atas agar melayang elegan */
+            margin-top: -35px; /* Offset negatif agar card menumpuk di atas header biru tanpa tertutup */
+            position: relative;
+            z-index: 10;
         }
 
-        /* --- CARD REGULER / PRIVAT --- */
+        /* Card Base Style */
         .card {
             background: #ffffff;
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 18px;
+            padding: 16px 20px;
             margin-bottom: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
             position: relative;
-            overflow: hidden;
         }
 
-        .card-title {
+        /* Card 1: Siswa Reguler / Privat */
+        .card-reguler h2 {
             font-size: 18px;
             font-weight: 800;
-            color: #1a202c;
-            margin-bottom: 8px;
+            color: #1e293b;
+            margin-bottom: 4px;
         }
 
-        .card-subtitle {
-            font-size: 12px;
-            color: #4a5568;
+        .card-reguler p {
+            font-size: 13px;
+            color: #64748b;
             font-weight: 600;
         }
 
-        .badge-discount {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: #1e6091;
-            color: white;
-            padding: 6px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: bold;
+        .card-reguler p span {
+            color: #0f172a;
+            font-weight: 800;
         }
 
-        /* --- PROGRAM STUDIKU --- */
-        .program-title {
+        /* Card 2: Program StudiKu */
+        .badge-diskon {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #1e5288;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+        }
+
+        .program-header {
             display: flex;
             align-items: center;
             gap: 8px;
             color: #0056b3;
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 800;
+            font-size: 15px;
             margin-bottom: 4px;
         }
 
-        .program-desc {
+        .program-sub {
             font-size: 11px;
-            color: #6c757d;
-            margin-bottom: 12px;
+            color: #64748b;
+            margin-bottom: 14px;
         }
 
-        .btn-primary {
+        .program-sub a {
+            color: #0056b3;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        .btn-program {
             background: #0056b3;
-            color: white;
+            color: #ffffff;
             border: none;
             width: 100%;
-            padding: 10px;
-            border-radius: 20px;
-            font-weight: bold;
+            padding: 12px;
+            border-radius: 25px;
+            font-weight: 700;
             font-size: 12px;
             cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 86, 179, 0.25);
+            transition: transform 0.1s ease;
         }
 
-        .level-tags {
-            margin-top: 8px;
+        .btn-program:active {
+            transform: scale(0.98);
+        }
+
+        .program-tags {
+            margin-top: 10px;
             font-size: 11px;
-            font-weight: bold;
-            color: #495057;
+            font-weight: 800;
+            color: #334155;
             text-align: center;
+            letter-spacing: 0.5px;
         }
 
-        /* --- GRID MENU UTAMA --- */
+        /* Grid Menu 8 Item */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            padding: 16px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            gap: 16px 12px;
+            padding: 20px 12px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
             margin-bottom: 16px;
         }
 
@@ -184,142 +218,243 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 6px;
             text-decoration: none;
+            cursor: pointer;
         }
 
-        .icon-box {
-            width: 48px;
-            height: 48px;
+        .icon-circle {
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 18px;
+            color: #ffffff;
+            font-size: 20px;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.15s ease;
+        }
+
+        .menu-item:active .icon-circle {
+            transform: scale(0.92);
         }
 
         .menu-label {
             font-size: 10px;
-            color: #2d3748;
-            font-weight: 600;
-            line-height: 1.2;
+            color: #334155;
+            font-weight: 700;
+            line-height: 1.25;
+            max-width: 80px;
         }
 
-        /* Warna Ikon Menu */
-        .bg-blue { background-color: #3182ce; }
-        .bg-purple { background-color: #805ad5; }
-        .bg-teal { background-color: #319795; }
-        .bg-green { background-color: #38a169; }
-        .bg-pink { background-color: #ed64a6; }
-        .bg-dark-green { background-color: #2f855a; }
-        .bg-indigo { background-color: #667eea; }
-        .bg-bright-blue { background-color: #4299e1; }
+        /* Warna khusus ikon */
+        .bg-pendaftaran { background-color: #3b82f6; }
+        .bg-materi      { background-color: #a855f7; }
+        .bg-tpa         { background-color: #14b8a6; }
+        .bg-jadwal      { background-color: #22c55e; }
+        .bg-pembayaran  { background-color: #ec4899; }
+        .bg-berita      { background-color: #15803d; }
+        .bg-konsultasi  { background-color: #6366f1; }
+        .bg-semua       { background-color: #2563eb; }
 
-        /* --- BANNER BAWAH --- */
+        /* Banner Orange */
         .banner-promo {
-            background: linear-gradient(90deg, #ff6b00, #ff8800);
-            color: white;
+            background: linear-gradient(90deg, #ff6a00, #ff8800);
+            color: #ffffff;
             text-align: center;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 12px;
             font-size: 11px;
-            font-weight: bold;
+            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(255, 106, 0, 0.25);
+        }
+
+        /* ================= BOTTOM NAVIGATION BAR ================= */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 65px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            z-index: 1000;
+        }
+
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 700;
+            flex: 1;
+        }
+
+        .nav-link i {
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+
+        .nav-link.active {
+            color: #007bff;
+        }
+
+        /* Center Floating Action Button */
+        .fab-container {
+            position: relative;
+            top: -16px;
+        }
+
+        .fab-btn {
+            width: 54px;
+            height: 54px;
+            background-color: #007bff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 6px 14px rgba(0, 123, 255, 0.4);
+            border: 4px solid #ffffff;
+        }
+
+        .fab-btn i {
+            font-size: 22px;
+            margin-bottom: 0;
         }
     </style>
 </head>
 <body>
 
     <!-- HEADER BIRU -->
-    <div class="header">
+    <header class="header">
         <div class="header-top">
             <div class="logo-box">
                 Bimbel <span>SAINS</span>
             </div>
             
-            <div class="user-info">
-                <div class="header-actions">
-                    <i class="fa-regular fa-bell" style="font-size: 18px;"></i>
-                    <i class="fa-solid fa-gear" style="font-size: 18px;"></i>
+            <div class="user-section">
+                <div class="header-icons">
+                    <i class="fa-regular fa-bell"></i>
+                    <i class="fa-solid fa-gear"></i>
                 </div>
-                <div>
-                    <div class="user-text">Selamat Belajar,</div>
+                <div class="user-details">
+                    <div class="user-greeting">Selamat Belajar,</div>
                     <div class="user-name">SUTRISNO</div>
-                    <button class="reload-btn">
+                    <button class="btn-reload">
                         Muat Ulang <i class="fa-solid fa-rotate-right"></i>
                     </button>
                 </div>
             </div>
         </div>
-    </div>
+    </header>
 
     <!-- KONTEN UTAMA -->
-    <div class="content">
+    <main class="container">
         
-        <!-- CARD REGULER / PRIVAT -->
-        <div class="card">
-            <div class="card-title">Siswa Reguler / Privat</div>
-            <div class="card-subtitle">Total Pertemuan: <b>24/30</b></div>
-        </div>
+        <!-- CARD 1: SISWA REGULER / PRIVAT -->
+        <section class="card card-reguler">
+            <h2>Siswa Reguler / Privat</h2>
+            <p>Total Pertemuan: <span>24/30</span></p>
+        </section>
 
-        <!-- CARD PROGRAM STUDIKU -->
-        <div class="card">
-            <div class="badge-discount">DISKON 50%</div>
-            <div class="program-title">
+        <!-- CARD 2: PROGRAM STUDIKU -->
+        <section class="card">
+            <span class="badge-diskon">DISKON 50%</span>
+            <div class="program-header">
                 <i class="fa-solid fa-house"></i>
-                Program StudiKu
+                <span>Program StudiKu</span>
             </div>
-            <div class="program-desc">
-                Anda memiliki 2 program studi aktif. <a href="#" style="color: #0056b3;">Lihat detail.</a>
-            </div>
-            <button class="btn-primary">
+            <p class="program-sub">
+                Anda memiliki 2 program studi aktif. <a href="#">Lihat detail.</a>
+            </p>
+            <button class="btn-program">
                 Program & Privat (Guru datang ke Rumah)
             </button>
-            <div class="level-tags">TK, SD, SMP, SMA, SMK, TPA</div>
-        </div>
+            <div class="program-tags">TK, SD, SMP, SMA, SMK, TPA</div>
+        </section>
 
-        <!-- GRID MENU UTAMA -->
-        <div class="menu-grid">
+        <!-- GRID 8 MENU UTAMA -->
+        <section class="menu-grid">
             <div class="menu-item">
-                <div class="icon-box bg-blue"><i class="fa-solid fa-user-plus"></i></div>
-                <div class="menu-label">Pendaftaran Murid Baru</div>
+                <div class="icon-circle bg-pendaftaran"><i class="fa-solid fa-user-plus"></i></div>
+                <span class="menu-label">Pendaftaran Murid Baru</span>
             </div>
             <div class="menu-item">
-                <div class="icon-box bg-purple"><i class="fa-solid fa-book-open"></i></div>
-                <div class="menu-label">Materi Belajar</div>
+                <div class="icon-circle bg-materi"><i class="fa-solid fa-book-open"></i></div>
+                <span class="menu-label">Materi Belajar</span>
             </div>
             <div class="menu-item">
-                <div class="icon-box bg-teal"><i class="fa-solid fa-file-lines"></i></div>
-                <div class="menu-label">TPA & AKM</div>
+                <div class="icon-circle bg-tpa"><i class="fa-solid fa-file-lines"></i></div>
+                <span class="menu-label">TPA & AKM</span>
             </div>
             <div class="menu-item">
-                <div class="icon-box bg-green"><i class="fa-regular fa-clock"></i></div>
-                <div class="menu-label">Jadwal Kelas</div>
+                <div class="icon-circle bg-jadwal"><i class="fa-regular fa-clock"></i></div>
+                <span class="menu-label">Jadwal Kelas</span>
             </div>
             <div class="menu-item">
-                <div class="icon-box bg-pink"><i class="fa-solid fa-wallet"></i></div>
-                <div class="menu-label">Pembayaran Biaya</div>
+                <div class="icon-circle bg-pembayaran"><i class="fa-solid fa-wallet"></i></div>
+                <span class="menu-label">Pembayaran Biaya</span>
             </div>
             <div class="menu-item">
-                <div class="icon-box bg-dark-green"><i class="fa-regular fa-envelope"></i></div>
-                <div class="menu-label">Berita & Info</div>
+                <div class="icon-circle bg-berita"><i class="fa-regular fa-envelope"></i></div>
+                <span class="menu-label">Berita & Info</span>
             </div>
             <div class="menu-item">
-                <div class="icon-box bg-indigo"><i class="fa-regular fa-comments"></i></div>
-                <div class="menu-label">Konsultasi Guru</div>
+                <div class="icon-circle bg-konsultasi"><i class="fa-regular fa-comments"></i></div>
+                <span class="menu-label">Konsultasi Guru</span>
             </div>
             <div class="menu-item">
-                <div class="icon-box bg-bright-blue"><i class="fa-solid fa-border-all"></i></div>
-                <div class="menu-label">Semua Menu</div>
+                <div class="icon-circle bg-semua"><i class="fa-solid fa-border-all"></i></div>
+                <span class="menu-label">Semua Menu</span>
             </div>
-        </div>
+        </section>
 
-        <!-- BANNER BOTTOM -->
+        <!-- BANNER PROMO ORANGE -->
         <div class="banner-promo">
             * Untuk 10 Pendaftar Pertama di Awal Semester
         </div>
 
-    </div>
+    </main>
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-link active">
+            <i class="fa-solid fa-house"></i>
+            <span>Beranda</span>
+        </a>
+        <a href="#" class="nav-link">
+            <i class="fa-regular fa-calendar-check"></i>
+            <span>Presensi</span>
+        </a>
+        
+        <!-- Center Floating Action Button -->
+        <a href="#" class="nav-link fab-container">
+            <div class="fab-btn">
+                <i class="fa-solid fa-qrcode"></i>
+            </div>
+        </a>
+
+        <a href="#" class="nav-link">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>Nilai</span>
+        </a>
+        <a href="#" class="nav-link">
+            <i class="fa-regular fa-user"></i>
+            <span>Profil</span>
+        </a>
+    </nav>
 
 </body>
 </html>
