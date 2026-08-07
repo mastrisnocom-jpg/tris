@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BM Monitoring Dashboard</title>
-  <!-- FontAwesome untuk Ikon -->
+  <!-- FontAwesome Icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     * {
@@ -20,14 +20,14 @@
     body {
       background-color: #f2f5f9;
       color: #333;
-      padding-bottom: 80px; /* Space untuk bottom nav */
+      padding-bottom: 85px;
     }
 
-    /* HEADER SECTION */
+    /* HEADER SECTION (PERSIS GAMBAR 2) */
     .header {
-      background-color: #007bff;
+      background: #007bff; /* Warna biru terang/vibrant */
       color: white;
-      padding: 20px 20px 50px 20px;
+      padding: 16px 16px 45px 16px;
       border-bottom-left-radius: 20px;
       border-bottom-right-radius: 20px;
       position: relative;
@@ -36,32 +36,41 @@
     .top-bar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
+      align-items: flex-start;
     }
 
+    /* LOGO PILL UTAMA */
     .logo-container {
       background: white;
       color: #007bff;
-      padding: 6px 16px;
-      border-radius: 20px;
+      padding: 8px 18px;
+      border-radius: 25px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 15px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
+    .logo-container span {
+      color: #0056b3;
+      font-weight: 800;
+    }
+
+    /* USER INFO SISI KANAN */
     .user-info {
       text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
     }
 
     .user-actions {
       display: flex;
       align-items: center;
-      justify-content: flex-end;
       gap: 12px;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .icon-btn {
@@ -72,42 +81,54 @@
     }
 
     .greeting {
-      font-size: 11px;
+      font-size: 10px;
       opacity: 0.9;
+      font-weight: 400;
+      line-height: 1.2;
     }
 
     .username {
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
       text-transform: uppercase;
+      margin-bottom: 3px;
     }
 
     .badge-role {
       background-color: #ffc107;
       color: #000;
       font-size: 9px;
-      font-weight: 700;
+      font-weight: 800;
       padding: 2px 8px;
       border-radius: 10px;
       display: inline-block;
-      margin-top: 2px;
+      text-transform: uppercase;
     }
 
     .btn-refresh {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.25);
       color: white;
-      border: none;
-      padding: 4px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 3px 10px;
       border-radius: 12px;
-      font-size: 11px;
+      font-size: 10px;
+      font-weight: 500;
       cursor: pointer;
-      margin-top: 4px;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-refresh:active {
+      background: rgba(255, 255, 255, 0.4);
     }
 
     /* CONTAINER & CARDS */
     .container {
       padding: 0 16px;
-      margin-top: -30px;
+      margin-top: -28px;
     }
 
     .card {
@@ -115,33 +136,31 @@
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
     }
 
-    /* CARD STATUS */
+    /* CARD 1: KONTROL PUSAT */
     .status-card h2 {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       color: #1a202c;
     }
 
     .status-card p {
-      font-size: 12px;
+      font-size: 11px;
       color: #718096;
       margin-top: 2px;
     }
 
-    /* CARD BANNER */
-    .banner-card {
+    /* CARD 2: BANNER MANAGEMENT */
+    .banner-card-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      background: #ffffff;
-      border-left: 5px solid #0056b3;
+      align-items: flex-start;
     }
 
     .banner-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       color: #0056b3;
       display: flex;
@@ -152,16 +171,16 @@
     .banner-sub {
       font-size: 11px;
       color: #6c757d;
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
     .badge-access {
       background-color: #1d4ed8;
       color: white;
-      font-size: 10px;
-      font-weight: 600;
-      padding: 4px 8px;
-      border-radius: 8px;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
     }
 
     .btn-action {
@@ -172,17 +191,17 @@
       padding: 10px;
       border-radius: 20px;
       font-weight: 600;
-      font-size: 13px;
+      font-size: 12px;
       margin-top: 12px;
       cursor: pointer;
     }
 
-    /* GRID MENU UTAMA */
+    /* GRID MENU 8 BOTON */
     .menu-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 16px 8px;
-      padding: 10px 0;
+      padding: 6px 0;
       text-align: center;
     }
 
@@ -195,30 +214,30 @@
     }
 
     .icon-circle {
-      width: 52px;
-      height: 52px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 20px;
-      margin-bottom: 8px;
+      font-size: 18px;
+      margin-bottom: 6px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s;
+      transition: transform 0.15s;
     }
 
     .menu-item:active .icon-circle {
-      transform: scale(0.95);
+      transform: scale(0.92);
     }
 
     .menu-label {
-      font-size: 11px;
-      font-weight: 500;
+      font-size: 10px;
+      font-weight: 600;
       line-height: 1.2;
     }
 
-    /* WARNA IKON MENU */
+    /* GRADIENT IKON MENU */
     .bg-red { background: linear-gradient(135deg, #ff5252, #ff1744); }
     .bg-orange { background: linear-gradient(135deg, #ff9800, #f57c00); }
     .bg-blue { background: linear-gradient(135deg, #42a5f5, #1e88e5); }
@@ -232,9 +251,9 @@
     .alert-banner {
       background: linear-gradient(90deg, #ff6d00, #ff9100);
       color: white;
-      padding: 10px 16px;
+      padding: 10px 14px;
       border-radius: 12px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       text-align: center;
       margin-bottom: 16px;
@@ -252,6 +271,7 @@
       align-items: center;
       padding: 8px 0;
       box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      z-index: 1000;
     }
 
     .nav-item {
@@ -261,6 +281,7 @@
       text-decoration: none;
       color: #a0aec0;
       font-size: 10px;
+      font-weight: 500;
     }
 
     .nav-item i {
@@ -278,8 +299,8 @@
     }
 
     .scan-btn {
-      width: 50px;
-      height: 50px;
+      width: 48px;
+      height: 48px;
       background: #007bff;
       border-radius: 50%;
       display: flex;
@@ -294,12 +315,15 @@
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- HEADER (SESUAI GAMBAR 2) -->
   <div class="header">
     <div class="top-bar">
+      <!-- Logo Pill Kiri -->
       <div class="logo-container">
-        <i class="fa-solid fa-building"></i> BM Monitoring
+        BM <span>Monitoring</span>
       </div>
+
+      <!-- Info User Kanan -->
       <div class="user-info">
         <div class="user-actions">
           <a href="#" class="icon-btn"><i class="fa-regular fa-bell"></i></a>
@@ -307,26 +331,26 @@
         </div>
         <div class="greeting">Selamat Datang,</div>
         <div class="username">ADMINISTRATOR UTAMA</div>
-        <span class="badge-role">SUPERADMIN</span> <br>
-        <button class="btn-refresh"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+        <span class="badge-role">SUPERADMIN</span>
+        <button class="btn-refresh">Refresh <i class="fa-solid fa-rotate-right"></i></button>
       </div>
     </div>
   </div>
 
-  <!-- MAIN CONTAINER -->
+  <!-- MAIN CONTENT CONTAINER -->
   <div class="container">
     
-    <!-- CARD 1: PANEL KENDALI -->
+    <!-- CARD 1: PANEL UTAMA -->
     <div class="card status-card">
-      <h2>Panel Kendali BM Monitoring</h2>
-      <p>Total Gedung: 12 | Total Pemeriksaan Hari Ini: 48</p>
+      <h2>Panel Kendali Pusat BM</h2>
+      <p>Total Gedung: 12 | Total Laporan: 350</p>
     </div>
 
-    <!-- CARD 2: RINGKASAN LAPORAN -->
-    <div class="card banner-card-wrapper">
-      <div class="banner-card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+    <!-- CARD 2: RINGKASAN MANAGEMENT -->
+    <div class="card">
+      <div class="banner-card-header">
         <div>
-          <div class="banner-title"><i class="fa-solid fa-house-laptop"></i> Ringkasan & Operasional</div>
+          <div class="banner-title"><i class="fa-solid fa-house-laptop"></i> Ringkasan Operasional</div>
           <div class="banner-sub">98% Pemeriksaan minggu ini telah terverifikasi.</div>
         </div>
         <span class="badge-access">AKSES FULL</span>
@@ -334,7 +358,7 @@
       <button class="btn-action">Buka Management Panel</button>
     </div>
 
-    <!-- CARD 3: MENU GRID (Sesuai Menu Gambar 1) -->
+    <!-- CARD 3: MENU GRID (Sesuai Struktur Gambar 1 dengan Tampilan Gambar 2) -->
     <div class="card">
       <div class="menu-grid">
         
@@ -397,14 +421,14 @@
       </div>
     </div>
 
-    <!-- ANNOUNCEMENT BANNER -->
+    <!-- INFORMASI/ANNOUNCEMENT BANNER -->
     <div class="alert-banner">
       * Jadwal Pemeliharaan Rutin ATM Setiap Hari Jumat
     </div>
 
   </div>
 
-  <!-- BOTTOM NAVIGATION -->
+  <!-- BOTTOM NAVIGATION BAR -->
   <div class="bottom-nav">
     <a href="#" class="nav-item active">
       <i class="fa-solid fa-house"></i>
