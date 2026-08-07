@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bimbel SAINS - Mobile App</title>
+    <title>Bimbel SAINS</title>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #0f172a;
-            color: #333;
+            background-color: #dbefe6;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -23,160 +22,315 @@
             margin: 0;
         }
 
-        /* Container Aplikasi Utama */
+        /* Container Selular */
         .app-viewport {
             width: 100%;
-            max-width: 414px;
+            max-width: 412px;
             height: 100vh;
-            max-height: 896px;
-            background-color: #f8fafc;
+            max-height: 870px;
+            background-color: #dcf2fd;
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
 
         @media (min-width: 420px) {
             .app-viewport {
-                height: 92vh;
-                border-radius: 40px;
-                border: 8px solid #1e293b;
+                height: 94vh;
+                border-radius: 36px;
+                border: 8px solid #0f172a;
             }
         }
 
-        /* Header Navigation */
+        /* Header Biru Utama */
         .header {
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            background: linear-gradient(180deg, #006ec7 0%, #0088eb 100%);
             color: white;
-            padding: 20px 20px 65px 20px;
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
-            flex-shrink: 0;
+            padding: 16px 20px 85px 20px;
+            position: relative;
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
+            align-items: flex-start;
         }
 
-        .brand-badge {
+        /* Logo Bimbel SAINS */
+        .logo-box {
             background: white;
-            padding: 4px 10px;
-            border-radius: 8px;
+            padding: 4px 12px;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .brand-sub {
-            font-size: 7px;
+        .logo-sub {
+            font-size: 11px;
             font-weight: 800;
-            color: #64748b;
-            letter-spacing: 0.5px;
+            color: #000;
+            line-height: 1.1;
         }
 
-        .brand-title {
+        .logo-text {
             font-weight: 900;
-            font-size: 16px;
+            font-size: 22px;
             line-height: 1;
+            letter-spacing: -0.5px;
         }
 
-        .brand-title span:nth-child(1) { color: #0284c7; }
-        .brand-title span:nth-child(2) { color: #84cc16; }
-        .brand-title span:nth-child(3) { color: #f59e0b; }
-        .brand-title span:nth-child(4) { color: #ec4899; }
-        .brand-title span:nth-child(5) { color: #8b5cf6; }
+        .logo-s { color: #00bcd4; }
+        .logo-a { color: #8bc34a; }
+        .logo-i { color: #ff9800; }
+        .logo-n { color: #e91e63; }
+        .logo-s2 { color: #00bcd4; }
 
-        .user-info {
+        .header-action-icons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .user-greeting {
             text-align: right;
+            margin-top: 10px;
+            color: white;
         }
 
-        .user-info .sub { font-size: 11px; opacity: 0.85; }
-        .user-info .name { font-size: 15px; font-weight: 700; }
+        .user-greeting .sub {
+            font-size: 13px;
+            opacity: 0.9;
+        }
 
-        /* Main Viewport Content Areas */
+        .user-greeting .name {
+            font-weight: 800;
+            font-size: 15px;
+        }
+
+        .reload-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-top: 4px;
+            background: rgba(255,255,255,0.15);
+            padding: 2px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .reload-icon-box {
+            background: #ffb800;
+            border-radius: 4px;
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: white;
+        }
+
+        /* Content Scroll Area */
         .main-content {
             flex: 1;
             overflow-y: auto;
             padding-bottom: 80px;
-            scroll-behavior: smooth;
         }
 
-        .tab-page {
-            display: none;
-            padding-bottom: 20px;
-        }
-
-        .tab-page.active {
-            display: block;
-        }
-
-        /* Card Section */
-        .card-overlap {
-            margin: -45px 16px 16px 16px;
+        /* Banner Card Status Siswa */
+        .hero-card-container {
+            margin: -65px 16px 14px 16px;
             position: relative;
             z-index: 10;
         }
 
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02);
-            border: 1px solid #f1f5f9;
-            margin-bottom: 14px;
+        .hero-card {
+            background: linear-gradient(135deg, #ffffff 0%, #eef7ff 100%);
+            border-radius: 20px;
+            padding: 18px 20px;
+            box-shadow: 0 10px 20px rgba(0, 82, 204, 0.12);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #ffffff;
         }
 
-        .card-header {
+        .hero-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .hero-status {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            max-width: 75%;
+        }
+
+        .hero-meta {
+            font-size: 13px;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .hero-meta strong {
+            font-size: 15px;
+            color: #0f172a;
+            font-weight: 800;
+        }
+
+        .hero-illustration {
+            position: absolute;
+            right: -10px;
+            bottom: -10px;
+            width: 120px;
+            height: 120px;
+            background: rgba(0, 110, 199, 0.85);
+            border-radius: 50% 0 0 0;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
+        }
+
+        .eye-icon {
+            width: 48px;
+            height: 48px;
+            border: 5px solid white;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .eye-pupil {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #93c5fd;
+        }
+
+        .dot.active {
+            width: 24px;
+            border-radius: 10px;
+            background: white;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: white;
+            margin: 0 16px 14px 16px;
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            position: relative;
+        }
+
+        /* Badge Diskon Starburst */
+        .discount-badge {
+            position: absolute;
+            top: -12px;
+            right: 12px;
+            background: linear-gradient(135deg, #2b6cb0, #1a365d);
+            color: white;
+            padding: 10px 12px;
+            clip-path: polygon(100% 50%, 85% 65%, 88% 85%, 68% 82%, 50% 100%, 32% 82%, 12% 85%, 15% 65%, 0% 50%, 15% 35%, 12% 15%, 32% 18%, 50% 0%, 68% 18%, 88% 15%, 85% 35%);
+            text-align: center;
+            font-weight: 900;
+            line-height: 1;
+            z-index: 12;
+        }
+
+        .discount-badge .small {
+            font-size: 9px;
+            letter-spacing: 0.5px;
+        }
+
+        .discount-badge .num {
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        .program-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0056b3;
+            font-weight: 800;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .program-desc {
+            font-size: 12px;
+            color: #475569;
             margin-bottom: 10px;
         }
 
-        .card-title {
+        .program-pill-box {
+            background: #0056b3;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .level-tags {
+            font-weight: 800;
             font-size: 13px;
-            font-weight: 700;
-            color: #1e293b;
+            color: #0f172a;
         }
 
-        .badge-status {
-            background: #dbeafe;
-            color: #1e40af;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 700;
+        .student-group-img {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            width: 120px;
+            border-radius: 8px;
         }
 
-        .progress-bar-container {
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #0284c7, #38bdf8);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        /* Menu Grid */
+        /* Menu Grid (8 Icons) */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-top: 8px;
+            gap: 16px 8px;
+            text-align: center;
+            margin-top: 4px;
         }
 
-        .menu-btn {
+        .menu-item {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -184,97 +338,68 @@
             background: none;
             border: none;
             cursor: pointer;
-            outline: none;
         }
 
-        .menu-icon-box {
-            width: 46px;
-            height: 46px;
-            border-radius: 14px;
+        .menu-icon-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
             transition: transform 0.1s ease;
         }
 
-        .menu-btn:active .menu-icon-box {
+        .menu-item:active .menu-icon-circle {
             transform: scale(0.92);
         }
 
         .menu-label {
-            font-size: 10px;
-            font-weight: 600;
-            color: #475569;
-            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.2;
+            max-width: 70px;
         }
 
-        /* List Items */
-        .data-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .data-item {
-            background: #f8fafc;
-            padding: 10px 12px;
-            border-radius: 10px;
+        /* Banner Informasi Bimbel Bottom */
+        .info-bottom-card {
+            background: white;
+            margin: 0 16px 14px 16px;
+            border-radius: 16px;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 12px;
-            border-left: 3px solid #0284c7;
+            font-size: 11px;
+            color: #0f172a;
         }
 
-        /* Form Inputs */
-        .form-group {
-            margin-bottom: 12px;
+        .wifi-tag {
+            background: #000;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
         }
 
-        .form-group label {
-            display: block;
+        .promo-banner {
+            background: #f97316;
+            color: white;
             font-size: 11px;
             font-weight: 700;
-            color: #475569;
-            margin-bottom: 4px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #cbd5e1;
+            padding: 6px 16px;
+            margin: 0 16px 14px 16px;
             border-radius: 8px;
-            font-size: 12px;
-            outline: none;
         }
 
-        .form-control:focus {
-            border-color: #0284c7;
-            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
-        }
-
-        .btn-primary {
-            width: 100%;
-            background: #0284c7;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-
-        .btn-primary:active {
-            background: #0369a1;
-        }
-
-        /* Bottom Nav Bar */
+        /* Navigation Floating Bottom */
         .bottom-nav {
             position: absolute;
             bottom: 0;
@@ -287,49 +412,74 @@
             align-items: center;
             border-top: 1px solid #e2e8f0;
             z-index: 100;
-            padding: 0 10px;
+            padding: 0 4px;
         }
 
-        .nav-link {
+        .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 2px;
             background: none;
             border: none;
             color: #94a3b8;
-            font-size: 10px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
             cursor: pointer;
             width: 20%;
         }
 
-        .nav-link.active {
-            color: #0284c7;
+        .nav-item.active {
+            color: #0056b3;
         }
 
-        .nav-link svg {
-            width: 20px;
-            height: 20px;
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
             fill: currentColor;
         }
 
-        /* Modal Popup */
+        /* Central QRIS Button */
+        .qris-btn-wrapper {
+            position: relative;
+            top: -18px;
+        }
+
+        .qris-btn {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #0056b3, #003d80);
+            border: 4px solid #dcf2fd;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 6px 16px rgba(0, 86, 179, 0.4);
+            cursor: pointer;
+        }
+
+        .qris-btn span {
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        /* Modal Dynamic Forms */
         .modal {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(3px);
             z-index: 200;
             display: none;
             align-items: flex-end;
         }
 
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
 
-        .modal-body {
+        .modal-content {
             background: white;
             width: 100%;
             border-top-left-radius: 24px;
@@ -337,12 +487,33 @@
             padding: 20px;
             max-height: 80vh;
             overflow-y: auto;
-            animation: slideUp 0.25s ease-out;
+            animation: slideUp 0.2s ease-out;
         }
 
         @keyframes slideUp {
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            margin-top: 4px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: #0056b3;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
         }
 
         .toast {
@@ -354,390 +525,294 @@
             color: white;
             padding: 8px 16px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: bold;
             z-index: 300;
             display: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
     </style>
 </head>
 <body>
 
     <div class="app-viewport">
-        <!-- Toast Notification -->
         <div id="toast" class="toast">Data berhasil disimpan!</div>
 
-        <!-- Top Header -->
+        <!-- Top Blue Header -->
         <div class="header">
             <div class="header-top">
-                <div class="brand-badge">
-                    <span class="brand-sub">BIMBEL</span>
-                    <div class="brand-title">
-                        <span>S</span><span>A</span><span>I</span><span>N</span><span>S</span>
+                <div class="logo-box">
+                    <span class="logo-sub">Bimbel</span>
+                    <div class="logo-text">
+                        <span class="logo-s">S</span><span class="logo-a">A</span><span class="logo-i">I</span><span class="logo-n">N</span><span class="logo-s2">S</span>
                     </div>
                 </div>
-                <div class="user-info">
-                    <div class="sub">Selamat Belajar,</div>
-                    <div class="name" id="display-user-name">Sutrisno</div>
+                <div class="header-action-icons">
+                    <button class="icon-btn">
+                        <svg style="width:22px;height:22px;fill:white;" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                    </button>
+                    <button class="icon-btn">
+                        <svg style="width:22px;height:22px;fill:white;" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="user-greeting">
+                <div class="sub">Selamat Belajar,</div>
+                <div class="name" id="user-display-name">SUTRISNO</div>
+                <div class="reload-badge" onclick="tambahPertemuan()">
+                    <span>Muat Ulang</span>
+                    <div class="reload-icon-box">↻</div>
                 </div>
             </div>
         </div>
 
-        <!-- Main Dynamic Content Pages -->
+        <!-- Scrollable Main View -->
         <div class="main-content">
-            
-            <!-- TAB 1: BERANDA -->
-            <div id="page-beranda" class="tab-page active">
-                <div class="card-overlap">
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Status Sesi Pembelajaran</span>
-                            <span class="badge-status" id="db-status-program">Reguler</span>
-                        </div>
-                        <div style="font-size: 20px; font-weight: 800; color: #0f172a;" id="db-session-count">0 / 30 Sesi</div>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-fill" id="progress-fill"></div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 8px;">
-                            <button onclick="tambahSesiBelajar()" style="background: #e0f2fe; color: #0369a1; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">+ Absen Kehadiran</button>
-                            <span style="font-size: 10px; color: #ef4444; font-weight: 700; align-self: center;">DISKON 50% AKTIF</span>
-                        </div>
-                    </div>
+            <!-- Hero Card: Status Siswa -->
+            <div class="hero-card-container">
+                <div class="hero-card">
+                    <div class="hero-title">Status Siswa</div>
+                    <div class="hero-status">Siswa Reguler / Privat</div>
+                    <div class="hero-meta">Total Pertemuan: <strong id="meeting-count">24/30</strong></div>
 
-                    <!-- Program Studi Selector -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Program Tingkat Sekolah</span>
-                        </div>
-                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                            <span style="background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;">TK</span>
-                            <span style="background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;">SD</span>
-                            <span style="background: #e0f2fe; color: #0284c7; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;">SMP</span>
-                            <span style="background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;">SMA/SMK</span>
-                            <span style="background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;">AKM/TPA</span>
-                        </div>
-                    </div>
-
-                    <!-- Grid Menu -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Layanan Siswa</span>
-                        </div>
-                        <div class="menu-grid">
-                            <button class="menu-btn" onclick="openModal('modal-daftar')">
-                                <div class="menu-icon-box" style="background: #2563eb;">
-                                    <svg style="width:20px;height:20px;fill:white;" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                                </div>
-                                <span class="menu-label">Daftar Baru</span>
-                            </button>
-                            <button class="menu-btn" onclick="switchTab('jadwal')">
-                                <div class="menu-icon-box" style="background: #059669;">
-                                    <svg style="width:20px;height:20px;fill:white;" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
-                                </div>
-                                <span class="menu-label">Jadwal Kelas</span>
-                            </button>
-                            <button class="menu-btn" onclick="openModal('modal-bayar')">
-                                <div class="menu-icon-box" style="background: #d97706;">
-                                    <svg style="width:20px;height:20px;fill:white;" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-                                </div>
-                                <span class="menu-label">Pembayaran</span>
-                            </button>
-                            <button class="menu-btn" onclick="openModal('modal-materi')">
-                                <div class="menu-icon-box" style="background: #7c3aed;">
-                                    <svg style="width:20px;height:20px;fill:white;" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
-                                </div>
-                                <span class="menu-label">Materi Modul</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Database Record List -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Siswa Terdaftar (Local DB)</span>
-                            <span style="font-size: 10px; color: #64748b;" id="db-count-label">0 Data</span>
-                        </div>
-                        <div class="data-list" id="db-siswa-list">
-                            <!-- Injected via JavaScript -->
+                    <div class="hero-illustration">
+                        <div class="eye-icon">
+                            <div class="eye-pupil"></div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- TAB 2: JADWAL KELAS -->
-            <div id="page-jadwal" class="tab-page" style="padding: 16px;">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">Jadwal Operasional Bimbel</span>
-                    </div>
-                    <div class="data-list">
-                        <div class="data-item">
-                            <div><strong>Sesi Pagi</strong><br><span style="color:#64748b;">Senin - Kamis</span></div>
-                            <span style="font-weight:bold; color:#0284c7;">08.00 - 09.30 WIB</span>
-                        </div>
-                        <div class="data-item">
-                            <div><strong>Sesi Siang</strong><br><span style="color:#64748b;">Senin - Kamis</span></div>
-                            <span style="font-weight:bold; color:#0284c7;">13.00 - 14.30 WIB</span>
-                        </div>
-                        <div class="data-item">
-                            <div><strong>Sesi Sore</strong><br><span style="color:#64748b;">Senin - Kamis</span></div>
-                            <span style="font-weight:bold; color:#0284c7;">16.30 - 18.00 WIB</span>
-                        </div>
-                        <div class="data-item">
-                            <div><strong>Sesi Malam</strong><br><span style="color:#64748b;">Senin - Kamis</span></div>
-                            <span style="font-weight:bold; color:#0284c7;">18.30 - 20.00 WIB</span>
-                        </div>
-                    </div>
+                <div class="slider-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
                 </div>
             </div>
 
-            <!-- TAB 3: PROFIL / DB INFO -->
-            <div id="page-profil" class="tab-page" style="padding: 16px;">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">Pengaturan Profil & Database</span>
-                    </div>
-                    <div class="form-group">
-                        <label>Nama Siswa Aktif</label>
-                        <input type="text" id="input-user-name" class="form-control" value="Sutrisno">
-                    </div>
-                    <button class="btn-primary" onclick="simpanProfil()">Update Nama Profile</button>
-                    <button class="btn-primary" onclick="resetDatabase()" style="background: #ef4444; margin-top: 10px;">Reset Local Database</button>
+            <!-- Program Studi Card -->
+            <div class="section-card">
+                <div class="discount-badge">
+                    <div class="small">DISKON</div>
+                    <div class="num">50%</div>
+                </div>
+
+                <div class="program-title-row">
+                    <svg style="width:18px;height:18px;fill:currentColor;" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                    Program StudiKu
+                </div>
+                <div class="program-desc">Anda memiliki 2 program studi aktif. <a href="#" style="color:#0056b3; font-weight:bold; text-decoration:none;">Lihat detail.</a></div>
+
+                <div class="program-pill-box">
+                    Program & Privat (Guru datang ke Rumah)
+                </div>
+
+                <div class="level-tags">
+                    TK, SD, SMP, SMA, SMK, TPA
                 </div>
             </div>
 
+            <!-- 8 Menu Icons Grid -->
+            <div class="section-card">
+                <div class="menu-grid">
+                    <button class="menu-item" onclick="openModal('modal-daftar')">
+                        <div class="menu-icon-circle" style="background: #2b6cb0;">
+                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        </div>
+                        <span class="menu-label">Pendaftaran Murid Baru</span>
+                    </button>
+
+                    <button class="menu-item" onclick="showToast('Muka Materi Belajar')">
+                        <div class="menu-icon-circle" style="background: #a855f7;">
+                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+                        </div>
+                        <span class="menu-label">Materi Belajar</span>
+                    </button>
+
+                    <button class="menu-item" onclick="showToast('Modul TPA & AKM')">
+                        <div class="menu-icon-circle" style="background: #14b8a6;">
+                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                        </div>
+                        <span class="menu-label">TPA & AKM</span>
+                    </button>
+
+                    <button class="menu-item" onclick="showToast('Jadwal: Senin-Jumat (08.00 - 20.00)')">
+                        <div class="menu-icon-circle" style="background: #22c55e;">
+                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                        </div>
+                        <span class="menu-label">Jadwal Kelas</span>
+                    </button>
+
+                    <button class="menu-item" onclick="openModal('modal-bayar')">
+                        <div class="menu-icon-circle" style="background: #ec4899;">
+                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                        </div>
+                        <span class="menu-label">Pembayaran Biaya</span>
+                    </button>
+
+                    <button class="menu-item" onclick="showToast('Membuka Berita & Info')">
+                        <div class="menu-icon-circle" style="background: #15803d;">
+                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        </div>
+                        <span class="menu-label">Berita & Info</span>
+                    </button>
+
+                    <button class="menu-item" onclick="showToast('Hubungi WA: 081336909060')">
+                        <div class="menu-icon-circle" style="background: #8b5cf6;">
+                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                        </div>
+                        <span class="menu-label">Konsultasi Guru</span>
+                    </button>
+
+                    <button class="menu-item" onclick="showToast('Menampilkan semua menu')">
+                        <div class="menu-icon-circle" style="background: #2563eb;">
+                            <svg style="width:24px;height:24px;fill:white;" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+                        </div>
+                        <span class="menu-label">Semua Menu</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Promo Banner -->
+            <div class="promo-banner">
+                * Untuk 10 Pendaftar Pertama di Awal Semester
+            </div>
+
+            <!-- Info Bimbel Card Bottom -->
+            <div class="info-bottom-card">
+                <div>
+                    <div style="font-weight:bold; font-size:13px;">Informasi Bimbel</div>
+                    <div style="font-size:11px; color:#475569; margin-top:2px;">
+                        Lokasi : Sidoarjo & Surabaya<br>
+                        Buka : Senin s/d Jum'at<br>
+                        Telp/WA: 081336909060
+                    </div>
+                </div>
+                <div class="wifi-tag">FREE Wi Fi</div>
+            </div>
         </div>
 
-        <!-- Bottom Navigation Bar -->
+        <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <button class="nav-link active" onclick="switchTab('beranda', this)">
+            <button class="nav-item active">
                 <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
                 Beranda
             </button>
-            <button class="nav-link" onclick="switchTab('jadwal', this)">
-                <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
-                Jadwal
+            <button class="nav-item" onclick="showToast('Membuka Laporan Nilai')">
+                <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+                Laporan Nilai
             </button>
-            <button class="nav-link" onclick="switchTab('profil', this)">
+
+            <div class="qris-btn-wrapper">
+                <div class="qris-btn" onclick="openModal('modal-bayar')">
+                    <svg style="width:20px;height:20px;fill:white;" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm13 0h3v3h-3zm-3-2h2v2h-2zm0 4h2v4h-2zm2 0h3v2h-3zm0 2h3v2h-3z"/></svg>
+                    <span>QRIS</span>
+                </div>
+            </div>
+
+            <button class="nav-item" onclick="showToast('Halaman Profil')">
                 <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 Profil
             </button>
+            <button class="nav-item" onclick="showToast('Berhasil Keluar')">
+                <svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                Keluar
+            </button>
         </div>
 
-        <!-- MODAL 1: FORM DAFTAR MURID BARU -->
+        <!-- MODAL FORM PENDAFTARAN -->
         <div id="modal-daftar" class="modal">
-            <div class="modal-body">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="font-size: 14px;">Pendaftaran Murid Baru</h3>
-                    <button onclick="closeModal('modal-daftar')" style="border:none; background:none; font-size:18px; cursor:pointer;">&times;</button>
+            <div class="modal-content">
+                <div style="display:flex; justify-style:space-between; align-items:center; margin-bottom:12px;">
+                    <h3>Form Pendaftaran Murid Baru</h3>
+                    <button onclick="closeModal('modal-daftar')" style="border:none; background:none; font-size:20px; cursor:pointer;">&times;</button>
                 </div>
-                <form id="form-daftar" onsubmit="handleDaftar(event)">
-                    <div class="form-group">
-                        <label>Nama Lengkap Murid</label>
-                        <input type="text" id="reg-nama" class="form-control" required placeholder="Contoh: Budi Santoso">
-                    </div>
-                    <div class="form-group">
-                        <label>Tingkat / Jenjang</label>
-                        <select id="reg-jenjang" class="form-control">
-                            <option value="SD">SD</option>
-                            <option value="SMP">SMP</option>
-                            <option value="SMA">SMA</option>
-                            <option value="Privat">Privat Guru ke Rumah</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>No. HP / Whatsapp</label>
-                        <input type="tel" id="reg-hp" class="form-control" required placeholder="081234567890">
-                    </div>
-                    <button type="submit" class="btn-primary">Simpan ke Database Local</button>
+                <form onsubmit="handleDaftar(event)">
+                    <label style="font-size:12px; font-weight:bold;">Nama Murid</label>
+                    <input type="text" id="reg-nama" class="form-control" required placeholder="Masukkan nama lengkap">
+
+                    <label style="font-size:12px; font-weight:bold;">Jenjang Kelas</label>
+                    <select id="reg-jenjang" class="form-control">
+                        <option value="TK">TK</option>
+                        <option value="SD">SD</option>
+                        <option value="SMP">SMP</option>
+                        <option value="SMA/SMK">SMA / SMK</option>
+                    </select>
+
+                    <button type="submit" class="btn-submit">Simpan Ke Local Database</button>
                 </form>
             </div>
         </div>
 
-        <!-- MODAL 2: PEMBAYARAN -->
+        <!-- MODAL QRIS PEMBAYARAN -->
         <div id="modal-bayar" class="modal">
-            <div class="modal-body">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="font-size: 14px;">Pembayaran Biaya Bimbel</h3>
-                    <button onclick="closeModal('modal-bayar')" style="border:none; background:none; font-size:18px; cursor:pointer;">&times;</button>
+            <div class="modal-content" style="text-align: center;">
+                <h3>Pembayaran QRIS Bimbel SAINS</h3>
+                <p style="font-size:12px; color:#64748b; margin-top:6px;">Scan kode QRIS di bawah ini untuk melakukan pembayaran les:</p>
+                <div style="background:#f1f5f9; padding:30px; margin:16px 0; border-radius:12px; border:2px dashed #0056b3;">
+                    <strong style="font-size:20px; color:#0056b3;">[ QRIS CODE SAINS ]</strong>
                 </div>
-                <div style="text-align: center; padding: 10px;">
-                    <p style="font-size: 12px; color: #475569; margin-bottom: 10px;">Pindai QRIS untuk pembayaran langsung:</p>
-                    <div style="background: #f1f5f9; padding: 20px; display: inline-block; border-radius: 12px; border: 2px dashed #cbd5e1;">
-                        <strong style="font-size: 18px; letter-spacing: 2px; color: #0284c7;">[ QRIS SAINS ]</strong>
-                    </div>
-                    <p style="font-size: 11px; color: #16a34a; margin-top: 10px; font-weight: bold;">Rata-rata Biaya Reguler: Rp 15.000 / Hari</p>
-                </div>
+                <button onclick="closeModal('modal-bayar')" class="btn-submit">Tutup</button>
             </div>
         </div>
-
-        <!-- MODAL 3: MATERI -->
-        <div id="modal-materi" class="modal">
-            <div class="modal-body">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="font-size: 14px;">Modul Materi Belajar</h3>
-                    <button onclick="closeModal('modal-materi')" style="border:none; background:none; font-size:18px; cursor:pointer;">&times;</button>
-                </div>
-                <div class="data-list">
-                    <div class="data-item">
-                        <span>Modul Matematika SD - Bab 1</span>
-                        <a href="#" onclick="showToast('Materi Berhasil Diunduh')" style="color:#0284c7; font-weight:bold; text-decoration:none;">Download</a>
-                    </div>
-                    <div class="data-item">
-                        <span>Latihan Soal AKM & TPA SMP</span>
-                        <a href="#" onclick="showToast('Materi Berhasil Diunduh')" style="color:#0284c7; font-weight:bold; text-decoration:none;">Download</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <!-- DATABASE ENGINE (IndexedDB / LocalStorage Handler) -->
+    <!-- ENGINE DATABASE LOKAL (IndexedDB & LocalStorage) -->
     <script>
-        // Inisialisasi Database Lokal
-        const DB_KEY_SISWA = "bimbel_sains_siswa_db";
-        const DB_KEY_USER = "bimbel_sains_user_data";
+        const DB_NAME = "BimbelSainsDB";
+        let db;
 
-        // Seed Data Awal jika DB Kosong
-        const defaultSiswaData = [
-            { id: 1, nama: "Ahmad Sidoarjo", jenjang: "SMP", hp: "081336909060" },
-            { id: 2, nama: "Siti Surabaya", jenjang: "SMA", hp: "08123456789" }
-        ];
+        // Inisialisasi Database IndexedDB
+        const request = indexedDB.open(DB_NAME, 1);
 
-        const defaultUserData = {
-            nama: "Sutrisno",
-            sesi: 24,
-            maxSesi: 30,
-            program: "Siswa Reguler / Privat"
+        request.onupgradeneeded = function(e) {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains("siswas")) {
+                db.createObjectStore("siswas", { keyPath: "id", autoIncrement: true });
+            }
         };
 
-        // Load App State
-        document.addEventListener("DOMContentLoaded", () => {
-            initDatabase();
-            renderUI();
-        });
+        request.onsuccess = function(e) {
+            db = e.target.result;
+            loadDataFromDB();
+        };
 
-        function initDatabase() {
-            if (!localStorage.getItem(DB_KEY_SISWA)) {
-                localStorage.setItem(DB_KEY_SISWA, JSON.stringify(defaultSiswaData));
-            }
-            if (!localStorage.getItem(DB_KEY_USER)) {
-                localStorage.setItem(DB_KEY_USER, JSON.stringify(defaultUserData));
-            }
+        function loadDataFromDB() {
+            const count = localStorage.getItem("pertemuan_count") || 24;
+            document.getElementById("meeting-count").innerText = `${count}/30`;
         }
 
-        function renderUI() {
-            // Render Profile Data
-            const userData = JSON.parse(localStorage.getItem(DB_KEY_USER));
-            document.getElementById("display-user-name").innerText = userData.nama;
-            document.getElementById("input-user-name").value = userData.nama;
-            document.getElementById("db-session-count").innerText = `${userData.sesi} / ${userData.maxSesi} Sesi`;
-            
-            const fillPercentage = (userData.sesi / userData.maxSesi) * 100;
-            document.getElementById("progress-fill").style.width = `${fillPercentage}%`;
-
-            // Render List Siswa Terdaftar
-            const siswaList = JSON.parse(localStorage.getItem(DB_KEY_SISWA));
-            const listContainer = document.getElementById("db-siswa-list");
-            document.getElementById("db-count-label").innerText = `${siswaList.length} Murid`;
-
-            listContainer.innerHTML = "";
-            siswaList.forEach(item => {
-                const div = document.createElement("div");
-                div.className = "data-item";
-                div.innerHTML = `
-                    <div>
-                        <strong>${item.nama}</strong>
-                        <div style="font-size:10px; color:#64748b;">${item.jenjang} - ${item.hp}</div>
-                    </div>
-                    <span style="background:#22c55e; color:white; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:bold;">Aktif</span>
-                `;
-                listContainer.appendChild(div);
-            });
-        }
-
-        // Action: Tambah Kehadiran Sesi (Interaktif DB)
-        function tambahSesiBelajar() {
-            const userData = JSON.parse(localStorage.getItem(DB_KEY_USER));
-            if (userData.sesi < userData.maxSesi) {
-                userData.sesi += 1;
-                localStorage.setItem(DB_KEY_USER, JSON.stringify(userData));
-                renderUI();
-                showToast("Sesi Kehadiran Bertambah!");
-            } else {
-                showToast("Sesi pembelajaran telah penuh!");
+        function tambahPertemuan() {
+            let count = parseInt(localStorage.getItem("pertemuan_count") || 24);
+            if (count < 30) {
+                count += 1;
+                localStorage.setItem("pertemuan_count", count);
+                document.getElementById("meeting-count").innerText = `${count}/30`;
+                showToast("Data pertemuan diperbarui!");
             }
         }
 
-        // Action: Form Pendaftaran Siswa
-        function handleDaftar(event) {
-            event.preventDefault();
+        function handleDaftar(e) {
+            e.preventDefault();
             const nama = document.getElementById("reg-nama").value;
             const jenjang = document.getElementById("reg-jenjang").value;
-            const hp = document.getElementById("reg-hp").value;
 
-            const siswaList = JSON.parse(localStorage.getItem(DB_KEY_SISWA));
-            const newSiswa = { id: Date.now(), nama, jenjang, hp };
+            const transaction = db.transaction(["siswas"], "readwrite");
+            const store = transaction.objectStore("siswas");
+            store.add({ nama, jenjang, tanggal: new Date().toISOString() });
 
-            siswaList.unshift(newSiswa);
-            localStorage.setItem(DB_KEY_SISWA, JSON.stringify(siswaList));
-
-            closeModal("modal-daftar");
-            document.getElementById("form-daftar").reset();
-            renderUI();
-            showToast("Murid Baru Berhasil Didaftarkan!");
+            transaction.oncomplete = function() {
+                closeModal("modal-daftar");
+                showToast("Pendaftaran " + nama + " Berhasil!");
+            };
         }
 
-        // Action: Save Profile
-        function simpanProfil() {
-            const newName = document.getElementById("input-user-name").value;
-            if (newName.trim() !== "") {
-                const userData = JSON.parse(localStorage.getItem(DB_KEY_USER));
-                userData.nama = newName;
-                localStorage.setItem(DB_KEY_USER, JSON.stringify(userData));
-                renderUI();
-                showToast("Profil Diperbarui!");
-            }
-        }
+        function openModal(id) { document.getElementById(id).classList.add("active"); }
+        function closeModal(id) { document.getElementById(id).classList.remove("active"); }
 
-        // Reset DB
-        function resetDatabase() {
-            if (confirm("Apakah Anda yakin ingin mereset database ke awal?")) {
-                localStorage.clear();
-                initDatabase();
-                renderUI();
-                showToast("Database Berhasil Direset!");
-            }
-        }
-
-        // Tab Navigation System
-        function switchTab(tabName, element) {
-            document.querySelectorAll(".tab-page").forEach(page => page.classList.remove("active"));
-            document.querySelectorAll(".nav-link").forEach(nav => nav.classList.remove("active"));
-
-            document.getElementById(`page-${tabName}`).classList.add("active");
-            if (element) element.classList.add("active");
-        }
-
-        // Modal Handlers
-        function openModal(id) {
-            document.getElementById(id).classList.add("active");
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove("active");
-        }
-
-        // Notification Helper
-        function showToast(msg) {
+        function showToast(text) {
             const toast = document.getElementById("toast");
-            toast.innerText = msg;
+            toast.innerText = text;
             toast.style.display = "block";
-            setTimeout(() => {
-                toast.style.display = "none";
-            }, 2500);
+            setTimeout(() => { toast.style.display = "none"; }, 2000);
         }
     </script>
 </body>
