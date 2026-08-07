@@ -2,569 +2,743 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bimbel SAINS - Mobile Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bimbel SAINS - Mobile App</title>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #e9ecef;
+            background-color: #0f172a;
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
-            color: #333;
+            margin: 0;
         }
 
-        /* Container Simulasi Handphone */
-        .app-container {
-            width: 375px;
-            background-color: #f4f7f6;
-            border-radius: 32px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            overflow: hidden;
+        /* Container Aplikasi Utama */
+        .app-viewport {
+            width: 100%;
+            max-width: 414px;
+            height: 100vh;
+            max-height: 896px;
+            background-color: #f8fafc;
+            display: flex;
+            flex-direction: column;
             position: relative;
-            border: 8px solid #1e293b;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        /* Header Atas */
+        @media (min-width: 420px) {
+            .app-viewport {
+                height: 92vh;
+                border-radius: 40px;
+                border: 8px solid #1e293b;
+            }
+        }
+
+        /* Header Navigation */
         .header {
-            background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: white;
-            padding: 24px 20px 70px 20px;
-            border-bottom-left-radius: 28px;
-            border-bottom-right-radius: 28px;
+            padding: 20px 20px 65px 20px;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            flex-shrink: 0;
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
-        .logo-box {
+        .brand-badge {
             background: white;
             padding: 4px 10px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        .logo-text {
+        .brand-sub {
+            font-size: 7px;
+            font-weight: 800;
+            color: #64748b;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-title {
             font-weight: 900;
-            font-size: 18px;
-            letter-spacing: -0.5px;
+            font-size: 16px;
+            line-height: 1;
         }
 
-        .logo-s { color: #00bcd4; }
-        .logo-a { color: #8bc34a; }
-        .logo-i { color: #ff9800; }
-        .logo-n { color: #e91e63; }
-        .logo-s2 { color: #9c27b0; }
+        .brand-title span:nth-child(1) { color: #0284c7; }
+        .brand-title span:nth-child(2) { color: #84cc16; }
+        .brand-title span:nth-child(3) { color: #f59e0b; }
+        .brand-title span:nth-child(4) { color: #ec4899; }
+        .brand-title span:nth-child(5) { color: #8b5cf6; }
 
-        .logo-sub {
-            font-size: 8px;
-            color: #666;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        .header-icons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .icon-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .badge {
-            position: absolute;
-            top: 2px;
-            right: 2px;
-            background: #ff3b30;
-            color: white;
-            font-size: 9px;
-            font-weight: bold;
-            padding: 1px 4px;
-            border-radius: 10px;
-        }
-
-        .user-greeting {
+        .user-info {
             text-align: right;
         }
 
-        .greeting-text {
-            font-size: 12px;
-            opacity: 0.9;
+        .user-info .sub { font-size: 11px; opacity: 0.85; }
+        .user-info .name { font-size: 15px; font-weight: 700; }
+
+        /* Main Viewport Content Areas */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 80px;
+            scroll-behavior: smooth;
         }
 
-        .user-name {
-            font-size: 16px;
-            font-weight: bold;
+        .tab-page {
+            display: none;
+            padding-bottom: 20px;
         }
 
-        /* Banner / Status Card Utama */
-        .card-slider {
-            margin: -50px 16px 16px 16px;
+        .tab-page.active {
+            display: block;
+        }
+
+        /* Card Section */
+        .card-overlap {
+            margin: -45px 16px 16px 16px;
             position: relative;
             z-index: 10;
         }
 
-        .main-card {
+        .card {
             background: white;
-            border-radius: 20px;
-            padding: 18px;
-            box-shadow: 0 8px 20px rgba(0,82,204,0.12);
-            border: 1px solid #e1e8f0;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02);
+            border: 1px solid #f1f5f9;
+            margin-bottom: 14px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
         .card-title {
             font-size: 13px;
-            color: #64748b;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            background: #e0e7ff;
-            color: #3730a3;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
             font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .card-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .meeting-count {
-            font-size: 22px;
-            font-weight: 800;
             color: #1e293b;
         }
 
-        .meeting-count span {
-            font-size: 13px;
-            color: #64748b;
-            font-weight: normal;
-        }
-
-        .discount-tag {
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            color: white;
-            padding: 6px 12px;
+        .badge-status {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 3px 8px;
             border-radius: 12px;
-            font-weight: bold;
-            font-size: 12px;
-            box-shadow: 0 4px 10px rgba(255, 65, 108, 0.3);
-            text-align: center;
-        }
-
-        .discount-tag div {
-            font-size: 16px;
-            font-weight: 900;
-        }
-
-        /* Section Box */
-        .section-box {
-            background: white;
-            margin: 0 16px 16px 16px;
-            border-radius: 20px;
-            padding: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .section-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .see-all {
-            font-size: 11px;
-            color: #0052cc;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .program-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 8px;
-        }
-
-        .pill {
-            background: #e0f2fe;
-            color: #0284c7;
             font-size: 10px;
             font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 6px;
         }
 
-        /* Grid Menu Navigasi */
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0284c7, #38bdf8);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Menu Grid */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 12px;
-            text-align: center;
+            margin-top: 8px;
         }
 
-        .menu-item {
+        .menu-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
+            background: none;
+            border: none;
             cursor: pointer;
+            outline: none;
         }
 
-        .menu-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 16px;
+        .menu-icon-box {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.1s ease;
+        }
+
+        .menu-btn:active .menu-icon-box {
+            transform: scale(0.92);
         }
 
         .menu-label {
             font-size: 10px;
             font-weight: 600;
-            color: #334155;
-            line-height: 1.2;
+            color: #475569;
+            text-align: center;
         }
 
-        /* Information & Wifi Card */
-        .info-card {
-            background: #fffbeeb3;
-            border: 1px solid #fef08a;
-            border-radius: 14px;
-            padding: 10px 12px;
-            font-size: 11px;
-            color: #854d0e;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
-
-        .wifi-badge {
-            background: #22c55e;
-            color: white;
-            font-size: 9px;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        /* Schedule List */
-        .schedule-list {
+        /* List Items */
+        .data-list {
+            list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             margin-top: 8px;
         }
 
-        .schedule-row {
-            display: flex;
-            justify-content: space-between;
+        .data-item {
             background: #f8fafc;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 11px;
-        }
-
-        .schedule-row .time {
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .schedule-row .session {
-            color: #64748b;
-        }
-
-        /* Bottom Navigation Bar */
-        .bottom-nav {
-            background: white;
-            padding: 10px 20px;
+            padding: 10px 12px;
+            border-radius: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-top: 1px solid #e2e8f0;
-            position: relative;
+            font-size: 12px;
+            border-left: 3px solid #0284c7;
         }
 
-        .nav-item {
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #0284c7;
+            box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn-primary:active {
+            background: #0369a1;
+        }
+
+        /* Bottom Nav Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65px;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #e2e8f0;
+            z-index: 100;
+            padding: 0 10px;
+        }
+
+        .nav-link {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
+            gap: 4px;
+            background: none;
+            border: none;
             color: #94a3b8;
             font-size: 10px;
             font-weight: 600;
-            text-decoration: none;
+            cursor: pointer;
+            width: 20%;
         }
 
-        .nav-item.active {
-            color: #0052cc;
+        .nav-link.active {
+            color: #0284c7;
         }
 
-        .qris-btn {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, #0052cc, #003999);
-            border: 4px solid #f4f7f6;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            box-shadow: 0 6px 16px rgba(0,82,204,0.3);
-        }
-
-        .qris-btn span {
-            font-size: 8px;
-            font-weight: 900;
-        }
-
-        .svg-icon {
+        .nav-link svg {
             width: 20px;
             height: 20px;
             fill: currentColor;
+        }
+
+        /* Modal Popup */
+        .modal {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: none;
+            align-items: flex-end;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-body {
+            background: white;
+            width: 100%;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.25s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .toast {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            z-index: 300;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
+    <div class="app-viewport">
+        <!-- Toast Notification -->
+        <div id="toast" class="toast">Data berhasil disimpan!</div>
+
         <!-- Top Header -->
         <div class="header">
             <div class="header-top">
-                <div class="logo-box">
-                    <div class="logo-sub">BIMBEL</div>
-                    <div class="logo-text">
-                        <span class="logo-s">S</span><span class="logo-a">A</span><span class="logo-i">I</span><span class="logo-n">N</span><span class="logo-s2">S</span>
+                <div class="brand-badge">
+                    <span class="brand-sub">BIMBEL</span>
+                    <div class="brand-title">
+                        <span>S</span><span>A</span><span>I</span><span>N</span><span>S</span>
                     </div>
                 </div>
-                <div class="header-icons">
-                    <div class="icon-btn">
-                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-                        <span class="badge">20</span>
-                    </div>
-                    <div class="icon-btn">
-                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
-                    </div>
-                </div>
-            </div>
-            <div class="user-greeting">
-                <div class="greeting-text">Selamat Belajar,</div>
-                <div class="user-name">SUTRISNO</div>
-            </div>
-        </div>
-
-        <!-- Main Status Card -->
-        <div class="card-slider">
-            <div class="main-card">
-                <div class="card-title">Status Siswa / Pembelajaran</div>
-                <div class="status-badge">Siswa Reguler & Privat</div>
-                <div class="card-info">
-                    <div>
-                        <div style="font-size: 11px; color: #64748b;">Total Pertemuan</div>
-                        <div class="meeting-count">24 <span>/ 30 Sesi</span></div>
-                    </div>
-                    <div class="discount-tag">
-                        DISKON
-                        <div>50%</div>
-                    </div>
+                <div class="user-info">
+                    <div class="sub">Selamat Belajar,</div>
+                    <div class="name" id="display-user-name">Sutrisno</div>
                 </div>
             </div>
         </div>
 
-        <!-- Program & Info Section -->
-        <div class="section-box">
-            <div class="section-header">
-                <div class="section-title">
-                    <svg style="width:16px;height:16px;fill:#0052cc" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM3.82 9L12 4.54 20.18 9 12 13.46 3.82 9zM5 13.25V18l7 3.82 7-3.82v-4.75l-7 3.82-7-3.82z"/></svg>
-                    Program StudiKu
-                </div>
-                <a href="#" class="see-all">Lihat Detail ></a>
-            </div>
-            <div style="font-size: 11px; color: #475569; margin-bottom: 6px;">
-                Kelas & Privat (Guru Bisa Datang ke Rumah)
-            </div>
-            <div class="program-pills">
-                <span class="pill">TK</span>
-                <span class="pill">SD</span>
-                <span class="pill">SMP</span>
-                <span class="pill">1 & 2 SMA</span>
-                <span class="pill">SMK</span>
-                <span class="pill">TPA / AKM</span>
-            </div>
-        </div>
-
-        <!-- Menu Grid -->
-        <div class="section-box">
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <div class="menu-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
-                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9 0c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 1.6c-2.67 0-8 1.34-8 4v2.4h16v-2.4c0-2.66-5.33-4-8-4zm9 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.35v2.4h6v-2.4c0-2.23-4.31-3.4-7-3.4z"/></svg>
-                    </div>
-                    <div class="menu-label">Daftar Baru</div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="menu-icon" style="background: linear-gradient(135deg, #a855f7, #7e22ce);">
-                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
-                    </div>
-                    <div class="menu-label">Materi Belajar</div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="menu-icon" style="background: linear-gradient(135deg, #14b8a6, #0f766e);">
-                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                    </div>
-                    <div class="menu-label">Tryout & AKM</div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="menu-icon" style="background: linear-gradient(135deg, #ec4899, #be185d);">
-                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
-                    </div>
-                    <div class="menu-label">Jadwal Kelas</div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="menu-icon" style="background: linear-gradient(135deg, #f59e0b, #b45309);">
-                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-                    </div>
-                    <div class="menu-label">Pembayaran</div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="menu-icon" style="background: linear-gradient(135deg, #10b981, #047857);">
-                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    </div>
-                    <div class="menu-label">Konsultasi</div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="menu-icon" style="background: linear-gradient(135deg, #6366f1, #4338ca);">
-                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                    </div>
-                    <div class="menu-label">Info Cabang</div>
-                </div>
-
-                <div class="menu-item">
-                    <div class="menu-icon" style="background: linear-gradient(135deg, #64748b, #334155);">
-                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
-                    </div>
-                    <div class="menu-label">Semua Menu</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Jadwal Belajar Section -->
-        <div class="section-box">
-            <div class="section-header">
-                <div class="section-title">
-                    <svg style="width:16px;height:16px;fill:#0052cc" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
-                    Jadwal Belajar
-                </div>
-                <span style="font-size:10px; color:#64748b;">Senin - Jumat</span>
-            </div>
-            <div class="schedule-list">
-                <div class="schedule-row">
-                    <span class="session">Pagi</span>
-                    <span class="time">08.00 - 09.30 WIB</span>
-                </div>
-                <div class="schedule-row">
-                    <span class="session">Siang</span>
-                    <span class="time">13.00 - 14.30 WIB</span>
-                </div>
-                <div class="schedule-row">
-                    <span class="session">Sore</span>
-                    <span class="time">16.30 - 18.00 WIB</span>
-                </div>
-                <div class="schedule-row">
-                    <span class="session">Malam</span>
-                    <span class="time">18.30 - 20.00 WIB</span>
-                </div>
-            </div>
-
-            <div class="info-card">
-                <div>
-                    <strong>Lokasi:</strong> Sidoarjo & Surabaya<br>
-                    <span style="font-size:9px; color:#a16207;">Rata-rata 15rb/hari</span>
-                </div>
-                <span class="wifi-badge">FREE WIFI</span>
-            </div>
-        </div>
-
-        <!-- Bottom Navigation -->
-        <div class="bottom-nav">
-            <a href="#" class="nav-item active">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                Beranda
-            </a>
-            <a href="#" class="nav-item">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-                Arus Kas
-            </a>
+        <!-- Main Dynamic Content Pages -->
+        <div class="main-content">
             
-            <div style="width: 40px;"></div>
-            <div class="qris-btn">
-                <svg style="width:18px;height:18px;fill:white;" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm13 0h3v3h-3zm-3-2h2v2h-2zm0 4h2v4h-2zm2 0h3v2h-3zm0 2h3v2h-3z"/></svg>
-                <span>QRIS</span>
+            <!-- TAB 1: BERANDA -->
+            <div id="page-beranda" class="tab-page active">
+                <div class="card-overlap">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Status Sesi Pembelajaran</span>
+                            <span class="badge-status" id="db-status-program">Reguler</span>
+                        </div>
+                        <div style="font-size: 20px; font-weight: 800; color: #0f172a;" id="db-session-count">0 / 30 Sesi</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="progress-fill"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                            <button onclick="tambahSesiBelajar()" style="background: #e0f2fe; color: #0369a1; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">+ Absen Kehadiran</button>
+                            <span style="font-size: 10px; color: #ef4444; font-weight: 700; align-self: center;">DISKON 50% AKTIF</span>
+                        </div>
+                    </div>
+
+                    <!-- Program Studi Selector -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Program Tingkat Sekolah</span>
+                        </div>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                            <span style="background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;">TK</span>
+                            <span style="background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;">SD</span>
+                            <span style="background: #e0f2fe; color: #0284c7; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;">SMP</span>
+                            <span style="background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;">SMA/SMK</span>
+                            <span style="background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;">AKM/TPA</span>
+                        </div>
+                    </div>
+
+                    <!-- Grid Menu -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Layanan Siswa</span>
+                        </div>
+                        <div class="menu-grid">
+                            <button class="menu-btn" onclick="openModal('modal-daftar')">
+                                <div class="menu-icon-box" style="background: #2563eb;">
+                                    <svg style="width:20px;height:20px;fill:white;" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                </div>
+                                <span class="menu-label">Daftar Baru</span>
+                            </button>
+                            <button class="menu-btn" onclick="switchTab('jadwal')">
+                                <div class="menu-icon-box" style="background: #059669;">
+                                    <svg style="width:20px;height:20px;fill:white;" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                                </div>
+                                <span class="menu-label">Jadwal Kelas</span>
+                            </button>
+                            <button class="menu-btn" onclick="openModal('modal-bayar')">
+                                <div class="menu-icon-box" style="background: #d97706;">
+                                    <svg style="width:20px;height:20px;fill:white;" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                                </div>
+                                <span class="menu-label">Pembayaran</span>
+                            </button>
+                            <button class="menu-btn" onclick="openModal('modal-materi')">
+                                <div class="menu-icon-box" style="background: #7c3aed;">
+                                    <svg style="width:20px;height:20px;fill:white;" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+                                </div>
+                                <span class="menu-label">Materi Modul</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Database Record List -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Siswa Terdaftar (Local DB)</span>
+                            <span style="font-size: 10px; color: #64748b;" id="db-count-label">0 Data</span>
+                        </div>
+                        <div class="data-list" id="db-siswa-list">
+                            <!-- Injected via JavaScript -->
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <a href="#" class="nav-item">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                Profil
-            </a>
-            <a href="#" class="nav-item">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-                Keluar
-            </a>
+            <!-- TAB 2: JADWAL KELAS -->
+            <div id="page-jadwal" class="tab-page" style="padding: 16px;">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Jadwal Operasional Bimbel</span>
+                    </div>
+                    <div class="data-list">
+                        <div class="data-item">
+                            <div><strong>Sesi Pagi</strong><br><span style="color:#64748b;">Senin - Kamis</span></div>
+                            <span style="font-weight:bold; color:#0284c7;">08.00 - 09.30 WIB</span>
+                        </div>
+                        <div class="data-item">
+                            <div><strong>Sesi Siang</strong><br><span style="color:#64748b;">Senin - Kamis</span></div>
+                            <span style="font-weight:bold; color:#0284c7;">13.00 - 14.30 WIB</span>
+                        </div>
+                        <div class="data-item">
+                            <div><strong>Sesi Sore</strong><br><span style="color:#64748b;">Senin - Kamis</span></div>
+                            <span style="font-weight:bold; color:#0284c7;">16.30 - 18.00 WIB</span>
+                        </div>
+                        <div class="data-item">
+                            <div><strong>Sesi Malam</strong><br><span style="color:#64748b;">Senin - Kamis</span></div>
+                            <span style="font-weight:bold; color:#0284c7;">18.30 - 20.00 WIB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: PROFIL / DB INFO -->
+            <div id="page-profil" class="tab-page" style="padding: 16px;">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">Pengaturan Profil & Database</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Siswa Aktif</label>
+                        <input type="text" id="input-user-name" class="form-control" value="Sutrisno">
+                    </div>
+                    <button class="btn-primary" onclick="simpanProfil()">Update Nama Profile</button>
+                    <button class="btn-primary" onclick="resetDatabase()" style="background: #ef4444; margin-top: 10px;">Reset Local Database</button>
+                </div>
+            </div>
+
         </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <button class="nav-link active" onclick="switchTab('beranda', this)">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                Beranda
+            </button>
+            <button class="nav-link" onclick="switchTab('jadwal', this)">
+                <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+                Jadwal
+            </button>
+            <button class="nav-link" onclick="switchTab('profil', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                Profil
+            </button>
+        </div>
+
+        <!-- MODAL 1: FORM DAFTAR MURID BARU -->
+        <div id="modal-daftar" class="modal">
+            <div class="modal-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="font-size: 14px;">Pendaftaran Murid Baru</h3>
+                    <button onclick="closeModal('modal-daftar')" style="border:none; background:none; font-size:18px; cursor:pointer;">&times;</button>
+                </div>
+                <form id="form-daftar" onsubmit="handleDaftar(event)">
+                    <div class="form-group">
+                        <label>Nama Lengkap Murid</label>
+                        <input type="text" id="reg-nama" class="form-control" required placeholder="Contoh: Budi Santoso">
+                    </div>
+                    <div class="form-group">
+                        <label>Tingkat / Jenjang</label>
+                        <select id="reg-jenjang" class="form-control">
+                            <option value="SD">SD</option>
+                            <option value="SMP">SMP</option>
+                            <option value="SMA">SMA</option>
+                            <option value="Privat">Privat Guru ke Rumah</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>No. HP / Whatsapp</label>
+                        <input type="tel" id="reg-hp" class="form-control" required placeholder="081234567890">
+                    </div>
+                    <button type="submit" class="btn-primary">Simpan ke Database Local</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL 2: PEMBAYARAN -->
+        <div id="modal-bayar" class="modal">
+            <div class="modal-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="font-size: 14px;">Pembayaran Biaya Bimbel</h3>
+                    <button onclick="closeModal('modal-bayar')" style="border:none; background:none; font-size:18px; cursor:pointer;">&times;</button>
+                </div>
+                <div style="text-align: center; padding: 10px;">
+                    <p style="font-size: 12px; color: #475569; margin-bottom: 10px;">Pindai QRIS untuk pembayaran langsung:</p>
+                    <div style="background: #f1f5f9; padding: 20px; display: inline-block; border-radius: 12px; border: 2px dashed #cbd5e1;">
+                        <strong style="font-size: 18px; letter-spacing: 2px; color: #0284c7;">[ QRIS SAINS ]</strong>
+                    </div>
+                    <p style="font-size: 11px; color: #16a34a; margin-top: 10px; font-weight: bold;">Rata-rata Biaya Reguler: Rp 15.000 / Hari</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL 3: MATERI -->
+        <div id="modal-materi" class="modal">
+            <div class="modal-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="font-size: 14px;">Modul Materi Belajar</h3>
+                    <button onclick="closeModal('modal-materi')" style="border:none; background:none; font-size:18px; cursor:pointer;">&times;</button>
+                </div>
+                <div class="data-list">
+                    <div class="data-item">
+                        <span>Modul Matematika SD - Bab 1</span>
+                        <a href="#" onclick="showToast('Materi Berhasil Diunduh')" style="color:#0284c7; font-weight:bold; text-decoration:none;">Download</a>
+                    </div>
+                    <div class="data-item">
+                        <span>Latihan Soal AKM & TPA SMP</span>
+                        <a href="#" onclick="showToast('Materi Berhasil Diunduh')" style="color:#0284c7; font-weight:bold; text-decoration:none;">Download</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
+    <!-- DATABASE ENGINE (IndexedDB / LocalStorage Handler) -->
+    <script>
+        // Inisialisasi Database Lokal
+        const DB_KEY_SISWA = "bimbel_sains_siswa_db";
+        const DB_KEY_USER = "bimbel_sains_user_data";
+
+        // Seed Data Awal jika DB Kosong
+        const defaultSiswaData = [
+            { id: 1, nama: "Ahmad Sidoarjo", jenjang: "SMP", hp: "081336909060" },
+            { id: 2, nama: "Siti Surabaya", jenjang: "SMA", hp: "08123456789" }
+        ];
+
+        const defaultUserData = {
+            nama: "Sutrisno",
+            sesi: 24,
+            maxSesi: 30,
+            program: "Siswa Reguler / Privat"
+        };
+
+        // Load App State
+        document.addEventListener("DOMContentLoaded", () => {
+            initDatabase();
+            renderUI();
+        });
+
+        function initDatabase() {
+            if (!localStorage.getItem(DB_KEY_SISWA)) {
+                localStorage.setItem(DB_KEY_SISWA, JSON.stringify(defaultSiswaData));
+            }
+            if (!localStorage.getItem(DB_KEY_USER)) {
+                localStorage.setItem(DB_KEY_USER, JSON.stringify(defaultUserData));
+            }
+        }
+
+        function renderUI() {
+            // Render Profile Data
+            const userData = JSON.parse(localStorage.getItem(DB_KEY_USER));
+            document.getElementById("display-user-name").innerText = userData.nama;
+            document.getElementById("input-user-name").value = userData.nama;
+            document.getElementById("db-session-count").innerText = `${userData.sesi} / ${userData.maxSesi} Sesi`;
+            
+            const fillPercentage = (userData.sesi / userData.maxSesi) * 100;
+            document.getElementById("progress-fill").style.width = `${fillPercentage}%`;
+
+            // Render List Siswa Terdaftar
+            const siswaList = JSON.parse(localStorage.getItem(DB_KEY_SISWA));
+            const listContainer = document.getElementById("db-siswa-list");
+            document.getElementById("db-count-label").innerText = `${siswaList.length} Murid`;
+
+            listContainer.innerHTML = "";
+            siswaList.forEach(item => {
+                const div = document.createElement("div");
+                div.className = "data-item";
+                div.innerHTML = `
+                    <div>
+                        <strong>${item.nama}</strong>
+                        <div style="font-size:10px; color:#64748b;">${item.jenjang} - ${item.hp}</div>
+                    </div>
+                    <span style="background:#22c55e; color:white; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:bold;">Aktif</span>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        // Action: Tambah Kehadiran Sesi (Interaktif DB)
+        function tambahSesiBelajar() {
+            const userData = JSON.parse(localStorage.getItem(DB_KEY_USER));
+            if (userData.sesi < userData.maxSesi) {
+                userData.sesi += 1;
+                localStorage.setItem(DB_KEY_USER, JSON.stringify(userData));
+                renderUI();
+                showToast("Sesi Kehadiran Bertambah!");
+            } else {
+                showToast("Sesi pembelajaran telah penuh!");
+            }
+        }
+
+        // Action: Form Pendaftaran Siswa
+        function handleDaftar(event) {
+            event.preventDefault();
+            const nama = document.getElementById("reg-nama").value;
+            const jenjang = document.getElementById("reg-jenjang").value;
+            const hp = document.getElementById("reg-hp").value;
+
+            const siswaList = JSON.parse(localStorage.getItem(DB_KEY_SISWA));
+            const newSiswa = { id: Date.now(), nama, jenjang, hp };
+
+            siswaList.unshift(newSiswa);
+            localStorage.setItem(DB_KEY_SISWA, JSON.stringify(siswaList));
+
+            closeModal("modal-daftar");
+            document.getElementById("form-daftar").reset();
+            renderUI();
+            showToast("Murid Baru Berhasil Didaftarkan!");
+        }
+
+        // Action: Save Profile
+        function simpanProfil() {
+            const newName = document.getElementById("input-user-name").value;
+            if (newName.trim() !== "") {
+                const userData = JSON.parse(localStorage.getItem(DB_KEY_USER));
+                userData.nama = newName;
+                localStorage.setItem(DB_KEY_USER, JSON.stringify(userData));
+                renderUI();
+                showToast("Profil Diperbarui!");
+            }
+        }
+
+        // Reset DB
+        function resetDatabase() {
+            if (confirm("Apakah Anda yakin ingin mereset database ke awal?")) {
+                localStorage.clear();
+                initDatabase();
+                renderUI();
+                showToast("Database Berhasil Direset!");
+            }
+        }
+
+        // Tab Navigation System
+        function switchTab(tabName, element) {
+            document.querySelectorAll(".tab-page").forEach(page => page.classList.remove("active"));
+            document.querySelectorAll(".nav-link").forEach(nav => nav.classList.remove("active"));
+
+            document.getElementById(`page-${tabName}`).classList.add("active");
+            if (element) element.classList.add("active");
+        }
+
+        // Modal Handlers
+        function openModal(id) {
+            document.getElementById(id).classList.add("active");
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove("active");
+        }
+
+        // Notification Helper
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.style.display = "block";
+            setTimeout(() => {
+                toast.style.display = "none";
+            }, 2500);
+        }
+    </script>
 </body>
 </html>
