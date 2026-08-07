@@ -1,355 +1,570 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Bimbel SAINS | Mobile Dashboard</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        sainsRed: '#DC2626',
-                        sainsYellow: '#FACC15',
-                        sainsDark: '#0B0F19',
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
+    <title>Bimbel SAINS - Mobile Dashboard</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
         }
-    </script>
+
+        body {
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* Container Simulasi Handphone */
+        .app-container {
+            width: 375px;
+            background-color: #f4f7f6;
+            border-radius: 32px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+            border: 8px solid #1e293b;
+        }
+
+        /* Header Atas */
+        .header {
+            background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+            color: white;
+            padding: 24px 20px 70px 20px;
+            border-bottom-left-radius: 28px;
+            border-bottom-right-radius: 28px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .logo-box {
+            background: white;
+            padding: 4px 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .logo-text {
+            font-weight: 900;
+            font-size: 18px;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-s { color: #00bcd4; }
+        .logo-a { color: #8bc34a; }
+        .logo-i { color: #ff9800; }
+        .logo-n { color: #e91e63; }
+        .logo-s2 { color: #9c27b0; }
+
+        .logo-sub {
+            font-size: 8px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #ff3b30;
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 1px 4px;
+            border-radius: 10px;
+        }
+
+        .user-greeting {
+            text-align: right;
+        }
+
+        .greeting-text {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Banner / Status Card Utama */
+        .card-slider {
+            margin: -50px 16px 16px 16px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 8px 20px rgba(0,82,204,0.12);
+            border: 1px solid #e1e8f0;
+        }
+
+        .card-title {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .meeting-count {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        .meeting-count span {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: normal;
+        }
+
+        .discount-tag {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 4px 10px rgba(255, 65, 108, 0.3);
+            text-align: center;
+        }
+
+        .discount-tag div {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        /* Section Box */
+        .section-box {
+            background: white;
+            margin: 0 16px 16px 16px;
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .see-all {
+            font-size: 11px;
+            color: #0052cc;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .program-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .pill {
+            background: #e0f2fe;
+            color: #0284c7;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        /* Grid Menu Navigasi */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            text-align: center;
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .menu-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: #334155;
+            line-height: 1.2;
+        }
+
+        /* Information & Wifi Card */
+        .info-card {
+            background: #fffbeeb3;
+            border: 1px solid #fef08a;
+            border-radius: 14px;
+            padding: 10px 12px;
+            font-size: 11px;
+            color: #854d0e;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .wifi-badge {
+            background: #22c55e;
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Schedule List */
+        .schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .schedule-row {
+            display: flex;
+            justify-content: space-between;
+            background: #f8fafc;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+        }
+
+        .schedule-row .time {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .schedule-row .session {
+            color: #64748b;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            background: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            color: #0052cc;
+        }
+
+        .qris-btn {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #0052cc, #003999);
+            border: 4px solid #f4f7f6;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 6px 16px rgba(0,82,204,0.3);
+        }
+
+        .qris-btn span {
+            font-size: 8px;
+            font-weight: 900;
+        }
+
+        .svg-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+    </style>
 </head>
-<body class="bg-sainsDark text-gray-100 font-sans antialiased selection:bg-sainsYellow selection:text-sainsDark pb-24">
+<body>
 
-    <!-- LOGIN VIEW -->
-    <div id="view-login" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-red-950/40 via-sainsDark to-sainsDark fixed inset-0 z-50">
-        <div class="max-w-md w-full bg-gray-900 p-8 rounded-3xl border border-gray-800 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 right-0 bg-gradient-to-l from-sainsRed to-red-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-bl-xl">
-                PORTAL SAINS
-            </div>
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-extrabold tracking-wider text-sainsYellow mb-2">SAINS</h1>
-                <p class="text-gray-400 text-xs uppercase tracking-widest">Sistem Informasi Akademik</p>
-            </div>
-            <form id="loginForm" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Email / Username</label>
-                    <input type="text" id="loginEmail" required placeholder="admin@sains.com" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sainsYellow transition">
+    <div class="app-container">
+        <!-- Top Header -->
+        <div class="header">
+            <div class="header-top">
+                <div class="logo-box">
+                    <div class="logo-sub">BIMBEL</div>
+                    <div class="logo-text">
+                        <span class="logo-s">S</span><span class="logo-a">A</span><span class="logo-i">I</span><span class="logo-n">N</span><span class="logo-s2">S</span>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Password</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sainsYellow transition">
+                <div class="header-icons">
+                    <div class="icon-btn">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                        <span class="badge">20</span>
+                    </div>
+                    <div class="icon-btn">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+                    </div>
                 </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-sainsRed to-red-600 text-white font-extrabold py-3.5 rounded-xl hover:opacity-95 transition shadow-lg shadow-sainsRed/30 text-sm">
-                    Masuk Aplikasi
-                </button>
-                <p id="loginMessage" class="text-center text-xs mt-3 hidden text-red-400"></p>
-            </form>
+            </div>
+            <div class="user-greeting">
+                <div class="greeting-text">Selamat Belajar,</div>
+                <div class="user-name">SUTRISNO</div>
+            </div>
         </div>
-    </div>
 
-    <!-- MAIN APP CONTAINER -->
-    <div id="view-app" class="max-w-md mx-auto min-h-screen relative flex flex-col justify-between">
-        
-        <!-- HEADER / TOP PROFILE CARD -->
-        <div class="p-4">
-            <div class="bg-gradient-to-r from-red-700 via-red-600 to-sainsYellow p-5 rounded-3xl shadow-xl relative overflow-hidden text-white">
-                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
-                <div class="flex justify-between items-start mb-4">
+        <!-- Main Status Card -->
+        <div class="card-slider">
+            <div class="main-card">
+                <div class="card-title">Status Siswa / Pembelajaran</div>
+                <div class="status-badge">Siswa Reguler & Privat</div>
+                <div class="card-info">
                     <div>
-                        <p class="text-xs text-red-100 font-medium">Selamat Malam 👋</p>
-                        <h2 class="text-xl font-extrabold tracking-wide text-white">Admin SAINS</h2>
-                        <span class="inline-block bg-black/25 text-sainsYellow text-[10px] px-2.5 py-0.5 rounded-full font-semibold mt-1">Administrator</span>
+                        <div style="font-size: 11px; color: #64748b;">Total Pertemuan</div>
+                        <div class="meeting-count">24 <span>/ 30 Sesi</span></div>
                     </div>
-                    <div class="w-12 h-12 rounded-full bg-white/20 border-2 border-white/40 flex items-center justify-center text-xl font-bold backdrop-blur-sm shadow">
-                        🦊
-                    </div>
-                </div>
-                <div class="grid grid-cols-3 gap-2 pt-3 border-t border-white/20 text-center">
-                    <div>
-                        <p class="text-[10px] uppercase text-red-100">Tanggal</p>
-                        <p class="text-xs font-bold text-white" id="current-date">07 Agu 2026</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] uppercase text-red-100">Waktu</p>
-                        <p class="text-xs font-bold text-white" id="current-time">00:00 WIB</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] uppercase text-red-100">ID Sesi</p>
-                        <p class="text-xs font-bold text-white">#SAINS</p>
+                    <div class="discount-tag">
+                        DISKON
+                        <div>50%</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- CONTENT AREA (DIPENGARUHI MENU / TAB) -->
-        <main class="px-4 flex-1 space-y-6">
+        <!-- Program & Info Section -->
+        <div class="section-box">
+            <div class="section-header">
+                <div class="section-title">
+                    <svg style="width:16px;height:16px;fill:#0052cc" viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM3.82 9L12 4.54 20.18 9 12 13.46 3.82 9zM5 13.25V18l7 3.82 7-3.82v-4.75l-7 3.82-7-3.82z"/></svg>
+                    Program StudiKu
+                </div>
+                <a href="#" class="see-all">Lihat Detail ></a>
+            </div>
+            <div style="font-size: 11px; color: #475569; margin-bottom: 6px;">
+                Kelas & Privat (Guru Bisa Datang ke Rumah)
+            </div>
+            <div class="program-pills">
+                <span class="pill">TK</span>
+                <span class="pill">SD</span>
+                <span class="pill">SMP</span>
+                <span class="pill">1 & 2 SMA</span>
+                <span class="pill">SMK</span>
+                <span class="pill">TPA / AKM</span>
+            </div>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="section-box">
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="menu-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9 0c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 1.6c-2.67 0-8 1.34-8 4v2.4h16v-2.4c0-2.66-5.33-4-8-4zm9 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.35v2.4h6v-2.4c0-2.23-4.31-3.4-7-3.4z"/></svg>
+                    </div>
+                    <div class="menu-label">Daftar Baru</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon" style="background: linear-gradient(135deg, #a855f7, #7e22ce);">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+                    </div>
+                    <div class="menu-label">Materi Belajar</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon" style="background: linear-gradient(135deg, #14b8a6, #0f766e);">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                    </div>
+                    <div class="menu-label">Tryout & AKM</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon" style="background: linear-gradient(135deg, #ec4899, #be185d);">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                    </div>
+                    <div class="menu-label">Jadwal Kelas</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon" style="background: linear-gradient(135deg, #f59e0b, #b45309);">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                    </div>
+                    <div class="menu-label">Pembayaran</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon" style="background: linear-gradient(135deg, #10b981, #047857);">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </div>
+                    <div class="menu-label">Konsultasi</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon" style="background: linear-gradient(135deg, #6366f1, #4338ca);">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    </div>
+                    <div class="menu-label">Info Cabang</div>
+                </div>
+
+                <div class="menu-item">
+                    <div class="menu-icon" style="background: linear-gradient(135deg, #64748b, #334155);">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+                    </div>
+                    <div class="menu-label">Semua Menu</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jadwal Belajar Section -->
+        <div class="section-box">
+            <div class="section-header">
+                <div class="section-title">
+                    <svg style="width:16px;height:16px;fill:#0052cc" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                    Jadwal Belajar
+                </div>
+                <span style="font-size:10px; color:#64748b;">Senin - Jumat</span>
+            </div>
+            <div class="schedule-list">
+                <div class="schedule-row">
+                    <span class="session">Pagi</span>
+                    <span class="time">08.00 - 09.30 WIB</span>
+                </div>
+                <div class="schedule-row">
+                    <span class="session">Siang</span>
+                    <span class="time">13.00 - 14.30 WIB</span>
+                </div>
+                <div class="schedule-row">
+                    <span class="session">Sore</span>
+                    <span class="time">16.30 - 18.00 WIB</span>
+                </div>
+                <div class="schedule-row">
+                    <span class="session">Malam</span>
+                    <span class="time">18.30 - 20.00 WIB</span>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div>
+                    <strong>Lokasi:</strong> Sidoarjo & Surabaya<br>
+                    <span style="font-size:9px; color:#a16207;">Rata-rata 15rb/hari</span>
+                </div>
+                <span class="wifi-badge">FREE WIFI</span>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                Beranda
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                Arus Kas
+            </a>
             
-            <!-- 1. DASHBOARD VIEW (Grid Menu Ala Aplikasi Referensi) -->
-            <div id="tab-dashboard" class="tab-content space-y-6">
-                <div>
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Menu Navigasi Utama</h3>
-                    <div class="grid grid-cols-4 gap-3">
-                        <button onclick="switchTab('siswa')" class="bg-gray-900 border border-gray-800 p-3 rounded-2xl flex flex-col items-center text-center hover:border-sainsYellow transition group">
-                            <div class="w-12 h-12 rounded-2xl bg-red-500/10 text-sainsRed flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition">👨‍🎓</div>
-                            <span class="text-[11px] font-semibold text-gray-200">Siswa</span>
-                        </button>
-                        <button onclick="switchTab('guru')" class="bg-gray-900 border border-gray-800 p-3 rounded-2xl flex flex-col items-center text-center hover:border-sainsYellow transition group">
-                            <div class="w-12 h-12 rounded-2xl bg-yellow-500/10 text-sainsYellow flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition">👩‍🏫</div>
-                            <span class="text-[11px] font-semibold text-gray-200">Guru</span>
-                        </button>
-                        <button onclick="switchTab('jadwal')" class="bg-gray-900 border border-gray-800 p-3 rounded-2xl flex flex-col items-center text-center hover:border-sainsYellow transition group">
-                            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition">📅</div>
-                            <span class="text-[11px] font-semibold text-gray-200">Jadwal</span>
-                        </button>
-                        <button onclick="switchTab('absensi')" class="bg-gray-900 border border-gray-800 p-3 rounded-2xl flex flex-col items-center text-center hover:border-sainsYellow transition group">
-                            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition">📋</div>
-                            <span class="text-[11px] font-semibold text-gray-200">Absensi</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Menu Tambahan Baris Kedua -->
-                <div class="grid grid-cols-4 gap-3">
-                    <button onclick="switchTab('nilai')" class="bg-gray-900 border border-gray-800 p-3 rounded-2xl flex flex-col items-center text-center hover:border-sainsYellow transition group">
-                        <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition">📈</div>
-                        <span class="text-[11px] font-semibold text-gray-200">Nilai</span>
-                    </button>
-                    <button onclick="switchTab('pembayaran')" class="bg-gray-900 border border-gray-800 p-3 rounded-2xl flex flex-col items-center text-center hover:border-sainsYellow transition group">
-                        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition">💳</div>
-                        <span class="text-[11px] font-semibold text-gray-200">SPP</span>
-                    </button>
-                    <button onclick="switchTab('ujian')" class="bg-gray-900 border border-gray-800 p-3 rounded-2xl flex flex-col items-center text-center hover:border-sainsYellow transition group">
-                        <div class="w-12 h-12 rounded-2xl bg-pink-500/10 text-pink-400 flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition">📝</div>
-                        <span class="text-[11px] font-semibold text-gray-200">Ujian</span>
-                    </button>
-                    <button onclick="switchTab('laporan')" class="bg-gray-900 border border-gray-800 p-3 rounded-2xl flex flex-col items-center text-center hover:border-sainsYellow transition group">
-                        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xl mb-2 group-hover:scale-110 transition">📑</div>
-                        <span class="text-[11px] font-semibold text-gray-200">Laporan</span>
-                    </button>
-                </div>
-
-                <!-- Info Card Interaktif -->
-                <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-sainsYellow/10 text-sainsYellow flex items-center justify-center font-bold text-lg">🔒</div>
-                        <div>
-                            <h4 class="text-xs font-bold text-white">Zona Akses Khusus</h4>
-                            <p class="text-[10px] text-gray-400">Kelola izin & hak akses sistem</p>
-                        </div>
-                    </div>
-                    <button onclick="switchTab('pengumuman')" class="bg-gray-800 text-sainsYellow text-xs font-bold px-3 py-1.5 rounded-xl hover:bg-gray-700 transition">Info</button>
-                </div>
-
-                <!-- Aktivitas Ringkas -->
-                <div>
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Statistik Kilat</h3>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl">
-                            <p class="text-[10px] text-gray-400">Total Siswa Aktif</p>
-                            <p class="text-xl font-extrabold text-sainsYellow mt-1">120 Siswa</p>
-                        </div>
-                        <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl">
-                            <p class="text-[10px] text-gray-400">Kehadiran Hari Ini</p>
-                            <p class="text-xl font-extrabold text-green-400 mt-1">95%</p>
-                        </div>
-                    </div>
-                </div>
+            <div style="width: 40px;"></div>
+            <div class="qris-btn">
+                <svg style="width:18px;height:18px;fill:white;" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm13 0h3v3h-3zm-3-2h2v2h-2zm0 4h2v4h-2zm2 0h3v2h-3zm0 2h3v2h-3z"/></svg>
+                <span>QRIS</span>
             </div>
 
-            <!-- 2. SISWA -->
-            <div id="tab-siswa" class="tab-content hidden space-y-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-lg font-bold">Data Siswa</h2>
-                    <button class="bg-sainsRed text-white text-xs font-bold px-3 py-1.5 rounded-xl">Tambah</button>
-                </div>
-                <div class="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-gray-800/50 text-sainsYellow uppercase">
-                            <tr><th class="p-3">Nama</th><th class="p-3">Jenjang</th><th class="p-3">WA</th></tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-800 text-gray-300">
-                            <tr><td class="p-3 font-semibold text-white">Ahmad Fauzi</td><td class="p-3">SD 5</td><td class="p-3">081234</td></tr>
-                            <tr><td class="p-3 font-semibold text-white">Siti Rahma</td><td class="p-3">SMP 8</td><td class="p-3">089876</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 3. GURU -->
-            <div id="tab-guru" class="tab-content hidden space-y-4">
-                <h2 class="text-lg font-bold">Data Pengajar / Guru</h2>
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-xs text-gray-400">
-                    Modul pengelolaan data pengajar bimbel SAINS.
-                </div>
-            </div>
-
-            <!-- 4. ORANG TUA -->
-            <div id="tab-orangtua" class="tab-content hidden space-y-4">
-                <h2 class="text-lg font-bold">Data Orang Tua / Wali</h2>
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-xs text-gray-400">
-                    Informasi kontak dan relasi orang tua siswa.
-                </div>
-            </div>
-
-            <!-- 5. JADWAL -->
-            <div id="tab-jadwal" class="tab-content hidden space-y-4">
-                <h2 class="text-lg font-bold">Jadwal Kelas</h2>
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-xs text-gray-400">
-                    Daftar jadwal sesi Pagi, Siang, Sore, dan Malam.
-                </div>
-            </div>
-
-            <!-- 6. ABSENSI -->
-            <div id="tab-absensi" class="tab-content hidden space-y-4">
-                <h2 class="text-lg font-bold">Absensi Kehadiran</h2>
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-xs text-gray-400">
-                    Rekapitulasi kehadiran harian siswa.
-                </div>
-            </div>
-
-            <!-- 7. NILAI -->
-            <div id="tab-nilai" class="tab-content hidden space-y-4">
-                <h2 class="text-lg font-bold">Nilai Akademik</h2>
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-xs text-gray-400">
-                    Input dan rekap nilai ulangan harian serta tryout.
-                </div>
-            </div>
-
-            <!-- 8. PEMBAYARAN -->
-            <div id="tab-pembayaran" class="tab-content hidden space-y-4">
-                <h2 class="text-lg font-bold">Pembayaran SPP</h2>
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-xs text-gray-400">
-                    Status pembayaran bulanan siswa.
-                </div>
-            </div>
-
-            <!-- 9. UJIAN -->
-            <div id="tab-ujian" class="tab-content hidden space-y-4">
-                <h2 class="text-lg font-bold">Ujian & Tryout</h2>
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-xs text-gray-400">
-                    Pengelolaan bank soal dan jadwal ujian.
-                </div>
-            </div>
-
-            <!-- 10. PENGUMUMAN -->
-            <div id="tab-pengumuman" class="tab-content hidden space-y-4">
-                <h2 class="text-lg font-bold">Pengumuman</h2>
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-xs text-gray-400">
-                    Informasi penting untuk siswa dan orang tua.
-                </div>
-            </div>
-
-            <!-- 11. LAPORAN -->
-            <div id="tab-laporan" class="tab-content hidden space-y-4">
-                <h2 class="text-lg font-bold">Laporan Akademik</h2>
-                <div class="bg-gray-900 p-4 rounded-2xl border border-gray-800 text-xs text-gray-400">
-                    Cetak laporan perkembangan belajar bulanan.
-                </div>
-            </div>
-
-        </main>
-
-        <!-- FLOATING CHAT AI (Gaya Referensi) -->
-        <div class="fixed bottom-20 right-4 z-40">
-            <button onclick="alert('Zoni AI: Halo Admin SAINS! Ada yang bisa saya bantu hari ini?')" class="bg-gradient-to-r from-sainsRed to-red-600 text-white p-3.5 rounded-full shadow-2xl hover:scale-105 transition flex items-center space-x-2 border-2 border-sainsYellow/40">
-                <span class="text-lg">🤖</span>
-                <span class="text-xs font-bold pr-1">Zoni AI</span>
-            </button>
+            <a href="#" class="nav-item">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                Profil
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                Keluar
+            </a>
         </div>
-
-        <!-- BOTTOM NAVIGATION BAR (Gaya Referensi) -->
-        <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-gray-950/90 backdrop-blur-md border-t border-gray-800 px-4 py-2 flex justify-around items-center z-40">
-            <button onclick="switchTab('dashboard')" class="nav-icon-btn flex flex-col items-center text-sainsYellow" data-nav="dashboard">
-                <span class="text-lg">🏠</span>
-                <span class="text-[10px] font-bold mt-0.5">Beranda</span>
-            </button>
-            <button onclick="switchTab('siswa')" class="nav-icon-btn flex flex-col items-center text-gray-400 hover:text-gray-200" data-nav="siswa">
-                <span class="text-lg">👨‍🎓</span>
-                <span class="text-[10px] font-medium mt-0.5">Siswa</span>
-            </button>
-            <!-- Tombol Tengah Menonjol -->
-            <div class="relative -top-3">
-                <button onclick="switchTab('jadwal')" class="w-12 h-12 rounded-full bg-gradient-to-r from-sainsRed to-red-600 text-white flex items-center justify-center shadow-lg shadow-sainsRed/40 border-4 border-sainsDark text-xl">
-                    📅
-                </button>
-            </div>
-            <button onclick="switchTab('guru')" class="nav-icon-btn flex flex-col items-center text-gray-400 hover:text-gray-200" data-nav="guru">
-                <span class="text-lg">👩‍🏫</span>
-                <span class="text-[10px] font-medium mt-0.5">Guru</span>
-            </button>
-            <button onclick="logout()" class="nav-icon-btn flex flex-col items-center text-red-400 hover:text-red-300">
-                <span class="text-lg">🚪</span>
-                <span class="text-[10px] font-medium mt-0.5">Keluar</span>
-            </button>
-        </nav>
-
     </div>
 
-    <!-- SCRIPT CONTROLLER & SUPABASE -->
-    <script>
-        // Konfigurasi Supabase
-        const SUPABASE_URL = 'https://URL_SUPABASE_ANDA.supabase.co';
-        const SUPABASE_ANON_KEY = 'ANON_KEY_SUPABASE_ANDA';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // Update Tanggal & Waktu Realtime
-        function updateClock() {
-            const now = new Date();
-            const optionsDate = { day: '2-digit', month: 'short', year: 'numeric' };
-            document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', optionsDate);
-            document.getElementById('current-time').textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // Login Handler
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            document.getElementById('view-login').classList.add('hidden');
-        });
-
-        function logout() {
-            document.getElementById('view-login').classList.remove('hidden');
-        }
-
-        // Tab Switcher SPA Function
-        function switchTab(targetId) {
-            // Sembunyikan semua tab konten
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(el => el.classList.add('hidden'));
-
-            // Tampilkan target konten (jika ada, jika tidak default ke dashboard)
-            const targetEl = document.getElementById('tab-' + targetId);
-            if(targetEl) {
-                targetEl.classList.remove('hidden');
-            } else {
-                document.getElementById('tab-dashboard').classList.remove('hidden');
-            }
-
-            // Update status aktif pada bottom nav icon utama
-            const navButtons = document.querySelectorAll('.nav-icon-btn');
-            navButtons.forEach(btn => {
-                if(btn.getAttribute('data-nav') === targetId) {
-                    btn.classList.add('text-sainsYellow', 'font-bold');
-                    btn.classList.remove('text-gray-400');
-                } else {
-                    btn.classList.remove('text-sainsYellow', 'font-bold');
-                    btn.classList.add('text-gray-400');
-                }
-            });
-
-            // Scroll ke atas setiap ganti menu
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    </script>
 </body>
 </html>
