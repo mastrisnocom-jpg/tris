@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bimbel SAINS - Dashboard LocalStorage</title>
+    <title>Bimbel SAINS - Multi Role System</title>
     <!-- Font Awesome CDN untuk Ikon -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -21,11 +21,107 @@
             margin: 0 auto;
             min-height: 100vh;
             position: relative;
-            padding-bottom: 90px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
         }
 
-        /* ================= HEADER BIRU ================= */
+        .hidden { display: none !important; }
+
+        /* ================= HALAMAN LOGIN ================= */
+        .login-screen {
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #007bff;
+            margin-top: 10px;
+        }
+
+        .login-title span { color: #17a2b8; }
+
+        .role-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 12px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 10px 4px;
+            border: none;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .role-btn.active {
+            background: #007bff;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        /* ================= DASHBOARD UI ================= */
+        .dashboard-screen {
+            padding-bottom: 90px;
+        }
+
         .header {
             background-color: #007bff;
             color: #ffffff;
@@ -40,17 +136,14 @@
 
         .logo-box {
             background: #ffffff;
-            padding: 8px 16px;
+            padding: 6px 14px;
             border-radius: 20px;
             font-weight: 800;
             color: #007bff;
-            font-size: 15px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            font-size: 14px;
         }
 
-        .logo-box span {
-            color: #17a2b8;
-        }
+        .logo-box span { color: #17a2b8; }
 
         .user-section {
             display: flex;
@@ -64,33 +157,28 @@
             margin-top: 2px;
         }
 
-        .header-icons i {
-            font-size: 18px;
-            cursor: pointer;
-        }
+        .header-icons i { font-size: 18px; cursor: pointer; }
 
-        .user-details {
-            text-align: right;
-        }
-
-        .user-greeting {
-            font-size: 11px;
-            opacity: 0.9;
-            line-height: 1.2;
-        }
-
-        .user-name {
+        .user-details { text-align: right; }
+        .user-greeting { font-size: 10px; opacity: 0.9; }
+        .user-name { font-weight: 800; font-size: 13px; }
+        .user-role-badge { 
+            display: inline-block;
+            background: #ffc107;
+            color: #000;
+            font-size: 9px;
             font-weight: 800;
-            font-size: 14px;
-            letter-spacing: 0.5px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-top: 2px;
         }
 
-        .btn-reload {
+        .btn-action-header {
             background: rgba(255, 255, 255, 0.25);
             border: none;
             color: #ffffff;
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 4px 8px;
+            border-radius: 10px;
             font-size: 10px;
             font-weight: 600;
             cursor: pointer;
@@ -98,10 +186,9 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            backdrop-filter: blur(4px);
         }
 
-        /* ================= KONTEN UTAMA ================= */
+        /* Konten Utama */
         .container {
             padding: 0 16px;
             margin-top: -35px;
@@ -118,37 +205,20 @@
             position: relative;
         }
 
-        /* Card Siswa Reguler */
-        .card-reguler h2 {
-            font-size: 18px;
-            font-weight: 800;
-            color: #1e293b;
-            margin-bottom: 4px;
-        }
+        .card h2 { font-size: 17px; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
+        .card p { font-size: 12px; color: #64748b; font-weight: 600; }
+        .card p span { color: #0f172a; font-weight: 800; }
 
-        .card-reguler p {
-            font-size: 13px;
-            color: #64748b;
-            font-weight: 600;
-        }
-
-        .card-reguler p span {
-            color: #0f172a;
-            font-weight: 800;
-        }
-
-        /* Card Program StudiKu */
         .badge-diskon {
             position: absolute;
             top: 16px;
             right: 16px;
             background: #1e5288;
             color: #ffffff;
-            padding: 6px 12px;
+            padding: 5px 10px;
             border-radius: 20px;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 800;
-            letter-spacing: 0.3px;
         }
 
         .program-header {
@@ -157,20 +227,8 @@
             gap: 8px;
             color: #0056b3;
             font-weight: 800;
-            font-size: 15px;
+            font-size: 14px;
             margin-bottom: 4px;
-        }
-
-        .program-sub {
-            font-size: 11px;
-            color: #64748b;
-            margin-bottom: 14px;
-        }
-
-        .program-sub a {
-            color: #0056b3;
-            text-decoration: underline;
-            font-weight: 600;
         }
 
         .btn-program {
@@ -178,29 +236,15 @@
             color: #ffffff;
             border: none;
             width: 100%;
-            padding: 12px;
+            padding: 11px;
             border-radius: 25px;
             font-weight: 700;
             font-size: 12px;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 86, 179, 0.25);
-            transition: transform 0.1s ease;
-        }
-
-        .btn-program:active {
-            transform: scale(0.98);
-        }
-
-        .program-tags {
             margin-top: 10px;
-            font-size: 11px;
-            font-weight: 800;
-            color: #334155;
-            text-align: center;
-            letter-spacing: 0.5px;
         }
 
-        /* Grid Menu Utama */
+        /* Menu Grid */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -217,37 +261,30 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            text-decoration: none;
             cursor: pointer;
         }
 
         .icon-circle {
-            width: 52px;
-            height: 52px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #ffffff;
-            font-size: 20px;
-            margin-bottom: 8px;
+            font-size: 18px;
+            margin-bottom: 6px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-            transition: transform 0.15s ease;
-        }
-
-        .menu-item:active .icon-circle {
-            transform: scale(0.92);
         }
 
         .menu-label {
             font-size: 10px;
             color: #334155;
             font-weight: 700;
-            line-height: 1.25;
+            line-height: 1.2;
             max-width: 80px;
         }
 
-        /* Banner Orange */
         .banner-promo {
             background: linear-gradient(90deg, #ff6a00, #ff8800);
             color: #ffffff;
@@ -256,10 +293,9 @@
             border-radius: 12px;
             font-size: 11px;
             font-weight: 800;
-            box-shadow: 0 4px 10px rgba(255, 106, 0, 0.25);
         }
 
-        /* ================= BOTTOM NAVIGATION BAR ================= */
+        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -282,7 +318,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             text-decoration: none;
             color: #94a3b8;
             font-size: 10px;
@@ -290,23 +325,13 @@
             flex: 1;
         }
 
-        .nav-link i {
-            font-size: 18px;
-            margin-bottom: 3px;
-        }
+        .nav-link i { font-size: 18px; margin-bottom: 3px; }
+        .nav-link.active { color: #007bff; }
 
-        .nav-link.active {
-            color: #007bff;
-        }
-
-        .fab-container {
-            position: relative;
-            top: -16px;
-        }
-
+        .fab-container { position: relative; top: -16px; }
         .fab-btn {
-            width: 54px;
-            height: 54px;
+            width: 52px;
+            height: 52px;
             background-color: #007bff;
             border-radius: 50%;
             display: flex;
@@ -316,210 +341,313 @@
             box-shadow: 0 6px 14px rgba(0, 123, 255, 0.4);
             border: 4px solid #ffffff;
         }
-
-        .fab-btn i {
-            font-size: 22px;
-            margin-bottom: 0;
-        }
+        .fab-btn i { font-size: 20px; }
     </style>
 </head>
 <body>
 
-    <!-- HEADER BIRU -->
-    <header class="header">
-        <div class="header-top">
-            <div class="logo-box">
-                Bimbel <span>SAINS</span>
+    <!-- ================= 1. TAMPILAN LOGIN ================= -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-header">
+            <div style="font-size: 40px; color: #007bff;"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div class="login-title">Bimbel <span>SAINS</span></div>
+            <p style="font-size: 12px; color: #64748b; margin-top: 4px;">Pilih Peran dan Masuk ke Akun Anda</p>
+        </div>
+
+        <!-- Role Selector Switcher -->
+        <div class="role-selector">
+            <button class="role-btn active" onclick="setLoginRole('murid')" id="roleBtnMurid">Murid</button>
+            <button class="role-btn" onclick="setLoginRole('guru')" id="roleBtnGuru">Guru</button>
+            <button class="role-btn" onclick="setLoginRole('superadmin')" id="roleBtnSuperadmin">Superadmin</button>
+        </div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label id="inputLabel">Username / ID Murid</label>
+                <input type="text" class="form-control" id="usernameInput" required placeholder="Masukkan ID">
             </div>
+            <div class="form-group">
+                <label>Kata Sandi</label>
+                <input type="password" class="form-control" id="passwordInput" required value="123456">
+            </div>
+            <button type="submit" class="btn-submit">Masuk Dashboard</button>
+        </form>
+    </div>
+
+    <!-- ================= 2. TAMPILAN DASHBOARD ================= -->
+    <div id="dashboardScreen" class="dashboard-screen hidden">
+        
+        <!-- HEADER BIRU -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo-box">
+                    Bimbel <span>SAINS</span>
+                </div>
+                
+                <div class="user-section">
+                    <div class="header-icons">
+                        <i class="fa-regular fa-bell"></i>
+                        <i class="fa-solid fa-right-from-bracket" onclick="handleLogout()" title="Keluar / Logout"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-greeting">Selamat Datang,</div>
+                        <div class="user-name" id="dashName">---</div>
+                        <div class="user-role-badge" id="dashRoleBadge">MURID</div>
+                        <div>
+                            <button class="btn-action-header" id="btnReloadData">
+                                Refresh <i class="fa-solid fa-rotate-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- KONTEN UTAMA -->
+        <main class="container">
             
-            <div class="user-section">
-                <div class="header-icons">
-                    <i class="fa-regular fa-bell"></i>
-                    <i class="fa-solid fa-gear"></i>
+            <!-- CARD STATISTIK DINAMIS -->
+            <section class="card">
+                <h2 id="cardTitle">---</h2>
+                <p id="cardSub">---</p>
+            </section>
+
+            <!-- CARD PROGRAM / FITUR KELAS -->
+            <section class="card" id="programCardSection">
+                <span class="badge-diskon" id="dashBadge">DISKON 50%</span>
+                <div class="program-header">
+                    <i class="fa-solid fa-house"></i>
+                    <span id="dashProgramHeader">Program StudiKu</span>
                 </div>
-                <div class="user-details">
-                    <div class="user-greeting">Selamat Belajar,</div>
-                    <div class="user-name" id="userName">---</div>
-                    <button class="btn-reload" id="btnReload">
-                        Muat Ulang <i class="fa-solid fa-rotate-right"></i>
-                    </button>
-                </div>
+                <p style="font-size: 11px; color: #64748b; margin-top: 4px;" id="dashProgramSub">
+                    2 program aktif berjalan.
+                </p>
+                <button class="btn-program" id="dashProgramBtn">
+                    Aksi Utama
+                </button>
+            </section>
+
+            <!-- GRID MENU DINAMIS -->
+            <section class="menu-grid" id="dashMenuGrid">
+                <!-- Menu di-generate otomatis sesuai Role -->
+            </section>
+
+            <!-- BANNER PROMO -->
+            <div class="banner-promo" id="dashBanner">
+                * Untuk 10 Pendaftar Pertama di Awal Semester
             </div>
-        </div>
-    </header>
 
-    <!-- KONTEN UTAMA -->
-    <main class="container">
-        
-        <!-- CARD 1: SISWA REGULER / PRIVAT -->
-        <section class="card card-reguler">
-            <h2 id="siswaType">---</h2>
-            <p>Total Pertemuan: <span id="totalPertemuan">0/0</span></p>
-        </section>
+        </main>
 
-        <!-- CARD 2: PROGRAM STUDIKU -->
-        <section class="card">
-            <span class="badge-diskon" id="diskonBadge">DISKON 0%</span>
-            <div class="program-header">
+        <!-- BOTTOM NAVIGATION BAR -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-link active">
                 <i class="fa-solid fa-house"></i>
-                <span>Program StudiKu</span>
-            </div>
-            <p class="program-sub">
-                Anda memiliki <span id="programAktifCount">0</span> program studi aktif. <a href="#">Lihat detail.</a>
-            </p>
-            <button class="btn-program" id="programBtnTitle">
-                ---
-            </button>
-            <div class="program-tags" id="programTags">---</div>
-        </section>
+                <span>Beranda</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class="fa-regular fa-calendar-check"></i>
+                <span>Presensi</span>
+            </a>
+            
+            <a href="#" class="nav-link fab-container">
+                <div class="fab-btn">
+                    <i class="fa-solid fa-qrcode"></i>
+                </div>
+            </a>
 
-        <!-- GRID 8 MENU UTAMA (Dirennder lewat JS) -->
-        <section class="menu-grid" id="menuGridContainer">
-            <!-- Menu item di-generate via JavaScript -->
-        </section>
+            <a href="#" class="nav-link">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>Laporan</span>
+            </a>
+            <a href="#" class="nav-link" onclick="handleLogout()">
+                <i class="fa-solid fa-power-off"></i>
+                <span>Keluar</span>
+            </a>
+        </nav>
 
-        <!-- BANNER PROMO ORANGE -->
-        <div class="banner-promo" id="bannerPromo">
-            ---
-        </div>
+    </div>
 
-    </main>
-
-    <!-- BOTTOM NAVIGATION BAR -->
-    <nav class="bottom-nav" id="bottomNav">
-        <a href="#" class="nav-link active" data-target="beranda">
-            <i class="fa-solid fa-house"></i>
-            <span>Beranda</span>
-        </a>
-        <a href="#" class="nav-link" data-target="presensi">
-            <i class="fa-regular fa-calendar-check"></i>
-            <span>Presensi</span>
-        </a>
-        
-        <a href="#" class="nav-link fab-container" data-target="scan">
-            <div class="fab-btn">
-                <i class="fa-solid fa-qrcode"></i>
-            </div>
-        </a>
-
-        <a href="#" class="nav-link" data-target="nilai">
-            <i class="fa-solid fa-graduation-cap"></i>
-            <span>Nilai</span>
-        </a>
-        <a href="#" class="nav-link" data-target="profil">
-            <i class="fa-regular fa-user"></i>
-            <span>Profil</span>
-        </a>
-    </nav>
-
-    <!-- JAVASCRIPT LOCALSTORAGE INTEGRATION -->
+    <!-- JAVASCRIPT SYSTEM WITH LOCALSTORAGE -->
     <script>
-        // 1. Data Default Aplikasi
-        const defaultData = {
-            user: {
-                nama: "SUTRISNO",
-                tipeSiswa: "Siswa Reguler / Privat",
-                pertemuanHadir: 24,
-                totalPertemuan: 30
+        // Data Default Akun & Peran
+        const accountsData = {
+            murid: {
+                name: "SUTRISNO",
+                id: "M-1029",
+                roleLabel: "MURID REGULER",
+                cardTitle: "Siswa Reguler / Privat",
+                cardSub: "Total Pertemuan: 24/30",
+                badge: "DISKON 50%",
+                programHeader: "Program StudiKu",
+                programSub: "Anda memiliki 2 program studi aktif. Lihat detail.",
+                programBtn: "Program & Privat (Guru datang ke Rumah)",
+                menus: [
+                    { label: "Pendaftaran Baru", icon: "fa-solid fa-user-plus", bg: "#3b82f6" },
+                    { label: "Materi Belajar", icon: "fa-solid fa-book-open", bg: "#a855f7" },
+                    { label: "TPA & AKM", icon: "fa-solid fa-file-lines", bg: "#14b8a6" },
+                    { label: "Jadwal Kelas", icon: "fa-regular fa-clock", bg: "#22c55e" },
+                    { label: "Pembayaran", icon: "fa-solid fa-wallet", bg: "#ec4899" },
+                    { label: "Berita & Info", icon: "fa-regular fa-envelope", bg: "#15803d" },
+                    { label: "Konsultasi", icon: "fa-regular fa-comments", bg: "#6366f1" },
+                    { label: "Semua Menu", icon: "fa-solid fa-border-all", bg: "#2563eb" }
+                ]
             },
-            program: {
-                diskon: "DISKON 50%",
-                jumlahAktif: 2,
-                titleButton: "Program & Privat (Guru datang ke Rumah)",
-                tags: "TK, SD, SMP, SMA, SMK, TPA"
+            guru: {
+                name: "HERI KURNIAWAN, S.Pd.",
+                id: "G-5001",
+                roleLabel: "GURU / PENGAJAR",
+                cardTitle: "Status Pengajar Aktif",
+                cardSub: "Total Jam Mengajar Minggu Ini: 18 Jam",
+                badge: "GURU UTAMA",
+                programHeader: "Jadwal Mengajar Hari Ini",
+                programSub: "3 Kelas Privat aktif untuk sesi sore.",
+                programBtn: "Input Presensi & Jurnal Kelas",
+                menus: [
+                    { label: "Absensi Murid", icon: "fa-solid fa-user-check", bg: "#22c55e" },
+                    { label: "Jadwal Mengajar", icon: "fa-solid fa-calendar-days", bg: "#3b82f6" },
+                    { label: "Input Nilai", icon: "fa-solid fa-pen-to-square", bg: "#a855f7" },
+                    { label: "Materi Ajar", icon: "fa-solid fa-folder-open", bg: "#14b8a6" },
+                    { label: "Honor / Gaji", icon: "fa-solid fa-money-bill-wave", bg: "#ec4899" },
+                    { label: "Pesan Wali", icon: "fa-solid fa-comments", bg: "#6366f1" },
+                    { label: "Evaluasi", icon: "fa-solid fa-chart-line", bg: "#15803d" },
+                    { label: "Semua Menu", icon: "fa-solid fa-border-all", bg: "#2563eb" }
+                ]
             },
-            banner: "* Untuk 10 Pendaftar Pertama di Awal Semester",
-            menuList: [
-                { id: 1, label: "Pendaftaran Murid Baru", icon: "fa-solid fa-user-plus", bg: "#3b82f6" },
-                { id: 2, label: "Materi Belajar", icon: "fa-solid fa-book-open", bg: "#a855f7" },
-                { id: 3, label: "TPA & AKM", icon: "fa-solid fa-file-lines", bg: "#14b8a6" },
-                { id: 4, label: "Jadwal Kelas", icon: "fa-regular fa-clock", bg: "#22c55e" },
-                { id: 5, label: "Pembayaran Biaya", icon: "fa-solid fa-wallet", bg: "#ec4899" },
-                { id: 6, label: "Berita & Info", icon: "fa-regular fa-envelope", bg: "#15803d" },
-                { id: 7, label: "Konsultasi Guru", icon: "fa-regular fa-comments", bg: "#6366f1" },
-                { id: 8, label: "Semua Menu", icon: "fa-solid fa-border-all", bg: "#2563eb" }
-            ]
+            superadmin: {
+                name: "ADMINISTRATOR UTAMA",
+                id: "SA-001",
+                roleLabel: "SUPERADMIN",
+                cardTitle: "Panel Kendali Pusat Bimbel",
+                cardSub: "Total Murid: 350 | Total Guru: 28",
+                badge: "AKSES FULL",
+                programHeader: "Ringkasan Keuangan & Operasional",
+                programSub: "98% Pendaftaran semester ini telah terverifikasi.",
+                programBtn: "Buka Management Panel",
+                menus: [
+                    { label: "Kelola User", icon: "fa-solid fa-users-gear", bg: "#ef4444" },
+                    { label: "Keuangan", icon: "fa-solid fa-chart-pie", bg: "#f59e0b" },
+                    { label: "Kelola Kelas", icon: "fa-solid fa-chalkboard", bg: "#3b82f6" },
+                    { label: "Laporan Full", icon: "fa-solid fa-file-invoice", bg: "#10b981" },
+                    { label: "Setting Web", icon: "fa-solid fa-gears", bg: "#6366f1" },
+                    { label: "Broadcast", icon: "fa-solid fa-bullhorn", bg: "#ec4899" },
+                    { label: "Database", icon: "fa-solid fa-database", bg: "#8b5cf6" },
+                    { label: "Semua Menu", icon: "fa-solid fa-border-all", bg: "#2563eb" }
+                ]
+            }
         };
 
-        // 2. Inisialisasi LocalStorage
-        function initLocalStorage() {
-            if (!localStorage.getItem("bimbel_sains_data")) {
-                localStorage.setItem("bimbel_sains_data", JSON.stringify(defaultData));
+        let selectedRole = "murid";
+
+        // Switch Tab Role di Halaman Login
+        function setLoginRole(role) {
+            selectedRole = role;
+            document.querySelectorAll(".role-btn").forEach(btn => btn.classList.remove("active"));
+            
+            if(role === 'murid') {
+                document.getElementById("roleBtnMurid").classList.add("active");
+                document.getElementById("inputLabel").textContent = "ID / NIS Murid";
+                document.getElementById("usernameInput").value = "M-1029";
+            } else if(role === 'guru') {
+                document.getElementById("roleBtnGuru").classList.add("active");
+                document.getElementById("inputLabel").textContent = "NIP / ID Guru";
+                document.getElementById("usernameInput").value = "G-5001";
+            } else {
+                document.getElementById("roleBtnSuperadmin").classList.add("active");
+                document.getElementById("inputLabel").textContent = "Username Superadmin";
+                document.getElementById("usernameInput").value = "admin_sains";
             }
         }
 
-        // 3. Fungsi Membaca Data dari LocalStorage & Merender ke DOM
-        function renderFromLocalStorage() {
-            initLocalStorage();
-            const data = JSON.parse(localStorage.getItem("bimbel_sains_data"));
-
-            // Render Informasi User
-            document.getElementById("userName").textContent = data.user.nama;
-            document.getElementById("siswaType").textContent = data.user.tipeSiswa;
-            document.getElementById("totalPertemuan").textContent = `${data.user.pertemuanHadir}/${data.user.totalPertemuan}`;
-
-            // Render Program StudiKu
-            document.getElementById("diskonBadge").textContent = data.program.diskon;
-            document.getElementById("programAktifCount").textContent = data.program.jumlahAktif;
-            document.getElementById("programBtnTitle").textContent = data.program.titleButton;
-            document.getElementById("programTags").textContent = data.program.tags;
-
-            // Render Banner
-            document.getElementById("bannerPromo").textContent = data.banner;
-
-            // Render Grid Menu
-            const menuContainer = document.getElementById("menuGridContainer");
-            menuContainer.innerHTML = ""; // Bersihkan kontainer
+        // Proses Login & Simpan ke LocalStorage
+        function handleLogin(event) {
+            event.preventDefault();
             
-            data.menuList.forEach(item => {
-                const menuItemHTML = `
-                    <div class="menu-item" onclick="onMenuClick('${item.label}')">
-                        <div class="icon-circle" style="background-color: ${item.bg}">
-                            <i class="${item.icon}"></i>
+            const sessionData = {
+                isLoggedIn: true,
+                role: selectedRole,
+                loginTime: new Date().toLocaleString()
+            };
+
+            // Simpan Sesi Login ke LocalStorage
+            localStorage.setItem("bimbel_session", JSON.stringify(sessionData));
+            
+            // Inisialisasi Database Default jika belum ada
+            if(!localStorage.getItem("bimbel_accounts")) {
+                localStorage.setItem("bimbel_accounts", JSON.stringify(accountsData));
+            }
+
+            renderDashboard();
+        }
+
+        // Logout & Hapus Sesi dari LocalStorage
+        function handleLogout() {
+            localStorage.removeItem("bimbel_session");
+            document.getElementById("dashboardScreen").classList.add("hidden");
+            document.getElementById("loginScreen").classList.remove("hidden");
+        }
+
+        // Render Tampilan Dashboard Berdasarkan LocalStorage
+        function renderDashboard() {
+            const session = JSON.parse(localStorage.getItem("bimbel_session"));
+            
+            if(!session || !session.isLoggedIn) {
+                document.getElementById("loginScreen").classList.remove("hidden");
+                document.getElementById("dashboardScreen").classList.add("hidden");
+                return;
+            }
+
+            const role = session.role;
+            const accounts = JSON.parse(localStorage.getItem("bimbel_accounts")) || accountsData;
+            const currentUser = accounts[role];
+
+            // Tampilkan Dashboard, Sembunyikan Login
+            document.getElementById("loginScreen").classList.add("hidden");
+            document.getElementById("dashboardScreen").classList.remove("hidden");
+
+            // Update DOM Header
+            document.getElementById("dashName").textContent = currentUser.name;
+            document.getElementById("dashRoleBadge").textContent = currentUser.roleLabel;
+
+            // Update Card Info
+            document.getElementById("cardTitle").textContent = currentUser.cardTitle;
+            document.getElementById("cardSub").textContent = currentUser.cardSub;
+
+            // Update Card Program
+            document.getElementById("dashBadge").textContent = currentUser.badge;
+            document.getElementById("dashProgramHeader").textContent = currentUser.programHeader;
+            document.getElementById("dashProgramSub").textContent = currentUser.programSub;
+            document.getElementById("dashProgramBtn").textContent = currentUser.programBtn;
+
+            // Render Menu Grid sesuai Role
+            const menuGrid = document.getElementById("dashMenuGrid");
+            menuGrid.innerHTML = "";
+            currentUser.menus.forEach(menu => {
+                const itemHTML = `
+                    <div class="menu-item" onclick="alert('Akses Menu [${currentUser.roleLabel}]: ${menu.label}')">
+                        <div class="icon-circle" style="background-color: ${menu.bg}">
+                            <i class="${menu.icon}"></i>
                         </div>
-                        <span class="menu-label">${item.label}</span>
+                        <span class="menu-label">${menu.label}</span>
                     </div>
                 `;
-                menuContainer.insertAdjacentHTML("beforeend", menuItemHTML);
+                menuGrid.insertAdjacentHTML("beforeend", itemHTML);
             });
         }
 
-        // 4. Event Handler Tombol "Muat Ulang" (Reset / Refresh LocalStorage)
-        document.getElementById("btnReload").addEventListener("click", () => {
-            // Contoh aksi muat ulang: menambah hitungan pertemuan di localStorage
-            let currentData = JSON.parse(localStorage.getItem("bimbel_sains_data"));
-            
-            // Tambah 1 pertemuan jika belum maksimal
-            if (currentData.user.pertemuanHadir < currentData.user.totalPertemuan) {
-                currentData.user.pertemuanHadir += 1;
-            } else {
-                currentData.user.pertemuanHadir = 1; // Reset jika sudah penuh
+        // Cek Sesi Otomatis Saat Aplikasi Dibuka
+        document.addEventListener("DOMContentLoaded", () => {
+            if(!localStorage.getItem("bimbel_accounts")) {
+                localStorage.setItem("bimbel_accounts", JSON.stringify(accountsData));
             }
-
-            // Simpan kembali data yang baru
-            localStorage.setItem("bimbel_sains_data", JSON.stringify(currentData));
-
-            // Render ulang tampilan
-            renderFromLocalStorage();
+            renderDashboard();
         });
 
-        // 5. Event Handler Menu Navigasi Bawah
-        const navLinks = document.querySelectorAll(".bottom-nav .nav-link");
-        navLinks.forEach(link => {
-            link.addEventListener("click", function(e) {
-                e.preventDefault();
-                navLinks.forEach(l => l.classList.remove("active"));
-                this.classList.add("active");
-            });
+        // Event Tombol Refresh
+        document.getElementById("btnReloadData").addEventListener("click", () => {
+            renderDashboard();
+            alert("Data Dashboard Berhasil Diperbarui!");
         });
-
-        // 6. Fungsi Klik Menu Utama
-        function onMenuClick(menuName) {
-            alert(`Membuka menu: ${menuName}`);
-        }
-
-        // Jalankan render saat dokumen selesai dimuat
-        document.addEventListener("DOMContentLoaded", renderFromLocalStorage);
     </script>
 </body>
 </html>
