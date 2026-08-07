@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bimbel SAINS - Dashboard</title>
+    <title>Bimbel SAINS - Dashboard LocalStorage</title>
     <!-- Font Awesome CDN untuk Ikon -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -17,11 +17,11 @@
 
         body {
             background-color: #f0f4f8;
-            max-width: 480px; /* Ukuran Tampilan Mobile */
+            max-width: 480px;
             margin: 0 auto;
             min-height: 100vh;
             position: relative;
-            padding-bottom: 90px; /* Jarak agar konten paling bawah tidak tertutup Bottom Nav */
+            padding-bottom: 90px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
         }
 
@@ -29,7 +29,7 @@
         .header {
             background-color: #007bff;
             color: #ffffff;
-            padding: 20px 16px 50px 16px; /* Bottom padding memberi ruang untuk card overlay */
+            padding: 20px 16px 50px 16px;
         }
 
         .header-top {
@@ -104,12 +104,11 @@
         /* ================= KONTEN UTAMA ================= */
         .container {
             padding: 0 16px;
-            margin-top: -35px; /* Offset negatif agar card menumpuk di atas header biru tanpa tertutup */
+            margin-top: -35px;
             position: relative;
             z-index: 10;
         }
 
-        /* Card Base Style */
         .card {
             background: #ffffff;
             border-radius: 18px;
@@ -119,7 +118,7 @@
             position: relative;
         }
 
-        /* Card 1: Siswa Reguler / Privat */
+        /* Card Siswa Reguler */
         .card-reguler h2 {
             font-size: 18px;
             font-weight: 800;
@@ -138,7 +137,7 @@
             font-weight: 800;
         }
 
-        /* Card 2: Program StudiKu */
+        /* Card Program StudiKu */
         .badge-diskon {
             position: absolute;
             top: 16px;
@@ -201,7 +200,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* Grid Menu 8 Item */
+        /* Grid Menu Utama */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -247,16 +246,6 @@
             line-height: 1.25;
             max-width: 80px;
         }
-
-        /* Warna khusus ikon */
-        .bg-pendaftaran { background-color: #3b82f6; }
-        .bg-materi      { background-color: #a855f7; }
-        .bg-tpa         { background-color: #14b8a6; }
-        .bg-jadwal      { background-color: #22c55e; }
-        .bg-pembayaran  { background-color: #ec4899; }
-        .bg-berita      { background-color: #15803d; }
-        .bg-konsultasi  { background-color: #6366f1; }
-        .bg-semua       { background-color: #2563eb; }
 
         /* Banner Orange */
         .banner-promo {
@@ -310,7 +299,6 @@
             color: #007bff;
         }
 
-        /* Center Floating Action Button */
         .fab-container {
             position: relative;
             top: -16px;
@@ -351,8 +339,8 @@
                 </div>
                 <div class="user-details">
                     <div class="user-greeting">Selamat Belajar,</div>
-                    <div class="user-name">SUTRISNO</div>
-                    <button class="btn-reload">
+                    <div class="user-name" id="userName">---</div>
+                    <button class="btn-reload" id="btnReload">
                         Muat Ulang <i class="fa-solid fa-rotate-right"></i>
                     </button>
                 </div>
@@ -365,96 +353,173 @@
         
         <!-- CARD 1: SISWA REGULER / PRIVAT -->
         <section class="card card-reguler">
-            <h2>Siswa Reguler / Privat</h2>
-            <p>Total Pertemuan: <span>24/30</span></p>
+            <h2 id="siswaType">---</h2>
+            <p>Total Pertemuan: <span id="totalPertemuan">0/0</span></p>
         </section>
 
         <!-- CARD 2: PROGRAM STUDIKU -->
         <section class="card">
-            <span class="badge-diskon">DISKON 50%</span>
+            <span class="badge-diskon" id="diskonBadge">DISKON 0%</span>
             <div class="program-header">
                 <i class="fa-solid fa-house"></i>
                 <span>Program StudiKu</span>
             </div>
             <p class="program-sub">
-                Anda memiliki 2 program studi aktif. <a href="#">Lihat detail.</a>
+                Anda memiliki <span id="programAktifCount">0</span> program studi aktif. <a href="#">Lihat detail.</a>
             </p>
-            <button class="btn-program">
-                Program & Privat (Guru datang ke Rumah)
+            <button class="btn-program" id="programBtnTitle">
+                ---
             </button>
-            <div class="program-tags">TK, SD, SMP, SMA, SMK, TPA</div>
+            <div class="program-tags" id="programTags">---</div>
         </section>
 
-        <!-- GRID 8 MENU UTAMA -->
-        <section class="menu-grid">
-            <div class="menu-item">
-                <div class="icon-circle bg-pendaftaran"><i class="fa-solid fa-user-plus"></i></div>
-                <span class="menu-label">Pendaftaran Murid Baru</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-circle bg-materi"><i class="fa-solid fa-book-open"></i></div>
-                <span class="menu-label">Materi Belajar</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-circle bg-tpa"><i class="fa-solid fa-file-lines"></i></div>
-                <span class="menu-label">TPA & AKM</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-circle bg-jadwal"><i class="fa-regular fa-clock"></i></div>
-                <span class="menu-label">Jadwal Kelas</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-circle bg-pembayaran"><i class="fa-solid fa-wallet"></i></div>
-                <span class="menu-label">Pembayaran Biaya</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-circle bg-berita"><i class="fa-regular fa-envelope"></i></div>
-                <span class="menu-label">Berita & Info</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-circle bg-konsultasi"><i class="fa-regular fa-comments"></i></div>
-                <span class="menu-label">Konsultasi Guru</span>
-            </div>
-            <div class="menu-item">
-                <div class="icon-circle bg-semua"><i class="fa-solid fa-border-all"></i></div>
-                <span class="menu-label">Semua Menu</span>
-            </div>
+        <!-- GRID 8 MENU UTAMA (Dirennder lewat JS) -->
+        <section class="menu-grid" id="menuGridContainer">
+            <!-- Menu item di-generate via JavaScript -->
         </section>
 
         <!-- BANNER PROMO ORANGE -->
-        <div class="banner-promo">
-            * Untuk 10 Pendaftar Pertama di Awal Semester
+        <div class="banner-promo" id="bannerPromo">
+            ---
         </div>
 
     </main>
 
     <!-- BOTTOM NAVIGATION BAR -->
-    <nav class="bottom-nav">
-        <a href="#" class="nav-link active">
+    <nav class="bottom-nav" id="bottomNav">
+        <a href="#" class="nav-link active" data-target="beranda">
             <i class="fa-solid fa-house"></i>
             <span>Beranda</span>
         </a>
-        <a href="#" class="nav-link">
+        <a href="#" class="nav-link" data-target="presensi">
             <i class="fa-regular fa-calendar-check"></i>
             <span>Presensi</span>
         </a>
         
-        <!-- Center Floating Action Button -->
-        <a href="#" class="nav-link fab-container">
+        <a href="#" class="nav-link fab-container" data-target="scan">
             <div class="fab-btn">
                 <i class="fa-solid fa-qrcode"></i>
             </div>
         </a>
 
-        <a href="#" class="nav-link">
+        <a href="#" class="nav-link" data-target="nilai">
             <i class="fa-solid fa-graduation-cap"></i>
             <span>Nilai</span>
         </a>
-        <a href="#" class="nav-link">
+        <a href="#" class="nav-link" data-target="profil">
             <i class="fa-regular fa-user"></i>
             <span>Profil</span>
         </a>
     </nav>
 
+    <!-- JAVASCRIPT LOCALSTORAGE INTEGRATION -->
+    <script>
+        // 1. Data Default Aplikasi
+        const defaultData = {
+            user: {
+                nama: "SUTRISNO",
+                tipeSiswa: "Siswa Reguler / Privat",
+                pertemuanHadir: 24,
+                totalPertemuan: 30
+            },
+            program: {
+                diskon: "DISKON 50%",
+                jumlahAktif: 2,
+                titleButton: "Program & Privat (Guru datang ke Rumah)",
+                tags: "TK, SD, SMP, SMA, SMK, TPA"
+            },
+            banner: "* Untuk 10 Pendaftar Pertama di Awal Semester",
+            menuList: [
+                { id: 1, label: "Pendaftaran Murid Baru", icon: "fa-solid fa-user-plus", bg: "#3b82f6" },
+                { id: 2, label: "Materi Belajar", icon: "fa-solid fa-book-open", bg: "#a855f7" },
+                { id: 3, label: "TPA & AKM", icon: "fa-solid fa-file-lines", bg: "#14b8a6" },
+                { id: 4, label: "Jadwal Kelas", icon: "fa-regular fa-clock", bg: "#22c55e" },
+                { id: 5, label: "Pembayaran Biaya", icon: "fa-solid fa-wallet", bg: "#ec4899" },
+                { id: 6, label: "Berita & Info", icon: "fa-regular fa-envelope", bg: "#15803d" },
+                { id: 7, label: "Konsultasi Guru", icon: "fa-regular fa-comments", bg: "#6366f1" },
+                { id: 8, label: "Semua Menu", icon: "fa-solid fa-border-all", bg: "#2563eb" }
+            ]
+        };
+
+        // 2. Inisialisasi LocalStorage
+        function initLocalStorage() {
+            if (!localStorage.getItem("bimbel_sains_data")) {
+                localStorage.setItem("bimbel_sains_data", JSON.stringify(defaultData));
+            }
+        }
+
+        // 3. Fungsi Membaca Data dari LocalStorage & Merender ke DOM
+        function renderFromLocalStorage() {
+            initLocalStorage();
+            const data = JSON.parse(localStorage.getItem("bimbel_sains_data"));
+
+            // Render Informasi User
+            document.getElementById("userName").textContent = data.user.nama;
+            document.getElementById("siswaType").textContent = data.user.tipeSiswa;
+            document.getElementById("totalPertemuan").textContent = `${data.user.pertemuanHadir}/${data.user.totalPertemuan}`;
+
+            // Render Program StudiKu
+            document.getElementById("diskonBadge").textContent = data.program.diskon;
+            document.getElementById("programAktifCount").textContent = data.program.jumlahAktif;
+            document.getElementById("programBtnTitle").textContent = data.program.titleButton;
+            document.getElementById("programTags").textContent = data.program.tags;
+
+            // Render Banner
+            document.getElementById("bannerPromo").textContent = data.banner;
+
+            // Render Grid Menu
+            const menuContainer = document.getElementById("menuGridContainer");
+            menuContainer.innerHTML = ""; // Bersihkan kontainer
+            
+            data.menuList.forEach(item => {
+                const menuItemHTML = `
+                    <div class="menu-item" onclick="onMenuClick('${item.label}')">
+                        <div class="icon-circle" style="background-color: ${item.bg}">
+                            <i class="${item.icon}"></i>
+                        </div>
+                        <span class="menu-label">${item.label}</span>
+                    </div>
+                `;
+                menuContainer.insertAdjacentHTML("beforeend", menuItemHTML);
+            });
+        }
+
+        // 4. Event Handler Tombol "Muat Ulang" (Reset / Refresh LocalStorage)
+        document.getElementById("btnReload").addEventListener("click", () => {
+            // Contoh aksi muat ulang: menambah hitungan pertemuan di localStorage
+            let currentData = JSON.parse(localStorage.getItem("bimbel_sains_data"));
+            
+            // Tambah 1 pertemuan jika belum maksimal
+            if (currentData.user.pertemuanHadir < currentData.user.totalPertemuan) {
+                currentData.user.pertemuanHadir += 1;
+            } else {
+                currentData.user.pertemuanHadir = 1; // Reset jika sudah penuh
+            }
+
+            // Simpan kembali data yang baru
+            localStorage.setItem("bimbel_sains_data", JSON.stringify(currentData));
+
+            // Render ulang tampilan
+            renderFromLocalStorage();
+        });
+
+        // 5. Event Handler Menu Navigasi Bawah
+        const navLinks = document.querySelectorAll(".bottom-nav .nav-link");
+        navLinks.forEach(link => {
+            link.addEventListener("click", function(e) {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove("active"));
+                this.classList.add("active");
+            });
+        });
+
+        // 6. Fungsi Klik Menu Utama
+        function onMenuClick(menuName) {
+            alert(`Membuka menu: ${menuName}`);
+        }
+
+        // Jalankan render saat dokumen selesai dimuat
+        document.addEventListener("DOMContentLoaded", renderFromLocalStorage);
+    </script>
 </body>
 </html>
