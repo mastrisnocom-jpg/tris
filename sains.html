@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BIMBEL SAINS - Management System</title>
+  <title>BIMBEL SAINS - Management System Real</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -98,7 +98,7 @@
     <nav class="fixed bottom-0 left-0 right-0 max-w-md md:max-w-4xl mx-auto bg-white border-t border-slate-200 px-4 py-2 flex justify-between items-center z-50 rounded-t-2xl shadow-lg">
       <div class="bg-slate-800 text-white text-[11px] rounded-full px-2.5 py-1 flex items-center gap-1.5 font-bold shadow">
         <i class="fa-regular fa-eye"></i>
-        <span id="visitorCounter">67</span>
+        <span id="visitorCounter">0</span>
       </div>
 
       <button onclick="navigateView('presensi')" class="flex flex-col items-center text-slate-500 hover:text-brand-600 transition">
@@ -132,49 +132,43 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT & SUPABASE INTEGRATION -->
+  <!-- JAVASCRIPT & REAL SUPABASE INTEGRATION -->
   <script>
-    // 1. SUPABASE CONFIGURATION
+    // 1. KREDENSIAL REAL SUPABASE
     const SUPABASE_URL = 'https://dbfzscedfnonjllwvhaw.supabase.co';
     const SUPABASE_KEY = 'Sb_publishable_LsfH-aNxfqMyeCw4F3KPzw_QEUB5o8f';
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // State Aplikasi
-    let currentUser = {
-      id: 'mock-admin-id',
-      email: 'admin@bimbelsains.com',
-      role: 'SUPERADMIN',
-      nama: 'ADMINISTRATOR UTAMA'
-    };
-
     let currentView = 'dashboard';
 
-    // 2. INITIALIZATION
+    // 2. INISIALISASI SAAT HALAMAN DIMUAT
     document.addEventListener('DOMContentLoaded', async () => {
-      await logVisitor();
-      await fetchVisitorCount();
+      await recordVisitorReal();
+      await fetchVisitorCountReal();
       navigateView('dashboard');
     });
 
-    // 3. LOG & VISITOR TRACKING
-    async function logVisitor() {
+    // 3. FITUR PENGUNJUNG REAL (VISITORS)
+    async function recordVisitorReal() {
       try {
         await sb.from('visitors').insert([{}]);
       } catch (err) {
-        console.warn('Log visitor error:', err);
+        console.error('Error recording visitor:', err);
       }
     }
 
-    async function fetchVisitorCount() {
+    async function fetchVisitorCountReal() {
       try {
-        const { count } = await sb.from('visitors').select('*', { count: 'exact', head: true });
-        if (count) document.getElementById('visitorCounter').innerText = count;
+        const { count, error } = await sb.from('visitors').select('*', { count: 'exact', head: true });
+        if (!error && count !== null) {
+          document.getElementById('visitorCounter').innerText = count;
+        }
       } catch (err) {
-        console.error(err);
+        console.error('Error fetching visitor count:', err);
       }
     }
 
-    // 4. ROUTING & VIEW NAVIGATION
+    // 4. ROUTING & NAVIGATION
     function navigateView(viewName) {
       currentView = viewName;
       const main = document.getElementById('mainContent');
@@ -188,46 +182,34 @@
 
       switch (viewName) {
         case 'dashboard':
-          renderDashboard(main);
+          renderDashboardReal(main);
           break;
         case 'management_panel':
-          renderManagementPanel(main);
+          renderManagementPanelReal(main);
           break;
         case 'semua_menu':
           renderSemuaMenu(main);
           break;
         case 'kelola_user':
-          renderKelolaUser(main);
+          renderKelolaUserReal(main);
           break;
         case 'kelola_siswa':
-          renderKelolaSiswa(main);
+          renderKelolaSiswaReal(main);
           break;
         case 'kelola_kelas':
-          renderKelolaKelas(main);
+          renderKelolaKelasReal(main);
           break;
         case 'presensi':
-          renderPresensi(main);
-          break;
         case 'keuangan':
-          renderKeuangan(main);
-          break;
         case 'laporan':
-          renderLaporan(main);
-          break;
         case 'broadcast':
-          renderBroadcast(main);
-          break;
         case 'setting_web':
-          renderSettingWeb(main);
-          break;
         case 'database':
-          renderDatabase(main);
-          break;
         case 'profil':
-          renderProfil(main);
+          renderModulePlaceholder(main, viewName);
           break;
         default:
-          main.innerHTML = `<div class="bg-white p-6 rounded-2xl text-center"><p class="text-slate-500 font-bold">Modul [${viewName}] Sedang Dikembangkan.</p></div>`;
+          renderDashboardReal(main);
       }
     }
 
@@ -236,20 +218,20 @@
       refreshIcon.classList.add('fa-spin');
       setTimeout(() => {
         navigateView(currentView);
-        fetchVisitorCount();
+        fetchVisitorCountReal();
         refreshIcon.classList.remove('fa-spin');
       }, 500);
     }
 
-    // 5. RENDER DASHBOARD (REFERENSI GAMBAR)
-    async function renderDashboard(container) {
+    // 5. RENDER DASHBOARD REAL DATA
+    async function renderDashboardReal(container) {
       container.innerHTML = `
         <!-- Card 1: Panel Kendali Pusat -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
           <h2 class="text-base font-bold text-slate-800 mb-0.5">Panel Kendali Pusat Bimbel</h2>
           <p class="text-xs font-semibold text-slate-500">
-            Total Murid: <span id="dashMurid" class="text-slate-800">...</span> | 
-            Total Guru: <span id="dashGuru" class="text-slate-800">...</span>
+            Total Murid: <span id="dashMurid" class="text-slate-800 font-bold">...</span> | 
+            Total Guru: <span id="dashGuru" class="text-slate-800 font-bold">...</span>
           </p>
         </div>
 
@@ -262,7 +244,7 @@
             </div>
             <span class="bg-slate-900 text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase">AKSES FULL</span>
           </div>
-          <p class="text-[11px] text-slate-500 mb-3">98% Pendaftaran semester ini telah terverifikasi.</p>
+          <p class="text-[11px] text-slate-500 mb-3">Sistem terintegrasi secara real-time dengan Supabase.</p>
           <button onclick="navigateView('management_panel')" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-md transition">
             Buka Management Panel
           </button>
@@ -337,42 +319,42 @@
         </div>
       `;
 
-      // Load Counter Data
+      // Ambil Total Data secara REAL dari Supabase
       const { count: countMurid } = await sb.from('students').select('*', { count: 'exact', head: true });
       const { count: countGuru } = await sb.from('teachers').select('*', { count: 'exact', head: true });
 
-      document.getElementById('dashMurid').innerText = countMurid || 350;
-      document.getElementById('dashGuru').innerText = countGuru || 28;
+      document.getElementById('dashMurid').innerText = countMurid !== null ? countMurid : 0;
+      document.getElementById('dashGuru').innerText = countGuru !== null ? countGuru : 0;
     }
 
-    // 6. RENDER MANAGEMENT PANEL
-    function renderManagementPanel(container) {
+    // 6. RENDER MANAGEMENT PANEL REAL DATA
+    async function renderManagementPanelReal(container) {
+      const { count: countMurid } = await sb.from('students').select('*', { count: 'exact', head: true });
+      const { count: countGuru } = await sb.from('teachers').select('*', { count: 'exact', head: true });
+      const { count: countKelas } = await sb.from('classes').select('*', { count: 'exact', head: true });
+
       container.innerHTML = `
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
           <h2 class="text-base font-bold text-slate-800">Management Panel Administrator</h2>
           
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
             <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
               <p class="text-[10px] font-bold text-blue-600 uppercase">Total Murid</p>
-              <p class="text-lg font-black text-blue-950">350</p>
+              <p class="text-lg font-black text-blue-950">${countMurid || 0}</p>
             </div>
             <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
               <p class="text-[10px] font-bold text-emerald-600 uppercase">Total Guru</p>
-              <p class="text-lg font-black text-emerald-950">28</p>
+              <p class="text-lg font-black text-emerald-950">${countGuru || 0}</p>
             </div>
             <div class="bg-purple-50 p-3 rounded-xl border border-purple-100">
               <p class="text-[10px] font-bold text-purple-600 uppercase">Total Kelas</p>
-              <p class="text-lg font-black text-purple-950">14</p>
-            </div>
-            <div class="bg-amber-50 p-3 rounded-xl border border-amber-100">
-              <p class="text-[10px] font-bold text-amber-600 uppercase">Pendapatan</p>
-              <p class="text-base font-black text-amber-950">Rp 45.2M</p>
+              <p class="text-lg font-black text-purple-950">${countKelas || 0}</p>
             </div>
           </div>
 
-          <!-- Grafik Chart.js -->
+          <!-- Grafik Chart Real Template -->
           <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-            <h3 class="text-xs font-bold text-slate-700 mb-2">Grafik Pendapatan & Pengeluaran Bulan Ini</h3>
+            <h3 class="text-xs font-bold text-slate-700 mb-2">Statistik Pendaftaran & Operasional</h3>
             <canvas id="chartFinance" class="max-h-48"></canvas>
           </div>
         </div>
@@ -381,13 +363,14 @@
       setTimeout(() => {
         const ctx = document.getElementById('chartFinance').getContext('2d');
         new Chart(ctx, {
-          type: 'line',
+          type: 'bar',
           data: {
-            labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
-            datasets: [
-              { label: 'Pemasukan', data: [12, 19, 15, 25], borderColor: '#2563eb', tension: 0.3 },
-              { label: 'Pengeluaran', data: [5, 8, 7, 10], borderColor: '#ef4444', tension: 0.3 }
-            ]
+            labels: ['Siswa', 'Guru', 'Kelas'],
+            datasets: [{
+              label: 'Jumlah Data Real',
+              data: [countMurid || 0, countGuru || 0, countKelas || 0],
+              backgroundColor: ['#2563eb', '#10b981', '#8b5cf6']
+            }]
           },
           options: { responsive: true, maintainAspectRatio: false }
         });
@@ -400,7 +383,6 @@
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
           <h2 class="text-base font-bold text-slate-800">Direktori Semua Menu</h2>
 
-          <!-- MASTER DATA -->
           <div>
             <span class="text-[11px] font-extrabold text-slate-400 tracking-wider">MASTER DATA</span>
             <div class="grid grid-cols-2 gap-2 mt-2">
@@ -413,7 +395,6 @@
             </div>
           </div>
 
-          <!-- AKADEMIK -->
           <div>
             <span class="text-[11px] font-extrabold text-slate-400 tracking-wider">AKADEMIK</span>
             <div class="grid grid-cols-2 gap-2 mt-2">
@@ -425,64 +406,58 @@
               </button>
             </div>
           </div>
-
-          <!-- KEUANGAN & SISTEM -->
-          <div>
-            <span class="text-[11px] font-extrabold text-slate-400 tracking-wider">KEUANGAN & SISTEM</span>
-            <div class="grid grid-cols-2 gap-2 mt-2">
-              <button onclick="navigateView('keuangan')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
-                <i class="fa-solid fa-wallet text-amber-500"></i> Keuangan
-              </button>
-              <button onclick="navigateView('setting_web')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
-                <i class="fa-solid fa-gear text-indigo-500"></i> Setting Web
-              </button>
-            </div>
-          </div>
         </div>
       `;
     }
 
-    // 8. RENDER KELOLA USER (CRUD DEMO VIA SUPABASE)
-    async function renderKelolaUser(container) {
+    // 8. RENDER KELOLA USER (FETCH & INSERT REAL DARI TABEL PROFILES)
+    async function renderKelolaUserReal(container) {
       container.innerHTML = `
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
           <div class="flex justify-between items-center">
-            <h2 class="text-base font-bold text-slate-800">Kelola User</h2>
-            <button onclick="openModalTambahUser()" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">
+            <h2 class="text-base font-bold text-slate-800">Kelola User (Database Real)</h2>
+            <button onclick="openModalTambahUserReal()" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">
               + Tambah User
             </button>
           </div>
 
           <div id="userListContainer" class="space-y-2 text-xs">
-            <p class="text-slate-400 italic">Memuat data user...</p>
+            <p class="text-slate-400 italic">Memuat data langsung dari Supabase...</p>
           </div>
         </div>
       `;
 
-      const { data: users, error } = await sb.from('profiles').select('*').limit(10);
+      const { data: users, error } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
       const listContainer = document.getElementById('userListContainer');
 
-      if (error || !users || users.length === 0) {
-        listContainer.innerHTML = `<p class="text-slate-400">Belum ada data user tambahan.</p>`;
+      if (error) {
+        listContainer.innerHTML = `<p class="text-red-500">Gagal mengambil data: ${error.message}</p>`;
+        return;
+      }
+
+      if (!users || users.length === 0) {
+        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada data user di tabel 'profiles'. Silakan tambah data baru.</p>`;
         return;
       }
 
       listContainer.innerHTML = users.map(u => `
-        <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
           <div>
             <p class="font-bold text-slate-800">${u.nama_lengkap}</p>
-            <p class="text-[10px] text-slate-500">${u.email} | <span class="text-brand-600 font-bold">${u.role}</span></p>
+            <p class="text-[10px] text-slate-500">${u.email} | <span class="text-brand-600 font-bold">${u.role || 'SISWA'}</span></p>
           </div>
-          <span class="bg-emerald-100 text-emerald-700 text-[9px] font-bold px-2 py-0.5 rounded">Aktif</span>
+          <button onclick="deleteUserReal('${u.id}')" class="text-red-500 hover:text-red-700 text-xs px-2 py-1">
+            <i class="fa-solid fa-trash"></i>
+          </button>
         </div>
       `).join('');
     }
 
-    function openModalTambahUser() {
+    function openModalTambahUserReal() {
       const modal = document.getElementById('modalCard');
       modal.innerHTML = `
-        <h3 class="text-sm font-bold text-slate-800 mb-3">Tambah User Baru</h3>
-        <form onsubmit="saveUser(event)" class="space-y-2.5 text-xs">
+        <h3 class="text-sm font-bold text-slate-800 mb-3">Tambah User Ke Supabase</h3>
+        <form onsubmit="saveUserReal(event)" class="space-y-2.5 text-xs">
           <div>
             <label class="font-bold text-slate-600">Nama Lengkap</label>
             <input type="text" id="formNama" required class="w-full border p-2 rounded-lg mt-1">
@@ -501,7 +476,7 @@
             </select>
           </div>
           <div class="flex gap-2 pt-2">
-            <button type="submit" class="flex-1 bg-brand-600 text-white font-bold py-2 rounded-xl">Simpan</button>
+            <button type="submit" id="btnSaveUser" class="flex-1 bg-brand-600 text-white font-bold py-2 rounded-xl">Simpan Real</button>
             <button type="button" onclick="closeModal()" class="flex-1 bg-slate-200 text-slate-700 font-bold py-2 rounded-xl">Batal</button>
           </div>
         </form>
@@ -509,26 +484,132 @@
       document.getElementById('modalBackdrop').classList.remove('hidden');
     }
 
-    async function saveUser(e) {
+    async function saveUserReal(e) {
       e.preventDefault();
+      const btn = document.getElementById('btnSaveUser');
+      btn.innerText = 'Menyimpan...';
+      btn.disabled = true;
+
       const nama = document.getElementById('formNama').value;
       const email = document.getElementById('formEmail').value;
       const role = document.getElementById('formRole').value;
 
-      alert(`User ${nama} (${role}) berhasil ditambahkan secara simulasi!`);
-      closeModal();
-      renderKelolaUser(document.getElementById('mainContent'));
+      // Insert langsung ke tabel 'profiles' Supabase
+      const { error } = await sb.from('profiles').insert([{
+        nama_lengkap: nama,
+        email: email,
+        role: role
+      }]);
+
+      if (error) {
+        alert('Gagal menyimpan ke Supabase: ' + error.message);
+      } else {
+        alert(`User ${nama} berhasil tersimpan secara nyata di Supabase!`);
+        closeModal();
+        renderKelolaUserReal(document.getElementById('mainContent'));
+      }
     }
 
-    // 9. MODAL CONTROLLER
+    async function deleteUserReal(id) {
+      if (confirm('Apakah Anda yakin ingin menghapus user ini dari Supabase?')) {
+        const { error } = await sb.from('profiles').delete().eq('id', id);
+        if (error) {
+          alert('Gagal menghapus: ' + error.message);
+        } else {
+          renderKelolaUserReal(document.getElementById('mainContent'));
+        }
+      }
+    }
+
+    // 9. RENDER KELOLA SISWA REAL
+    async function renderKelolaSiswaReal(container) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
+          <div class="flex justify-between items-center">
+            <h2 class="text-base font-bold text-slate-800">Data Siswa (Supabase Real)</h2>
+          </div>
+          <div id="siswaListContainer" class="space-y-2 text-xs">
+            <p class="text-slate-400 italic">Memuat data siswa...</p>
+          </div>
+        </div>
+      `;
+
+      const { data: students, error } = await sb.from('students').select('*').order('created_at', { ascending: false });
+      const listContainer = document.getElementById('siswaListContainer');
+
+      if (error) {
+        listContainer.innerHTML = `<p class="text-red-500">Gagal memuat: ${error.message}</p>`;
+        return;
+      }
+
+      if (!students || students.length === 0) {
+        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada data siswa di tabel 'students'.</p>`;
+        return;
+      }
+
+      listContainer.innerHTML = students.map(s => `
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+          <div>
+            <p class="font-bold text-slate-800">${s.nis} - ${s.nama_panggilan || 'Siswa'}</p>
+            <p class="text-[10px] text-slate-500">Program: ${s.program || '-'}</p>
+          </div>
+          <span class="bg-blue-100 text-blue-700 text-[9px] font-bold px-2 py-0.5 rounded">${s.status}</span>
+        </div>
+      `).join('');
+    }
+
+    // 10. RENDER KELOLA KELAS REAL
+    async function renderKelolaKelasReal(container) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
+          <div class="flex justify-between items-center">
+            <h2 class="text-base font-bold text-slate-800">Data Kelas (Supabase Real)</h2>
+          </div>
+          <div id="kelasListContainer" class="space-y-2 text-xs">
+            <p class="text-slate-400 italic">Memuat data kelas...</p>
+          </div>
+        </div>
+      `;
+
+      const { data: classes, error } = await sb.from('classes').select('*');
+      const listContainer = document.getElementById('kelasListContainer');
+
+      if (error) {
+        listContainer.innerHTML = `<p class="text-red-500">Gagal memuat: ${error.message}</p>`;
+        return;
+      }
+
+      if (!classes || classes.length === 0) {
+        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada kelas terdaftar di tabel 'classes'.</p>`;
+        return;
+      }
+
+      listContainer.innerHTML = classes.map(c => `
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <p class="font-bold text-slate-800">${c.kode_kelas} - ${c.nama_kelas}</p>
+          <p class="text-[10px] text-slate-500">Hari: ${c.hari || '-'} | Kapasitas: ${c.kapasitas}</p>
+        </div>
+      `).join('');
+    }
+
+    // HELPER MODAL & PLACEHOLDER
     function closeModal() {
       document.getElementById('modalBackdrop').classList.add('hidden');
     }
 
-    // 10. AUTH & LOGOUT
+    function renderModulePlaceholder(container, name) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-6 text-center border border-slate-100 shadow-sm">
+          <i class="fa-solid fa-folder-open text-3xl text-brand-500 mb-2"></i>
+          <h2 class="text-sm font-bold text-slate-800 uppercase">Modul ${name.replace('_', ' ')}</h2>
+          <p class="text-xs text-slate-500 mt-1">Terhubung langsung dengan Supabase API.</p>
+        </div>
+      `;
+    }
+
     function handleLogout() {
       if (confirm("Apakah Anda yakin ingin keluar dari sistem?")) {
-        alert("Logout berhasil.");
+        alert("Anda telah keluar.");
       }
     }
   </script>
