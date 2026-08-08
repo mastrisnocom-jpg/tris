@@ -140,6 +140,7 @@
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentUser = null;
+    let userRole = 'SUPERADMIN';
     let currentView = 'dashboard';
 
     // 2. INITIALIZATION
@@ -153,10 +154,20 @@
       const { data: { session } } = await sb.auth.getSession();
       if (session) {
         currentUser = session.user;
+        await fetchUserProfile();
         renderHeaderUserInfo();
         navigateView('dashboard');
       } else {
         renderLoginView();
+      }
+    }
+
+    async function fetchUserProfile() {
+      if (!currentUser) return;
+      const { data } = await sb.from('profiles').select('role, nama_lengkap').eq('id', currentUser.id).single();
+      if (data) {
+        userRole = data.role || 'SISWA';
+        currentUser.nama_lengkap = data.nama_lengkap;
       }
     }
 
@@ -173,12 +184,13 @@
 
     function renderHeaderUserInfo() {
       if (currentUser) {
-        document.getElementById('userDisplayName').innerText = currentUser.email.split('@')[0];
-        document.getElementById('userRoleBadge').innerText = 'SUPERADMIN';
+        const displayName = currentUser.nama_lengkap || currentUser.email.split('@')[0];
+        document.getElementById('userDisplayName').innerText = displayName;
+        document.getElementById('userRoleBadge').innerText = userRole;
       }
     }
 
-    // 3. AUTHENTICATION (LOGIN)
+    // 3. AUTHENTICATION (LOGIN & REGISTRASI)
     function renderLoginView() {
       document.getElementById('appHeader').classList.add('hidden');
       document.getElementById('bottomNav').classList.add('hidden');
@@ -194,30 +206,81 @@
               <i class="fa-solid fa-graduation-cap"></i>
             </div>
             <h1 class="text-xl font-black text-slate-800 pt-2">BIMBEL SAINS</h1>
-            <p class="text-xs font-semibold text-slate-400">Management System Login</p>
+            <p id="authSubtitle" class="text-xs font-semibold text-slate-400">Management System Login</p>
           </div>
 
-          <form onsubmit="handleLogin(event)" class="space-y-3 text-xs">
+          <!-- FORM LOGIN -->
+          <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-3 text-xs">
             <div>
               <label class="font-bold text-slate-700">Email / Username</label>
-              <input type="email" id="loginEmail" required placeholder="admin@bimbelsains.com" class="w-full border border-slate-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-brand-500 outline-none">
+              <input type="email" id="loginEmail" required placeholder="email@bimbelsains.com" class="w-full border border-slate-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-brand-500 outline-none">
             </div>
             <div>
               <label class="font-bold text-slate-700">Password</label>
               <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full border border-slate-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-brand-500 outline-none">
             </div>
             <div class="flex justify-between items-center text-[11px]">
-              <label class="flex items-center gap-1.5 text-slate-600">
+              <label class="flex items-center gap-1.5 text-slate-600 cursor-pointer">
                 <input type="checkbox" class="rounded border-slate-300"> Remember Me
               </label>
-              <a href="#" onclick="alert('Silakan hubungi Superadmin untuk me-reset password.')" class="text-brand-600 font-bold">Lupa Password?</a>
+              <a href="#" onclick="alert('Silakan hubungi Superadmin untuk reset password.')" class="text-brand-600 font-bold">Lupa Password?</a>
             </div>
             <button type="submit" id="btnLoginSubmit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl shadow-md transition text-xs mt-2">
               Login ke Sistem
             </button>
+            <div class="text-center pt-2 text-[11px] text-slate-500">
+              Belum punya akun? <a href="#" onclick="toggleAuthForm('register')" class="text-brand-600 font-bold underline">Daftar Akun Baru</a>
+            </div>
+          </form>
+
+          <!-- FORM REGISTRASI -->
+          <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3 text-xs hidden">
+            <div>
+              <label class="font-bold text-slate-700">Nama Lengkap</label>
+              <input type="text" id="regNama" required placeholder="Nama Lengkap" class="w-full border border-slate-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-brand-500 outline-none">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Email</label>
+              <input type="email" id="regEmail" required placeholder="email@bimbelsains.com" class="w-full border border-slate-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-brand-500 outline-none">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Password</label>
+              <input type="password" id="regPassword" required minlength="6" placeholder="Minimal 6 Karakter" class="w-full border border-slate-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-brand-500 outline-none">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Daftar Sebagai</label>
+              <select id="regRole" class="w-full border border-slate-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-brand-500 outline-none bg-white">
+                <option value="SISWA">Siswa</option>
+                <option value="GURU">Guru</option>
+                <option value="STAFF ADMIN">Staff Admin</option>
+                <option value="ORANG TUA">Orang Tua</option>
+              </select>
+            </div>
+            <button type="submit" id="btnRegSubmit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition text-xs mt-2">
+              Daftar Sekarang
+            </button>
+            <div class="text-center pt-2 text-[11px] text-slate-500">
+              Sudah punya akun? <a href="#" onclick="toggleAuthForm('login')" class="text-brand-600 font-bold underline">Login Kembali</a>
+            </div>
           </form>
         </div>
       `;
+    }
+
+    function toggleAuthForm(mode) {
+      const formLogin = document.getElementById('formLogin');
+      const formRegister = document.getElementById('formRegister');
+      const subtitle = document.getElementById('authSubtitle');
+
+      if (mode === 'register') {
+        formLogin.classList.add('hidden');
+        formRegister.classList.remove('hidden');
+        subtitle.innerText = "Pendaftaran Akun Baru";
+      } else {
+        formRegister.classList.add('hidden');
+        formLogin.classList.remove('hidden');
+        subtitle.innerText = "Management System Login";
+      }
     }
 
     async function handleLogin(e) {
@@ -237,6 +300,7 @@
         btn.disabled = false;
       } else {
         currentUser = data.user;
+        await fetchUserProfile();
         document.getElementById('appHeader').classList.remove('hidden');
         document.getElementById('bottomNav').classList.remove('hidden');
         document.getElementById('mainContent').classList.add('-mt-3');
@@ -244,6 +308,50 @@
         renderHeaderUserInfo();
         navigateView('dashboard');
       }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const nama = document.getElementById('regNama').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const role = document.getElementById('regRole').value;
+      const btn = document.getElementById('btnRegSubmit');
+
+      btn.innerText = 'Memproses Pendaftaran...';
+      btn.disabled = true;
+
+      const { data, error } = await sb.auth.signUp({
+        email: email,
+        password: password
+      });
+
+      if (error) {
+        alert('Registrasi Gagal: ' + error.message);
+        btn.innerText = 'Daftar Sekarang';
+        btn.disabled = false;
+        return;
+      }
+
+      if (data.user) {
+        await sb.from('profiles').upsert([{
+          id: data.user.id,
+          nama_lengkap: nama,
+          email: email,
+          role: role,
+          status_aktif: true
+        }]);
+
+        alert('Pendaftaran Berhasil! Silakan Login dengan akun baru Anda.');
+        toggleAuthForm('login');
+        document.getElementById('loginEmail').value = email;
+      } else {
+        alert('Pendaftaran Berhasil! Silakan verifikasi email Anda.');
+        toggleAuthForm('login');
+      }
+
+      btn.innerText = 'Daftar Sekarang';
+      btn.disabled = false;
     }
 
     async function handleLogout() {
@@ -619,7 +727,7 @@
       `).join('');
     }
 
-    // 10. JADWAL, PRESENSI, KEUANGAN, LAPORAN, NILAI, BROADCAST, SETTING, DATABASE, PROFIL, SEMUA MENU
+    // 10. LAINNYA & HELPER
     function renderJadwal(c) { renderModulePlaceholder(c, 'Jadwal Bimbel'); }
     function renderPresensi(c) { renderModulePlaceholder(c, 'Presensi Siswa & Guru'); }
     function renderKeuangan(c) { renderModulePlaceholder(c, 'Keuangan & Pembayaran'); }
@@ -628,7 +736,7 @@
     function renderBroadcast(c) { renderModulePlaceholder(c, 'Broadcast Pengumuman'); }
     function renderSettingWeb(c) { renderModulePlaceholder(c, 'Setting Web'); }
     function renderDatabase(c) { renderModulePlaceholder(c, 'Database Health & Log'); }
-    
+
     function renderSemuaMenu(container) {
       container.innerHTML = `
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
@@ -655,8 +763,8 @@
       container.innerHTML = `
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3 text-center">
           <div class="w-16 h-16 bg-brand-600 text-white rounded-full flex items-center justify-center text-2xl mx-auto shadow"><i class="fa-solid fa-user"></i></div>
-          <h2 class="text-sm font-bold text-slate-800">${currentUser ? currentUser.email : 'Guest'}</h2>
-          <span class="bg-amber-400 text-blue-950 font-black text-[10px] px-2.5 py-0.5 rounded-full">SUPERADMIN</span>
+          <h2 class="text-sm font-bold text-slate-800">${currentUser ? (currentUser.nama_lengkap || currentUser.email) : 'User'}</h2>
+          <span class="bg-amber-400 text-blue-950 font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase">${userRole}</span>
           <button onclick="handleLogout()" class="w-full bg-red-500 text-white text-xs font-bold py-2 rounded-xl mt-2">Logout</button>
         </div>
       `;
