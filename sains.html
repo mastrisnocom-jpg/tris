@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BIMBEL SAINS - Management System Real</title>
-  
+  <title>BIMBEL SAINS - WebApp Management System</title>
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome CDN -->
+  <!-- FontAwesome Icons CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <!-- Supabase JS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -51,8 +51,8 @@
 </head>
 <body class="flex justify-center min-h-screen text-slate-800">
 
-  <!-- Container Utama Mobile First -->
-  <div class="w-full max-w-md md:max-w-4xl bg-slate-100 min-h-screen flex flex-col justify-between shadow-2xl relative pb-20">
+  <!-- APP CONTAINER -->
+  <div id="appContainer" class="w-full max-w-md md:max-w-4xl bg-slate-100 min-h-screen flex flex-col justify-between shadow-2xl relative pb-20">
 
     <!-- HEADER / TOPBAR -->
     <header id="appHeader" class="bg-brand-600 text-white px-4 pt-5 pb-6 rounded-b-[2rem] shadow-md relative z-20">
@@ -91,11 +91,11 @@
 
     <!-- CONTENT AREA -->
     <main id="mainContent" class="px-4 -mt-3 z-10 flex-1 space-y-4">
-      <!-- Dynamic Views rendered via JS -->
+      <!-- Dynamic Views Rendered via JavaScript -->
     </main>
 
     <!-- BOTTOM NAVIGATION -->
-    <nav class="fixed bottom-0 left-0 right-0 max-w-md md:max-w-4xl mx-auto bg-white border-t border-slate-200 px-4 py-2 flex justify-between items-center z-50 rounded-t-2xl shadow-lg">
+    <nav id="bottomNav" class="fixed bottom-0 left-0 right-0 max-w-md md:max-w-4xl mx-auto bg-white border-t border-slate-200 px-4 py-2 flex justify-between items-center z-50 rounded-t-2xl shadow-lg">
       <div class="bg-slate-800 text-white text-[11px] rounded-full px-2.5 py-1 flex items-center gap-1.5 font-bold shadow">
         <i class="fa-regular fa-eye"></i>
         <span id="visitorCounter">0</span>
@@ -132,43 +132,129 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT & REAL SUPABASE INTEGRATION -->
+  <!-- JAVASCRIPT & SUPABASE INTEGRATION -->
   <script>
-    // 1. KREDENSIAL REAL SUPABASE
+    // 1. CONFIGURATION SUPABASE REAL
     const SUPABASE_URL = 'https://dbfzscedfnonjllwvhaw.supabase.co';
-    const SUPABASE_KEY = 'Sb_publishable_LsfH-aNxfqMyeCw4F3KPzw_QEUB5o8f';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRiZnpzY2VkZm5vbmpsbHd2aGF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxNzcyNTgsImV4cCI6MjEwMTc1MzI1OH0.1KrE5HAlk_cvTsGn_xIF2d9f24pUqBGr_87srvm4HD4';
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    let currentUser = null;
     let currentView = 'dashboard';
 
-    // 2. INISIALISASI SAAT HALAMAN DIMUAT
+    // 2. INITIALIZATION
     document.addEventListener('DOMContentLoaded', async () => {
       await recordVisitorReal();
       await fetchVisitorCountReal();
-      navigateView('dashboard');
+      await checkAuthSession();
     });
 
-    // 3. FITUR PENGUNJUNG REAL (VISITORS)
-    async function recordVisitorReal() {
-      try {
-        await sb.from('visitors').insert([{}]);
-      } catch (err) {
-        console.error('Error recording visitor:', err);
+    async function checkAuthSession() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        currentUser = session.user;
+        renderHeaderUserInfo();
+        navigateView('dashboard');
+      } else {
+        renderLoginView();
       }
+    }
+
+    async function recordVisitorReal() {
+      try { await sb.from('visitors').insert([{}]); } catch (e) {}
     }
 
     async function fetchVisitorCountReal() {
       try {
-        const { count, error } = await sb.from('visitors').select('*', { count: 'exact', head: true });
-        if (!error && count !== null) {
-          document.getElementById('visitorCounter').innerText = count;
-        }
-      } catch (err) {
-        console.error('Error fetching visitor count:', err);
+        const { count } = await sb.from('visitors').select('*', { count: 'exact', head: true });
+        if (count !== null) document.getElementById('visitorCounter').innerText = count;
+      } catch (e) {}
+    }
+
+    function renderHeaderUserInfo() {
+      if (currentUser) {
+        document.getElementById('userDisplayName').innerText = currentUser.email.split('@')[0];
+        document.getElementById('userRoleBadge').innerText = 'SUPERADMIN';
       }
     }
 
-    // 4. ROUTING & NAVIGATION
+    // 3. AUTHENTICATION (LOGIN)
+    function renderLoginView() {
+      document.getElementById('appHeader').classList.add('hidden');
+      document.getElementById('bottomNav').classList.add('hidden');
+
+      const main = document.getElementById('mainContent');
+      main.classList.remove('-mt-3');
+      main.classList.add('pt-10');
+
+      main.innerHTML = `
+        <div class="bg-white rounded-3xl p-6 shadow-xl border border-slate-100 max-w-sm mx-auto my-auto space-y-5">
+          <div class="text-center space-y-1">
+            <div class="w-16 h-16 bg-brand-600 text-white rounded-2xl flex items-center justify-center text-3xl mx-auto shadow-md">
+              <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h1 class="text-xl font-black text-slate-800 pt-2">BIMBEL SAINS</h1>
+            <p class="text-xs font-semibold text-slate-400">Management System Login</p>
+          </div>
+
+          <form onsubmit="handleLogin(event)" class="space-y-3 text-xs">
+            <div>
+              <label class="font-bold text-slate-700">Email / Username</label>
+              <input type="email" id="loginEmail" required placeholder="admin@bimbelsains.com" class="w-full border border-slate-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-brand-500 outline-none">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Password</label>
+              <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full border border-slate-200 p-3 rounded-xl mt-1 focus:ring-2 focus:ring-brand-500 outline-none">
+            </div>
+            <div class="flex justify-between items-center text-[11px]">
+              <label class="flex items-center gap-1.5 text-slate-600">
+                <input type="checkbox" class="rounded border-slate-300"> Remember Me
+              </label>
+              <a href="#" onclick="alert('Silakan hubungi Superadmin untuk me-reset password.')" class="text-brand-600 font-bold">Lupa Password?</a>
+            </div>
+            <button type="submit" id="btnLoginSubmit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl shadow-md transition text-xs mt-2">
+              Login ke Sistem
+            </button>
+          </form>
+        </div>
+      `;
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('btnLoginSubmit');
+
+      btn.innerText = 'Memproses...';
+      btn.disabled = true;
+
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        alert('Login Gagal: ' + error.message);
+        btn.innerText = 'Login ke Sistem';
+        btn.disabled = false;
+      } else {
+        currentUser = data.user;
+        document.getElementById('appHeader').classList.remove('hidden');
+        document.getElementById('bottomNav').classList.remove('hidden');
+        document.getElementById('mainContent').classList.add('-mt-3');
+        document.getElementById('mainContent').classList.remove('pt-10');
+        renderHeaderUserInfo();
+        navigateView('dashboard');
+      }
+    }
+
+    async function handleLogout() {
+      if (confirm('Apakah Anda yakin ingin keluar dari aplikasi?')) {
+        await sb.auth.signOut();
+        currentUser = null;
+        renderLoginView();
+      }
+    }
+
+    // 4. ROUTER
     function navigateView(viewName) {
       currentView = viewName;
       const main = document.getElementById('mainContent');
@@ -181,35 +267,22 @@
       }
 
       switch (viewName) {
-        case 'dashboard':
-          renderDashboardReal(main);
-          break;
-        case 'management_panel':
-          renderManagementPanelReal(main);
-          break;
-        case 'semua_menu':
-          renderSemuaMenu(main);
-          break;
-        case 'kelola_user':
-          renderKelolaUserReal(main);
-          break;
-        case 'kelola_siswa':
-          renderKelolaSiswaReal(main);
-          break;
-        case 'kelola_kelas':
-          renderKelolaKelasReal(main);
-          break;
-        case 'presensi':
-        case 'keuangan':
-        case 'laporan':
-        case 'broadcast':
-        case 'setting_web':
-        case 'database':
-        case 'profil':
-          renderModulePlaceholder(main, viewName);
-          break;
-        default:
-          renderDashboardReal(main);
+        case 'dashboard': renderDashboard(main); break;
+        case 'management_panel': renderManagementPanel(main); break;
+        case 'semua_menu': renderSemuaMenu(main); break;
+        case 'kelola_user': renderKelolaUser(main); break;
+        case 'kelola_siswa': renderKelolaSiswa(main); break;
+        case 'kelola_kelas': renderKelolaKelas(main); break;
+        case 'jadwal': renderJadwal(main); break;
+        case 'presensi': renderPresensi(main); break;
+        case 'keuangan': renderKeuangan(main); break;
+        case 'laporan': renderLaporan(main); break;
+        case 'nilai': renderNilai(main); break;
+        case 'broadcast': renderBroadcast(main); break;
+        case 'setting_web': renderSettingWeb(main); break;
+        case 'database': renderDatabase(main); break;
+        case 'profil': renderProfil(main); break;
+        default: renderDashboard(main);
       }
     }
 
@@ -223,10 +296,9 @@
       }, 500);
     }
 
-    // 5. RENDER DASHBOARD REAL DATA
-    async function renderDashboardReal(container) {
+    // 5. MODUL DASHBOARD UTAMA
+    async function renderDashboard(container) {
       container.innerHTML = `
-        <!-- Card 1: Panel Kendali Pusat -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
           <h2 class="text-base font-bold text-slate-800 mb-0.5">Panel Kendali Pusat Bimbel</h2>
           <p class="text-xs font-semibold text-slate-500">
@@ -235,7 +307,6 @@
           </p>
         </div>
 
-        <!-- Card 2: Ringkasan Operasional -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
           <div class="flex items-center justify-between mb-1.5">
             <div class="flex items-center gap-2">
@@ -250,7 +321,6 @@
           </button>
         </div>
 
-        <!-- Card 3: Grid Menu Utama -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
           <div class="grid grid-cols-4 gap-y-4 gap-x-2 text-center">
             
@@ -313,13 +383,11 @@
           </div>
         </div>
 
-        <!-- Banner Info -->
         <div class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold text-center text-xs py-3 px-4 rounded-xl shadow-sm border border-orange-400">
           * Untuk 10 Pendaftar Pertama di Awal Semester
         </div>
       `;
 
-      // Ambil Total Data secara REAL dari Supabase
       const { count: countMurid } = await sb.from('students').select('*', { count: 'exact', head: true });
       const { count: countGuru } = await sb.from('teachers').select('*', { count: 'exact', head: true });
 
@@ -327,8 +395,8 @@
       document.getElementById('dashGuru').innerText = countGuru !== null ? countGuru : 0;
     }
 
-    // 6. RENDER MANAGEMENT PANEL REAL DATA
-    async function renderManagementPanelReal(container) {
+    // 6. MANAGEMENT PANEL
+    async function renderManagementPanel(container) {
       const { count: countMurid } = await sb.from('students').select('*', { count: 'exact', head: true });
       const { count: countGuru } = await sb.from('teachers').select('*', { count: 'exact', head: true });
       const { count: countKelas } = await sb.from('classes').select('*', { count: 'exact', head: true });
@@ -352,7 +420,6 @@
             </div>
           </div>
 
-          <!-- Grafik Chart Real Template -->
           <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
             <h3 class="text-xs font-bold text-slate-700 mb-2">Statistik Pendaftaran & Operasional</h3>
             <canvas id="chartFinance" class="max-h-48"></canvas>
@@ -377,52 +444,19 @@
       }, 100);
     }
 
-    // 7. RENDER SEMUA MENU
-    function renderSemuaMenu(container) {
-      container.innerHTML = `
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
-          <h2 class="text-base font-bold text-slate-800">Direktori Semua Menu</h2>
-
-          <div>
-            <span class="text-[11px] font-extrabold text-slate-400 tracking-wider">MASTER DATA</span>
-            <div class="grid grid-cols-2 gap-2 mt-2">
-              <button onclick="navigateView('kelola_siswa')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
-                <i class="fa-solid fa-user-graduate text-brand-600"></i> Data Siswa
-              </button>
-              <button onclick="navigateView('kelola_user')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
-                <i class="fa-solid fa-users text-red-500"></i> Data User
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <span class="text-[11px] font-extrabold text-slate-400 tracking-wider">AKADEMIK</span>
-            <div class="grid grid-cols-2 gap-2 mt-2">
-              <button onclick="navigateView('kelola_kelas')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
-                <i class="fa-solid fa-laptop text-brand-500"></i> Kelola Kelas
-              </button>
-              <button onclick="navigateView('presensi')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
-                <i class="fa-solid fa-clipboard-user text-emerald-600"></i> Presensi
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // 8. RENDER KELOLA USER (FETCH & INSERT REAL DARI TABEL PROFILES)
-    async function renderKelolaUserReal(container) {
+    // 7. KELOLA USER (REAL SUPABASE)
+    async function renderKelolaUser(container) {
       container.innerHTML = `
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
           <div class="flex justify-between items-center">
-            <h2 class="text-base font-bold text-slate-800">Kelola User (Database Real)</h2>
-            <button onclick="openModalTambahUserReal()" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">
+            <h2 class="text-base font-bold text-slate-800">Kelola User</h2>
+            <button onclick="openModalTambahUser()" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">
               + Tambah User
             </button>
           </div>
 
           <div id="userListContainer" class="space-y-2 text-xs">
-            <p class="text-slate-400 italic">Memuat data langsung dari Supabase...</p>
+            <p class="text-slate-400 italic">Memuat data dari Supabase...</p>
           </div>
         </div>
       `;
@@ -430,13 +464,8 @@
       const { data: users, error } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
       const listContainer = document.getElementById('userListContainer');
 
-      if (error) {
-        listContainer.innerHTML = `<p class="text-red-500">Gagal mengambil data: ${error.message}</p>`;
-        return;
-      }
-
-      if (!users || users.length === 0) {
-        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada data user di tabel 'profiles'. Silakan tambah data baru.</p>`;
+      if (error || !users || users.length === 0) {
+        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada data user di tabel 'profiles'.</p>`;
         return;
       }
 
@@ -453,7 +482,7 @@
       `).join('');
     }
 
-    function openModalTambahUserReal() {
+    function openModalTambahUser() {
       const modal = document.getElementById('modalCard');
       modal.innerHTML = `
         <h3 class="text-sm font-bold text-slate-800 mb-3">Tambah User Ke Supabase</h3>
@@ -486,64 +515,45 @@
 
     async function saveUserReal(e) {
       e.preventDefault();
-      const btn = document.getElementById('btnSaveUser');
-      btn.innerText = 'Menyimpan...';
-      btn.disabled = true;
-
       const nama = document.getElementById('formNama').value;
       const email = document.getElementById('formEmail').value;
       const role = document.getElementById('formRole').value;
 
-      // Insert langsung ke tabel 'profiles' Supabase
-      const { error } = await sb.from('profiles').insert([{
-        nama_lengkap: nama,
-        email: email,
-        role: role
-      }]);
+      const { error } = await sb.from('profiles').insert([{ nama_lengkap: nama, email: email, role: role }]);
 
       if (error) {
-        alert('Gagal menyimpan ke Supabase: ' + error.message);
+        alert('Gagal menyimpan: ' + error.message);
       } else {
-        alert(`User ${nama} berhasil tersimpan secara nyata di Supabase!`);
+        alert('Data user berhasil disimpan!');
         closeModal();
-        renderKelolaUserReal(document.getElementById('mainContent'));
+        renderKelolaUser(document.getElementById('mainContent'));
       }
     }
 
     async function deleteUserReal(id) {
-      if (confirm('Apakah Anda yakin ingin menghapus user ini dari Supabase?')) {
-        const { error } = await sb.from('profiles').delete().eq('id', id);
-        if (error) {
-          alert('Gagal menghapus: ' + error.message);
-        } else {
-          renderKelolaUserReal(document.getElementById('mainContent'));
-        }
+      if (confirm('Hapus user dari Supabase?')) {
+        await sb.from('profiles').delete().eq('id', id);
+        renderKelolaUser(document.getElementById('mainContent'));
       }
     }
 
-    // 9. RENDER KELOLA SISWA REAL
-    async function renderKelolaSiswaReal(container) {
+    // 8. DATA SISWA
+    async function renderKelolaSiswa(container) {
       container.innerHTML = `
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
           <div class="flex justify-between items-center">
-            <h2 class="text-base font-bold text-slate-800">Data Siswa (Supabase Real)</h2>
+            <h2 class="text-base font-bold text-slate-800">Data Siswa</h2>
+            <button onclick="openModalTambahSiswa()" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">+ Siswa</button>
           </div>
-          <div id="siswaListContainer" class="space-y-2 text-xs">
-            <p class="text-slate-400 italic">Memuat data siswa...</p>
-          </div>
+          <div id="siswaListContainer" class="space-y-2 text-xs"><p class="text-slate-400 italic">Memuat data...</p></div>
         </div>
       `;
 
-      const { data: students, error } = await sb.from('students').select('*').order('created_at', { ascending: false });
+      const { data: students } = await sb.from('students').select('*').order('created_at', { ascending: false });
       const listContainer = document.getElementById('siswaListContainer');
 
-      if (error) {
-        listContainer.innerHTML = `<p class="text-red-500">Gagal memuat: ${error.message}</p>`;
-        return;
-      }
-
       if (!students || students.length === 0) {
-        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada data siswa di tabel 'students'.</p>`;
+        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada data siswa.</p>`;
         return;
       }
 
@@ -558,29 +568,46 @@
       `).join('');
     }
 
-    // 10. RENDER KELOLA KELAS REAL
-    async function renderKelolaKelasReal(container) {
+    function openModalTambahSiswa() {
+      const modal = document.getElementById('modalCard');
+      modal.innerHTML = `
+        <h3 class="text-sm font-bold text-slate-800 mb-3">Tambah Data Siswa</h3>
+        <form onsubmit="saveSiswaReal(event)" class="space-y-2 text-xs">
+          <div><label class="font-bold text-slate-600">NIS</label><input type="text" id="siswaNIS" required class="w-full border p-2 rounded-lg mt-1"></div>
+          <div><label class="font-bold text-slate-600">Nama Panggilan</label><input type="text" id="siswaNama" required class="w-full border p-2 rounded-lg mt-1"></div>
+          <div class="flex gap-2 pt-2">
+            <button type="submit" class="flex-1 bg-brand-600 text-white font-bold py-2 rounded-xl">Simpan</button>
+            <button type="button" onclick="closeModal()" class="flex-1 bg-slate-200 text-slate-700 font-bold py-2 rounded-xl">Batal</button>
+          </div>
+        </form>
+      `;
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+    }
+
+    async function saveSiswaReal(e) {
+      e.preventDefault();
+      const nis = document.getElementById('siswaNIS').value;
+      const nama = document.getElementById('siswaNama').value;
+
+      const { error } = await sb.from('students').insert([{ nis: nis, nama_panggilan: nama }]);
+      if (error) alert('Error: ' + error.message);
+      else { closeModal(); renderKelolaSiswa(document.getElementById('mainContent')); }
+    }
+
+    // 9. KELOLA KELAS
+    async function renderKelolaKelas(container) {
       container.innerHTML = `
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
-          <div class="flex justify-between items-center">
-            <h2 class="text-base font-bold text-slate-800">Data Kelas (Supabase Real)</h2>
-          </div>
-          <div id="kelasListContainer" class="space-y-2 text-xs">
-            <p class="text-slate-400 italic">Memuat data kelas...</p>
-          </div>
+          <h2 class="text-base font-bold text-slate-800">Kelola Kelas</h2>
+          <div id="kelasListContainer" class="space-y-2 text-xs"><p class="text-slate-400 italic">Memuat kelas...</p></div>
         </div>
       `;
 
-      const { data: classes, error } = await sb.from('classes').select('*');
+      const { data: classes } = await sb.from('classes').select('*');
       const listContainer = document.getElementById('kelasListContainer');
 
-      if (error) {
-        listContainer.innerHTML = `<p class="text-red-500">Gagal memuat: ${error.message}</p>`;
-        return;
-      }
-
       if (!classes || classes.length === 0) {
-        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada kelas terdaftar di tabel 'classes'.</p>`;
+        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada kelas terdaftar.</p>`;
         return;
       }
 
@@ -592,25 +619,61 @@
       `).join('');
     }
 
-    // HELPER MODAL & PLACEHOLDER
-    function closeModal() {
-      document.getElementById('modalBackdrop').classList.add('hidden');
+    // 10. JADWAL, PRESENSI, KEUANGAN, LAPORAN, NILAI, BROADCAST, SETTING, DATABASE, PROFIL, SEMUA MENU
+    function renderJadwal(c) { renderModulePlaceholder(c, 'Jadwal Bimbel'); }
+    function renderPresensi(c) { renderModulePlaceholder(c, 'Presensi Siswa & Guru'); }
+    function renderKeuangan(c) { renderModulePlaceholder(c, 'Keuangan & Pembayaran'); }
+    function renderLaporan(c) { renderModulePlaceholder(c, 'Pusat Laporan Full'); }
+    function renderNilai(c) { renderModulePlaceholder(c, 'Nilai Siswa'); }
+    function renderBroadcast(c) { renderModulePlaceholder(c, 'Broadcast Pengumuman'); }
+    function renderSettingWeb(c) { renderModulePlaceholder(c, 'Setting Web'); }
+    function renderDatabase(c) { renderModulePlaceholder(c, 'Database Health & Log'); }
+    
+    function renderSemuaMenu(container) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
+          <h2 class="text-base font-bold text-slate-800">Direktori Semua Menu</h2>
+          <div>
+            <span class="text-[11px] font-extrabold text-slate-400 tracking-wider">MASTER DATA</span>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <button onclick="navigateView('kelola_siswa')" class="p-2.5 bg-slate-50 rounded-xl border text-xs font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-user-graduate text-brand-600"></i> Data Siswa</button>
+              <button onclick="navigateView('kelola_user')" class="p-2.5 bg-slate-50 rounded-xl border text-xs font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-users text-red-500"></i> Data User</button>
+            </div>
+          </div>
+          <div>
+            <span class="text-[11px] font-extrabold text-slate-400 tracking-wider">AKADEMIK</span>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <button onclick="navigateView('kelola_kelas')" class="p-2.5 bg-slate-50 rounded-xl border text-xs font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-laptop text-brand-500"></i> Kelola Kelas</button>
+              <button onclick="navigateView('presensi')" class="p-2.5 bg-slate-50 rounded-xl border text-xs font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-clipboard-user text-emerald-600"></i> Presensi</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProfil(container) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3 text-center">
+          <div class="w-16 h-16 bg-brand-600 text-white rounded-full flex items-center justify-center text-2xl mx-auto shadow"><i class="fa-solid fa-user"></i></div>
+          <h2 class="text-sm font-bold text-slate-800">${currentUser ? currentUser.email : 'Guest'}</h2>
+          <span class="bg-amber-400 text-blue-950 font-black text-[10px] px-2.5 py-0.5 rounded-full">SUPERADMIN</span>
+          <button onclick="handleLogout()" class="w-full bg-red-500 text-white text-xs font-bold py-2 rounded-xl mt-2">Logout</button>
+        </div>
+      `;
     }
 
     function renderModulePlaceholder(container, name) {
       container.innerHTML = `
         <div class="bg-white rounded-2xl p-6 text-center border border-slate-100 shadow-sm">
           <i class="fa-solid fa-folder-open text-3xl text-brand-500 mb-2"></i>
-          <h2 class="text-sm font-bold text-slate-800 uppercase">Modul ${name.replace('_', ' ')}</h2>
-          <p class="text-xs text-slate-500 mt-1">Terhubung langsung dengan Supabase API.</p>
+          <h2 class="text-sm font-bold text-slate-800 uppercase">Modul ${name}</h2>
+          <p class="text-xs text-slate-500 mt-1">Sistem terintegrasi Supabase.</p>
         </div>
       `;
     }
 
-    function handleLogout() {
-      if (confirm("Apakah Anda yakin ingin keluar dari sistem?")) {
-        alert("Anda telah keluar.");
-      }
+    function closeModal() {
+      document.getElementById('modalBackdrop').classList.add('hidden');
     }
   </script>
 </body>
