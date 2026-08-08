@@ -3,267 +3,534 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel Kendali Pusat Bimbel - Bimbel SAINS</title>
+  <title>BIMBEL SAINS - Management System</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- FontAwesome Icons CDN -->
+  <!-- FontAwesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
   <!-- Supabase JS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background-color: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
     }
   </style>
 </head>
-<body class="bg-slate-300 flex justify-center min-h-screen">
+<body class="flex justify-center min-h-screen text-slate-800">
 
-  <!-- Mobile Container Frame -->
-  <div class="w-full max-w-md bg-slate-100 min-h-screen flex flex-col justify-between shadow-2xl relative pb-24">
-    
-    <!-- Header Section -->
-    <div class="bg-blue-600 text-white px-4 pt-6 pb-8 rounded-b-[2rem] shadow-md relative">
-      <!-- Top Bar -->
-      <div class="flex items-center justify-between mb-4">
+  <!-- Container Utama Mobile First -->
+  <div class="w-full max-w-md md:max-w-4xl bg-slate-100 min-h-screen flex flex-col justify-between shadow-2xl relative pb-20">
+
+    <!-- HEADER / TOPBAR -->
+    <header id="appHeader" class="bg-brand-600 text-white px-4 pt-5 pb-6 rounded-b-[2rem] shadow-md relative z-20">
+      <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
-          <button class="text-white hover:opacity-80 transition">
-            <i class="fa-solid fa-arrow-left text-lg"></i>
+          <button id="btnBack" onclick="navigateView('dashboard')" class="text-white hover:bg-white/20 p-1.5 rounded-full transition hidden">
+            <i class="fa-solid fa-arrow-left text-base"></i>
           </button>
-          <!-- Badge Logo -->
-          <div class="bg-white text-blue-700 font-extrabold text-xs px-3 py-1 rounded-full shadow flex items-center gap-1.5">
+          <div class="bg-white text-brand-700 font-extrabold text-xs px-3 py-1 rounded-full shadow flex items-center gap-1.5">
             <i class="fa-solid fa-graduation-cap"></i>
             <span>Bimbel SAINS</span>
           </div>
         </div>
 
         <div class="flex items-center gap-2">
-          <span class="bg-amber-400 text-blue-950 font-black text-[10px] px-2 py-0.5 rounded uppercase tracking-wide">
+          <span id="userRoleBadge" class="bg-amber-400 text-brand-950 font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wide">
             SUPERADMIN
           </span>
-          <button onclick="loadDataFromSupabase()" class="bg-blue-500 hover:bg-blue-400 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 font-medium transition shadow-sm">
+          <button onclick="refreshCurrentView()" class="bg-brand-500 hover:bg-brand-400 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 font-medium transition shadow-sm">
             <span>Refresh</span>
             <i id="refreshIcon" class="fa-solid fa-rotate text-[10px]"></i>
           </button>
         </div>
       </div>
 
-      <!-- Sub Header Info -->
-      <div class="flex justify-between items-end mt-2">
+      <div class="flex justify-between items-end mt-1">
         <div>
           <p class="text-[11px] text-blue-200 font-medium">Status saya</p>
-          <h1 class="text-sm font-bold text-white tracking-wide">ADMINISTRATOR UTAMA</h1>
+          <h1 id="userDisplayName" class="text-sm font-bold text-white tracking-wide uppercase">ADMINISTRATOR UTAMA</h1>
         </div>
+        <button onclick="handleLogout()" class="text-xs bg-red-500/80 hover:bg-red-600 px-2.5 py-1 rounded-lg transition text-white flex items-center gap-1">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
       </div>
-    </div>
+    </header>
 
-    <!-- Main Content Cards -->
-    <div class="px-4 -mt-5 space-y-3 z-10 flex-1">
+    <!-- CONTENT AREA -->
+    <main id="mainContent" class="px-4 -mt-3 z-10 flex-1 space-y-4">
+      <!-- Dynamic Views rendered via JS -->
+    </main>
 
-      <!-- Card 1: Panel Kendali Pusat Bimbel -->
-      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-        <h2 class="text-lg font-bold text-slate-800 mb-1">Panel Kendali Pusat Bimbel</h2>
-        <p class="text-xs font-semibold text-slate-500">
-          Total Murid: <span id="totalMurid" class="text-slate-800">350</span> | 
-          Total Guru: <span id="totalGuru" class="text-slate-800">28</span>
-        </p>
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="fixed bottom-0 left-0 right-0 max-w-md md:max-w-4xl mx-auto bg-white border-t border-slate-200 px-4 py-2 flex justify-between items-center z-50 rounded-t-2xl shadow-lg">
+      <div class="bg-slate-800 text-white text-[11px] rounded-full px-2.5 py-1 flex items-center gap-1.5 font-bold shadow">
+        <i class="fa-regular fa-eye"></i>
+        <span id="visitorCounter">67</span>
       </div>
 
-      <!-- Card 2: Ringkasan Keuangan & Operasional -->
-      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-        <div class="flex items-center justify-between mb-1.5">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-house text-blue-800 text-sm"></i>
-            <h3 class="text-xs font-bold text-blue-900">Ringkasan Keuangan & Operasional</h3>
-          </div>
-          <span class="bg-slate-900 text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
-            AKSES FULL
-          </span>
-        </div>
-        <p class="text-[11px] text-slate-500 mb-3">
-          98% Pendaftaran semester ini telah terverifikasi.
-        </p>
-        <button class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-md transition duration-200">
-          Buka Management Panel
+      <button onclick="navigateView('presensi')" class="flex flex-col items-center text-slate-500 hover:text-brand-600 transition">
+        <i class="fa-regular fa-calendar-check text-base"></i>
+        <span class="text-[9px] font-semibold mt-0.5">Presensi</span>
+      </button>
+
+      <div class="-mt-6">
+        <button onclick="navigateView('semua_menu')" class="w-12 h-12 rounded-full bg-brand-600 border-4 border-slate-100 text-white flex items-center justify-center text-lg shadow-lg hover:bg-brand-700 transition">
+          <i class="fa-solid fa-grip"></i>
         </button>
       </div>
 
-      <!-- Card 3: Grid Menu Icons -->
-      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-        <div class="grid grid-cols-4 gap-y-4 gap-x-2 text-center">
-          
-          <!-- Kelola User -->
-          <div class="flex flex-col items-center cursor-pointer group">
-            <div class="w-11 h-11 rounded-full bg-red-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition-transform">
-              <i class="fa-solid fa-users-gear"></i>
-            </div>
-            <span class="text-[10px] font-bold text-slate-700 mt-1.5">Kelola User</span>
-          </div>
-
-          <!-- Keuangan -->
-          <div class="flex flex-col items-center cursor-pointer group">
-            <div class="w-11 h-11 rounded-full bg-amber-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition-transform">
-              <i class="fa-solid fa-chart-pie"></i>
-            </div>
-            <span class="text-[10px] font-bold text-slate-700 mt-1.5">Keuangan</span>
-          </div>
-
-          <!-- Kelola Kelas -->
-          <div class="flex flex-col items-center cursor-pointer group">
-            <div class="w-11 h-11 rounded-full bg-blue-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition-transform">
-              <i class="fa-solid fa-laptop"></i>
-            </div>
-            <span class="text-[10px] font-bold text-slate-700 mt-1.5">Kelola Kelas</span>
-          </div>
-
-          <!-- Laporan Full -->
-          <div class="flex flex-col items-center cursor-pointer group">
-            <div class="w-11 h-11 rounded-full bg-emerald-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition-transform">
-              <i class="fa-solid fa-file-invoice"></i>
-            </div>
-            <span class="text-[10px] font-bold text-slate-700 mt-1.5">Laporan Full</span>
-          </div>
-
-          <!-- Setting Web -->
-          <div class="flex flex-col items-center cursor-pointer group">
-            <div class="w-11 h-11 rounded-full bg-indigo-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition-transform">
-              <i class="fa-solid fa-gear"></i>
-            </div>
-            <span class="text-[10px] font-bold text-slate-700 mt-1.5">Setting Web</span>
-          </div>
-
-          <!-- Broadcast -->
-          <div class="flex flex-col items-center cursor-pointer group">
-            <div class="w-11 h-11 rounded-full bg-pink-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition-transform">
-              <i class="fa-solid fa-bullhorn"></i>
-            </div>
-            <span class="text-[10px] font-bold text-slate-700 mt-1.5">Broadcast</span>
-          </div>
-
-          <!-- Database -->
-          <div class="flex flex-col items-center cursor-pointer group">
-            <div class="w-11 h-11 rounded-full bg-purple-600 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition-transform">
-              <i class="fa-solid fa-database"></i>
-            </div>
-            <span class="text-[10px] font-bold text-slate-700 mt-1.5">Database</span>
-          </div>
-
-          <!-- Semua Menu -->
-          <div class="flex flex-col items-center cursor-pointer group">
-            <div class="w-11 h-11 rounded-full bg-blue-600 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition-transform">
-              <i class="fa-solid fa-table-cells font-bold"></i>
-            </div>
-            <span class="text-[10px] font-bold text-slate-700 mt-1.5">Semua Menu</span>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Banner Card -->
-      <div class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold text-center text-xs py-3 px-4 rounded-xl shadow-sm border border-orange-400">
-        * Untuk 10 Pendaftar Pertama di Awal Semester
-      </div>
-
-    </div>
-
-    <!-- Bottom Navigation Bar -->
-    <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-slate-200 px-4 py-2 flex justify-between items-center z-50 rounded-t-2xl shadow-lg">
-      
-      <!-- Visitor Count Pill -->
-      <div class="bg-slate-800 text-white text-xs rounded-full px-3 py-1 flex items-center gap-1.5 font-bold shadow">
-        <i class="fa-regular fa-eye"></i>
-        <span id="visitorCount">67</span>
-      </div>
-
-      <!-- Presensi -->
-      <div class="flex flex-col items-center text-slate-500 hover:text-blue-600 cursor-pointer">
-        <i class="fa-regular fa-calendar-check text-base"></i>
-        <span class="text-[9px] font-semibold mt-0.5">Presensi</span>
-      </div>
-
-      <!-- Floating Center App Menu Button -->
-      <div class="-mt-6">
-        <div class="w-12 h-12 rounded-full bg-blue-600 border-4 border-slate-100 text-white flex items-center justify-center text-lg shadow-lg cursor-pointer hover:bg-blue-700 transition">
-          <i class="fa-solid fa-grip font-bold"></i>
-        </div>
-      </div>
-
-      <!-- Laporan -->
-      <div class="flex flex-col items-center text-slate-500 hover:text-blue-600 cursor-pointer">
-        <i class="fa-solid fa-user-graduate text-base"></i>
+      <button onclick="navigateView('laporan')" class="flex flex-col items-center text-slate-500 hover:text-brand-600 transition">
+        <i class="fa-solid fa-file-invoice text-base"></i>
         <span class="text-[9px] font-semibold mt-0.5">Laporan</span>
-      </div>
+      </button>
 
-      <!-- Social Facebook -->
-      <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center cursor-pointer hover:bg-blue-600 transition">
-        <i class="fa-brands fa-facebook-f text-xs"></i>
-      </div>
-
-      <!-- Social Instagram -->
-      <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center cursor-pointer hover:bg-pink-600 transition">
-        <i class="fa-brands fa-instagram text-xs"></i>
-      </div>
-
-    </div>
+      <button onclick="navigateView('profil')" class="flex flex-col items-center text-slate-500 hover:text-brand-600 transition">
+        <i class="fa-regular fa-user text-base"></i>
+        <span class="text-[9px] font-semibold mt-0.5">Profil</span>
+      </button>
+    </nav>
 
   </div>
 
-  <!-- Supabase Integration Script -->
+  <!-- MODAL CONTAINER -->
+  <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div id="modalCard" class="bg-white rounded-2xl w-full max-w-md p-5 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <!-- Modal Content Dynamic -->
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT & SUPABASE INTEGRATION -->
   <script>
-    // Supabase Credentials
+    // 1. SUPABASE CONFIGURATION
     const SUPABASE_URL = 'https://dbfzscedfnonjllwvhaw.supabase.co';
     const SUPABASE_KEY = 'Sb_publishable_LsfH-aNxfqMyeCw4F3KPzw_QEUB5o8f';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Inisialisasi Supabase Client
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // State Aplikasi
+    let currentUser = {
+      id: 'mock-admin-id',
+      email: 'admin@bimbelsains.com',
+      role: 'SUPERADMIN',
+      nama: 'ADMINISTRATOR UTAMA'
+    };
 
-    // Fungsi mengambil data dari database Supabase
-    async function loadDataFromSupabase() {
-      const refreshIcon = document.getElementById('refreshIcon');
-      refreshIcon.classList.add('fa-spin');
+    let currentView = 'dashboard';
 
+    // 2. INITIALIZATION
+    document.addEventListener('DOMContentLoaded', async () => {
+      await logVisitor();
+      await fetchVisitorCount();
+      navigateView('dashboard');
+    });
+
+    // 3. LOG & VISITOR TRACKING
+    async function logVisitor() {
       try {
-        // Ambil data jumlah murid dari tabel 'murid'
-        const { count: countMurid, error: errMurid } = await supabaseClient
-          .from('murid')
-          .select('*', { count: 'exact', head: true });
-
-        if (!errMurid && countMurid !== null) {
-          document.getElementById('totalMurid').innerText = countMurid;
-        }
-
-        // Ambil data jumlah guru dari tabel 'guru'
-        const { count: countGuru, error: errGuru } = await supabaseClient
-          .from('guru')
-          .select('*', { count: 'exact', head: true });
-
-        if (!errGuru && countGuru !== null) {
-          document.getElementById('totalGuru').innerText = countGuru;
-        }
-
-        // Ambil data pengunjung dari tabel 'pengunjung' / 'visitors'
-        const { count: countVisitors, error: errVisitors } = await supabaseClient
-          .from('visitors')
-          .select('*', { count: 'exact', head: true });
-
-        if (!errVisitors && countVisitors !== null) {
-          document.getElementById('visitorCount').innerText = countVisitors;
-        }
-
+        await sb.from('visitors').insert([{}]);
       } catch (err) {
-        console.warn('Gagal memuat data dari Supabase (menggunakan data default):', err.message);
-      } finally {
-        setTimeout(() => {
-          refreshIcon.classList.remove('fa-spin');
-        }, 500);
+        console.warn('Log visitor error:', err);
       }
     }
 
-    // Jalankan pemanggilan data saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', loadDataFromSupabase);
+    async function fetchVisitorCount() {
+      try {
+        const { count } = await sb.from('visitors').select('*', { count: 'exact', head: true });
+        if (count) document.getElementById('visitorCounter').innerText = count;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // 4. ROUTING & VIEW NAVIGATION
+    function navigateView(viewName) {
+      currentView = viewName;
+      const main = document.getElementById('mainContent');
+      const btnBack = document.getElementById('btnBack');
+
+      if (viewName === 'dashboard') {
+        btnBack.classList.add('hidden');
+      } else {
+        btnBack.classList.remove('hidden');
+      }
+
+      switch (viewName) {
+        case 'dashboard':
+          renderDashboard(main);
+          break;
+        case 'management_panel':
+          renderManagementPanel(main);
+          break;
+        case 'semua_menu':
+          renderSemuaMenu(main);
+          break;
+        case 'kelola_user':
+          renderKelolaUser(main);
+          break;
+        case 'kelola_siswa':
+          renderKelolaSiswa(main);
+          break;
+        case 'kelola_kelas':
+          renderKelolaKelas(main);
+          break;
+        case 'presensi':
+          renderPresensi(main);
+          break;
+        case 'keuangan':
+          renderKeuangan(main);
+          break;
+        case 'laporan':
+          renderLaporan(main);
+          break;
+        case 'broadcast':
+          renderBroadcast(main);
+          break;
+        case 'setting_web':
+          renderSettingWeb(main);
+          break;
+        case 'database':
+          renderDatabase(main);
+          break;
+        case 'profil':
+          renderProfil(main);
+          break;
+        default:
+          main.innerHTML = `<div class="bg-white p-6 rounded-2xl text-center"><p class="text-slate-500 font-bold">Modul [${viewName}] Sedang Dikembangkan.</p></div>`;
+      }
+    }
+
+    function refreshCurrentView() {
+      const refreshIcon = document.getElementById('refreshIcon');
+      refreshIcon.classList.add('fa-spin');
+      setTimeout(() => {
+        navigateView(currentView);
+        fetchVisitorCount();
+        refreshIcon.classList.remove('fa-spin');
+      }, 500);
+    }
+
+    // 5. RENDER DASHBOARD (REFERENSI GAMBAR)
+    async function renderDashboard(container) {
+      container.innerHTML = `
+        <!-- Card 1: Panel Kendali Pusat -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+          <h2 class="text-base font-bold text-slate-800 mb-0.5">Panel Kendali Pusat Bimbel</h2>
+          <p class="text-xs font-semibold text-slate-500">
+            Total Murid: <span id="dashMurid" class="text-slate-800">...</span> | 
+            Total Guru: <span id="dashGuru" class="text-slate-800">...</span>
+          </p>
+        </div>
+
+        <!-- Card 2: Ringkasan Operasional -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+          <div class="flex items-center justify-between mb-1.5">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-house text-brand-600 text-sm"></i>
+              <h3 class="text-xs font-bold text-brand-900">Ringkasan Keuangan & Operasional</h3>
+            </div>
+            <span class="bg-slate-900 text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase">AKSES FULL</span>
+          </div>
+          <p class="text-[11px] text-slate-500 mb-3">98% Pendaftaran semester ini telah terverifikasi.</p>
+          <button onclick="navigateView('management_panel')" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-md transition">
+            Buka Management Panel
+          </button>
+        </div>
+
+        <!-- Card 3: Grid Menu Utama -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+          <div class="grid grid-cols-4 gap-y-4 gap-x-2 text-center">
+            
+            <div onclick="navigateView('kelola_user')" class="flex flex-col items-center cursor-pointer group">
+              <div class="w-11 h-11 rounded-full bg-red-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition">
+                <i class="fa-solid fa-users-gear"></i>
+              </div>
+              <span class="text-[10px] font-bold text-slate-700 mt-1.5">Kelola User</span>
+            </div>
+
+            <div onclick="navigateView('keuangan')" class="flex flex-col items-center cursor-pointer group">
+              <div class="w-11 h-11 rounded-full bg-amber-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition">
+                <i class="fa-solid fa-chart-pie"></i>
+              </div>
+              <span class="text-[10px] font-bold text-slate-700 mt-1.5">Keuangan</span>
+            </div>
+
+            <div onclick="navigateView('kelola_kelas')" class="flex flex-col items-center cursor-pointer group">
+              <div class="w-11 h-11 rounded-full bg-brand-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition">
+                <i class="fa-solid fa-laptop"></i>
+              </div>
+              <span class="text-[10px] font-bold text-slate-700 mt-1.5">Kelola Kelas</span>
+            </div>
+
+            <div onclick="navigateView('laporan')" class="flex flex-col items-center cursor-pointer group">
+              <div class="w-11 h-11 rounded-full bg-emerald-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition">
+                <i class="fa-solid fa-file-invoice"></i>
+              </div>
+              <span class="text-[10px] font-bold text-slate-700 mt-1.5">Laporan Full</span>
+            </div>
+
+            <div onclick="navigateView('setting_web')" class="flex flex-col items-center cursor-pointer group">
+              <div class="w-11 h-11 rounded-full bg-indigo-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition">
+                <i class="fa-solid fa-gear"></i>
+              </div>
+              <span class="text-[10px] font-bold text-slate-700 mt-1.5">Setting Web</span>
+            </div>
+
+            <div onclick="navigateView('broadcast')" class="flex flex-col items-center cursor-pointer group">
+              <div class="w-11 h-11 rounded-full bg-pink-500 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition">
+                <i class="fa-solid fa-bullhorn"></i>
+              </div>
+              <span class="text-[10px] font-bold text-slate-700 mt-1.5">Broadcast</span>
+            </div>
+
+            <div onclick="navigateView('database')" class="flex flex-col items-center cursor-pointer group">
+              <div class="w-11 h-11 rounded-full bg-purple-600 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition">
+                <i class="fa-solid fa-database"></i>
+              </div>
+              <span class="text-[10px] font-bold text-slate-700 mt-1.5">Database</span>
+            </div>
+
+            <div onclick="navigateView('semua_menu')" class="flex flex-col items-center cursor-pointer group">
+              <div class="w-11 h-11 rounded-full bg-brand-600 text-white flex items-center justify-center text-lg shadow-md group-hover:scale-105 transition">
+                <i class="fa-solid fa-table-cells"></i>
+              </div>
+              <span class="text-[10px] font-bold text-slate-700 mt-1.5">Semua Menu</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Banner Info -->
+        <div class="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold text-center text-xs py-3 px-4 rounded-xl shadow-sm border border-orange-400">
+          * Untuk 10 Pendaftar Pertama di Awal Semester
+        </div>
+      `;
+
+      // Load Counter Data
+      const { count: countMurid } = await sb.from('students').select('*', { count: 'exact', head: true });
+      const { count: countGuru } = await sb.from('teachers').select('*', { count: 'exact', head: true });
+
+      document.getElementById('dashMurid').innerText = countMurid || 350;
+      document.getElementById('dashGuru').innerText = countGuru || 28;
+    }
+
+    // 6. RENDER MANAGEMENT PANEL
+    function renderManagementPanel(container) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
+          <h2 class="text-base font-bold text-slate-800">Management Panel Administrator</h2>
+          
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
+              <p class="text-[10px] font-bold text-blue-600 uppercase">Total Murid</p>
+              <p class="text-lg font-black text-blue-950">350</p>
+            </div>
+            <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+              <p class="text-[10px] font-bold text-emerald-600 uppercase">Total Guru</p>
+              <p class="text-lg font-black text-emerald-950">28</p>
+            </div>
+            <div class="bg-purple-50 p-3 rounded-xl border border-purple-100">
+              <p class="text-[10px] font-bold text-purple-600 uppercase">Total Kelas</p>
+              <p class="text-lg font-black text-purple-950">14</p>
+            </div>
+            <div class="bg-amber-50 p-3 rounded-xl border border-amber-100">
+              <p class="text-[10px] font-bold text-amber-600 uppercase">Pendapatan</p>
+              <p class="text-base font-black text-amber-950">Rp 45.2M</p>
+            </div>
+          </div>
+
+          <!-- Grafik Chart.js -->
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <h3 class="text-xs font-bold text-slate-700 mb-2">Grafik Pendapatan & Pengeluaran Bulan Ini</h3>
+            <canvas id="chartFinance" class="max-h-48"></canvas>
+          </div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        const ctx = document.getElementById('chartFinance').getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+            datasets: [
+              { label: 'Pemasukan', data: [12, 19, 15, 25], borderColor: '#2563eb', tension: 0.3 },
+              { label: 'Pengeluaran', data: [5, 8, 7, 10], borderColor: '#ef4444', tension: 0.3 }
+            ]
+          },
+          options: { responsive: true, maintainAspectRatio: false }
+        });
+      }, 100);
+    }
+
+    // 7. RENDER SEMUA MENU
+    function renderSemuaMenu(container) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
+          <h2 class="text-base font-bold text-slate-800">Direktori Semua Menu</h2>
+
+          <!-- MASTER DATA -->
+          <div>
+            <span class="text-[11px] font-extrabold text-slate-400 tracking-wider">MASTER DATA</span>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <button onclick="navigateView('kelola_siswa')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
+                <i class="fa-solid fa-user-graduate text-brand-600"></i> Data Siswa
+              </button>
+              <button onclick="navigateView('kelola_user')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
+                <i class="fa-solid fa-users text-red-500"></i> Data User
+              </button>
+            </div>
+          </div>
+
+          <!-- AKADEMIK -->
+          <div>
+            <span class="text-[11px] font-extrabold text-slate-400 tracking-wider">AKADEMIK</span>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <button onclick="navigateView('kelola_kelas')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
+                <i class="fa-solid fa-laptop text-brand-500"></i> Kelola Kelas
+              </button>
+              <button onclick="navigateView('presensi')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
+                <i class="fa-solid fa-clipboard-user text-emerald-600"></i> Presensi
+              </button>
+            </div>
+          </div>
+
+          <!-- KEUANGAN & SISTEM -->
+          <div>
+            <span class="text-[11px] font-extrabold text-slate-400 tracking-wider">KEUANGAN & SISTEM</span>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <button onclick="navigateView('keuangan')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
+                <i class="fa-solid fa-wallet text-amber-500"></i> Keuangan
+              </button>
+              <button onclick="navigateView('setting_web')" class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-brand-50 transition">
+                <i class="fa-solid fa-gear text-indigo-500"></i> Setting Web
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // 8. RENDER KELOLA USER (CRUD DEMO VIA SUPABASE)
+    async function renderKelolaUser(container) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
+          <div class="flex justify-between items-center">
+            <h2 class="text-base font-bold text-slate-800">Kelola User</h2>
+            <button onclick="openModalTambahUser()" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">
+              + Tambah User
+            </button>
+          </div>
+
+          <div id="userListContainer" class="space-y-2 text-xs">
+            <p class="text-slate-400 italic">Memuat data user...</p>
+          </div>
+        </div>
+      `;
+
+      const { data: users, error } = await sb.from('profiles').select('*').limit(10);
+      const listContainer = document.getElementById('userListContainer');
+
+      if (error || !users || users.length === 0) {
+        listContainer.innerHTML = `<p class="text-slate-400">Belum ada data user tambahan.</p>`;
+        return;
+      }
+
+      listContainer.innerHTML = users.map(u => `
+        <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+          <div>
+            <p class="font-bold text-slate-800">${u.nama_lengkap}</p>
+            <p class="text-[10px] text-slate-500">${u.email} | <span class="text-brand-600 font-bold">${u.role}</span></p>
+          </div>
+          <span class="bg-emerald-100 text-emerald-700 text-[9px] font-bold px-2 py-0.5 rounded">Aktif</span>
+        </div>
+      `).join('');
+    }
+
+    function openModalTambahUser() {
+      const modal = document.getElementById('modalCard');
+      modal.innerHTML = `
+        <h3 class="text-sm font-bold text-slate-800 mb-3">Tambah User Baru</h3>
+        <form onsubmit="saveUser(event)" class="space-y-2.5 text-xs">
+          <div>
+            <label class="font-bold text-slate-600">Nama Lengkap</label>
+            <input type="text" id="formNama" required class="w-full border p-2 rounded-lg mt-1">
+          </div>
+          <div>
+            <label class="font-bold text-slate-600">Email</label>
+            <input type="email" id="formEmail" required class="w-full border p-2 rounded-lg mt-1">
+          </div>
+          <div>
+            <label class="font-bold text-slate-600">Role</label>
+            <select id="formRole" class="w-full border p-2 rounded-lg mt-1">
+              <option value="ADMIN">ADMIN</option>
+              <option value="GURU">GURU</option>
+              <option value="STAFF KEUANGAN">STAFF KEUANGAN</option>
+              <option value="SISWA">SISWA</option>
+            </select>
+          </div>
+          <div class="flex gap-2 pt-2">
+            <button type="submit" class="flex-1 bg-brand-600 text-white font-bold py-2 rounded-xl">Simpan</button>
+            <button type="button" onclick="closeModal()" class="flex-1 bg-slate-200 text-slate-700 font-bold py-2 rounded-xl">Batal</button>
+          </div>
+        </form>
+      `;
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+    }
+
+    async function saveUser(e) {
+      e.preventDefault();
+      const nama = document.getElementById('formNama').value;
+      const email = document.getElementById('formEmail').value;
+      const role = document.getElementById('formRole').value;
+
+      alert(`User ${nama} (${role}) berhasil ditambahkan secara simulasi!`);
+      closeModal();
+      renderKelolaUser(document.getElementById('mainContent'));
+    }
+
+    // 9. MODAL CONTROLLER
+    function closeModal() {
+      document.getElementById('modalBackdrop').classList.add('hidden');
+    }
+
+    // 10. AUTH & LOGOUT
+    function handleLogout() {
+      if (confirm("Apakah Anda yakin ingin keluar dari sistem?")) {
+        alert("Logout berhasil.");
+      }
+    }
   </script>
 </body>
 </html>
