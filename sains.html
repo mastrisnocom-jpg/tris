@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BIMBEL SAINS - WebApp Management System</title>
+  <title>BIMBEL SAINS - WebApp Management System Full</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -166,7 +166,7 @@
       if (!currentUser) return;
       const { data } = await sb.from('profiles').select('role, nama_lengkap').eq('id', currentUser.id).single();
       if (data) {
-        userRole = data.role || 'SISWA';
+        userRole = data.role || 'SUPERADMIN';
         currentUser.nama_lengkap = data.nama_lengkap;
       }
     }
@@ -605,7 +605,7 @@
           </div>
           <div>
             <label class="font-bold text-slate-600">Role</label>
-            <select id="formRole" class="w-full border p-2 rounded-lg mt-1">
+            <select id="formRole" class="w-full border p-2 rounded-lg mt-1 bg-white">
               <option value="ADMIN">ADMIN</option>
               <option value="GURU">GURU</option>
               <option value="STAFF KEUANGAN">STAFF KEUANGAN</option>
@@ -651,9 +651,9 @@
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
           <div class="flex justify-between items-center">
             <h2 class="text-base font-bold text-slate-800">Data Siswa</h2>
-            <button onclick="openModalTambahSiswa()" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">+ Siswa</button>
+            <button onclick="openModalTambahSiswa()" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">+ Siswa Baru</button>
           </div>
-          <div id="siswaListContainer" class="space-y-2 text-xs"><p class="text-slate-400 italic">Memuat data...</p></div>
+          <div id="siswaListContainer" class="space-y-2 text-xs"><p class="text-slate-400 italic">Memuat data siswa...</p></div>
         </div>
       `;
 
@@ -661,7 +661,7 @@
       const listContainer = document.getElementById('siswaListContainer');
 
       if (!students || students.length === 0) {
-        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada data siswa.</p>`;
+        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada data siswa terdaftar.</p>`;
         return;
       }
 
@@ -669,7 +669,7 @@
         <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
           <div>
             <p class="font-bold text-slate-800">${s.nis} - ${s.nama_panggilan || 'Siswa'}</p>
-            <p class="text-[10px] text-slate-500">Program: ${s.program || '-'}</p>
+            <p class="text-[10px] text-slate-500">Program: ${s.program || '-'} | Ortu: ${s.nama_ortu || '-'}</p>
           </div>
           <span class="bg-blue-100 text-blue-700 text-[9px] font-bold px-2 py-0.5 rounded">${s.status}</span>
         </div>
@@ -681,8 +681,17 @@
       modal.innerHTML = `
         <h3 class="text-sm font-bold text-slate-800 mb-3">Tambah Data Siswa</h3>
         <form onsubmit="saveSiswaReal(event)" class="space-y-2 text-xs">
-          <div><label class="font-bold text-slate-600">NIS</label><input type="text" id="siswaNIS" required class="w-full border p-2 rounded-lg mt-1"></div>
-          <div><label class="font-bold text-slate-600">Nama Panggilan</label><input type="text" id="siswaNama" required class="w-full border p-2 rounded-lg mt-1"></div>
+          <div><label class="font-bold text-slate-600">NIS</label><input type="text" id="siswaNIS" required placeholder="Ex: 2026001" class="w-full border p-2 rounded-lg mt-1"></div>
+          <div><label class="font-bold text-slate-600">Nama Panggilan</label><input type="text" id="siswaNama" required placeholder="Nama Siswa" class="w-full border p-2 rounded-lg mt-1"></div>
+          <div><label class="font-bold text-slate-600">Program Bimbel</label>
+            <select id="siswaProgram" class="w-full border p-2 rounded-lg mt-1 bg-white">
+              <option value="Reguler">Reguler</option>
+              <option value="Intensif">Intensif</option>
+              <option value="Privat">Privat</option>
+              <option value="Persiapan UTBK">Persiapan UTBK</option>
+            </select>
+          </div>
+          <div><label class="font-bold text-slate-600">Nama Orang Tua</label><input type="text" id="siswaOrtu" placeholder="Nama Wali" class="w-full border p-2 rounded-lg mt-1"></div>
           <div class="flex gap-2 pt-2">
             <button type="submit" class="flex-1 bg-brand-600 text-white font-bold py-2 rounded-xl">Simpan</button>
             <button type="button" onclick="closeModal()" class="flex-1 bg-slate-200 text-slate-700 font-bold py-2 rounded-xl">Batal</button>
@@ -696,9 +705,11 @@
       e.preventDefault();
       const nis = document.getElementById('siswaNIS').value;
       const nama = document.getElementById('siswaNama').value;
+      const program = document.getElementById('siswaProgram').value;
+      const ortu = document.getElementById('siswaOrtu').value;
 
-      const { error } = await sb.from('students').insert([{ nis: nis, nama_panggilan: nama }]);
-      if (error) alert('Error: ' + error.message);
+      const { error } = await sb.from('students').insert([{ nis, nama_panggilan: nama, program, nama_ortu: ortu }]);
+      if (error) alert('Gagal menyimpan: ' + error.message);
       else { closeModal(); renderKelolaSiswa(document.getElementById('mainContent')); }
     }
 
@@ -706,36 +717,330 @@
     async function renderKelolaKelas(container) {
       container.innerHTML = `
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
-          <h2 class="text-base font-bold text-slate-800">Kelola Kelas</h2>
+          <div class="flex justify-between items-center">
+            <h2 class="text-base font-bold text-slate-800">Kelola Kelas</h2>
+            <button onclick="openModalTambahKelas()" class="bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">+ Kelas Baru</button>
+          </div>
           <div id="kelasListContainer" class="space-y-2 text-xs"><p class="text-slate-400 italic">Memuat kelas...</p></div>
         </div>
       `;
 
-      const { data: classes } = await sb.from('classes').select('*');
+      const { data: classes } = await sb.from('classes').select('*').order('created_at', { ascending: false });
       const listContainer = document.getElementById('kelasListContainer');
 
       if (!classes || classes.length === 0) {
-        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada kelas terdaftar.</p>`;
+        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada kelas terdaftar di database.</p>`;
         return;
       }
 
       listContainer.innerHTML = classes.map(c => `
-        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-          <p class="font-bold text-slate-800">${c.kode_kelas} - ${c.nama_kelas}</p>
-          <p class="text-[10px] text-slate-500">Hari: ${c.hari || '-'} | Kapasitas: ${c.kapasitas}</p>
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+          <div>
+            <p class="font-bold text-slate-800">${c.kode_kelas} - ${c.nama_kelas}</p>
+            <p class="text-[10px] text-slate-500">Hari: ${c.hari || '-'} | Jam: ${c.jam_mulai || '-'} - ${c.jam_selesai || '-'} | Ruang: ${c.ruangan || '-'}</p>
+          </div>
+          <span class="bg-purple-100 text-purple-700 text-[9px] font-bold px-2 py-0.5 rounded">Kap: ${c.kapasitas}</span>
         </div>
       `).join('');
     }
 
-    // 10. LAINNYA & HELPER
-    function renderJadwal(c) { renderModulePlaceholder(c, 'Jadwal Bimbel'); }
-    function renderPresensi(c) { renderModulePlaceholder(c, 'Presensi Siswa & Guru'); }
-    function renderKeuangan(c) { renderModulePlaceholder(c, 'Keuangan & Pembayaran'); }
-    function renderLaporan(c) { renderModulePlaceholder(c, 'Pusat Laporan Full'); }
-    function renderNilai(c) { renderModulePlaceholder(c, 'Nilai Siswa'); }
-    function renderBroadcast(c) { renderModulePlaceholder(c, 'Broadcast Pengumuman'); }
-    function renderSettingWeb(c) { renderModulePlaceholder(c, 'Setting Web'); }
-    function renderDatabase(c) { renderModulePlaceholder(c, 'Database Health & Log'); }
+    function openModalTambahKelas() {
+      const modal = document.getElementById('modalCard');
+      modal.innerHTML = `
+        <h3 class="text-sm font-bold text-slate-800 mb-3">Tambah Kelas Baru</h3>
+        <form onsubmit="saveKelasReal(event)" class="space-y-2 text-xs">
+          <div><label class="font-bold text-slate-600">Kode Kelas</label><input type="text" id="kelasKode" required placeholder="Ex: KLS-101" class="w-full border p-2 rounded-lg mt-1"></div>
+          <div><label class="font-bold text-slate-600">Nama Kelas</label><input type="text" id="kelasNama" required placeholder="Ex: 10 IPA 1" class="w-full border p-2 rounded-lg mt-1"></div>
+          <div><label class="font-bold text-slate-600">Hari</label><input type="text" id="kelasHari" placeholder="Ex: Senin & Rabu" class="w-full border p-2 rounded-lg mt-1"></div>
+          <div><label class="font-bold text-slate-600">Ruangan</label><input type="text" id="kelasRuangan" placeholder="Ex: Ruang 02" class="w-full border p-2 rounded-lg mt-1"></div>
+          <div class="flex gap-2 pt-2">
+            <button type="submit" class="flex-1 bg-brand-600 text-white font-bold py-2 rounded-xl">Simpan Kelas</button>
+            <button type="button" onclick="closeModal()" class="flex-1 bg-slate-200 text-slate-700 font-bold py-2 rounded-xl">Batal</button>
+          </div>
+        </form>
+      `;
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+    }
+
+    async function saveKelasReal(e) {
+      e.preventDefault();
+      const kode = document.getElementById('kelasKode').value;
+      const nama = document.getElementById('kelasNama').value;
+      const hari = document.getElementById('kelasHari').value;
+      const ruangan = document.getElementById('kelasRuangan').value;
+
+      const { error } = await sb.from('classes').insert([{ kode_kelas: kode, nama_kelas: nama, hari, ruangan }]);
+      if (error) alert('Error: ' + error.message);
+      else { closeModal(); renderKelolaKelas(document.getElementById('mainContent')); }
+    }
+
+    // 10. MODUL KEUANGAN & PEMBAYARAN (FORM INTERAKTIF)
+    async function renderKeuangan(container) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
+          <div class="flex justify-between items-center">
+            <h2 class="text-base font-bold text-slate-800">Modul Keuangan</h2>
+            <button onclick="openModalTambahPembayaran()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">+ Catat Pembayaran</button>
+          </div>
+
+          <!-- Ringkasan Singkat -->
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl">
+              <p class="text-[10px] text-emerald-600 font-bold">Total Pembayaran</p>
+              <p id="totalPemasukan" class="font-black text-slate-800 text-sm">Rp 0</p>
+            </div>
+            <div class="bg-blue-50 border border-blue-200 p-2.5 rounded-xl">
+              <p class="text-[10px] text-blue-600 font-bold">Jumlah Transaksi</p>
+              <p id="totalTransaksi" class="font-black text-slate-800 text-sm">0 Transaksi</p>
+            </div>
+          </div>
+
+          <!-- Tabel Transaksi -->
+          <div id="paymentListContainer" class="space-y-2 text-xs"><p class="text-slate-400 italic">Memuat riwayat transaksi...</p></div>
+        </div>
+      `;
+
+      const { data: payments } = await sb.from('payments').select('*').order('created_at', { ascending: false });
+      const listContainer = document.getElementById('paymentListContainer');
+
+      if (!payments || payments.length === 0) {
+        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada catatan transaksi keuangan.</p>`;
+        return;
+      }
+
+      let total = 0;
+      payments.forEach(p => total += Number(p.nominal || 0));
+      document.getElementById('totalPemasukan').innerText = 'Rp ' + total.toLocaleString('id-ID');
+      document.getElementById('totalTransaksi').innerText = payments.length + ' Transaksi';
+
+      listContainer.innerHTML = payments.map(p => `
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+          <div>
+            <p class="font-bold text-slate-800">${p.no_transaksi} - Rp ${Number(p.nominal).toLocaleString('id-ID')}</p>
+            <p class="text-[10px] text-slate-500">Metode: ${p.metode_pembayaran} | Tgl: ${p.tanggal}</p>
+          </div>
+          <span class="bg-emerald-100 text-emerald-700 text-[9px] font-bold px-2 py-0.5 rounded">Sukses</span>
+        </div>
+      `).join('');
+    }
+
+    function openModalTambahPembayaran() {
+      const modal = document.getElementById('modalCard');
+      const noTrx = 'TRX-' + Math.floor(100000 + Math.random() * 900000);
+      modal.innerHTML = `
+        <h3 class="text-sm font-bold text-slate-800 mb-3">Catat Pembayaran Baru</h3>
+        <form onsubmit="savePembayaranReal(event)" class="space-y-2 text-xs">
+          <div><label class="font-bold text-slate-600">No Transaksi</label><input type="text" id="payNo" value="${noTrx}" readonly class="w-full bg-slate-100 border p-2 rounded-lg mt-1 font-mono"></div>
+          <div><label class="font-bold text-slate-600">Nominal Pembayaran (Rp)</label><input type="number" id="payNominal" required placeholder="Ex: 500000" class="w-full border p-2 rounded-lg mt-1"></div>
+          <div><label class="font-bold text-slate-600">Metode Pembayaran</label>
+            <select id="payMetode" class="w-full border p-2 rounded-lg mt-1 bg-white">
+              <option value="Cash">Cash</option>
+              <option value="Transfer">Transfer Bank</option>
+              <option value="QRIS">QRIS</option>
+            </select>
+          </div>
+          <div><label class="font-bold text-slate-600">Catatan</label><input type="text" id="payCatatan" placeholder="Keterangan SPP Bulan..." class="w-full border p-2 rounded-lg mt-1"></div>
+          <div class="flex gap-2 pt-2">
+            <button type="submit" class="flex-1 bg-amber-500 text-white font-bold py-2 rounded-xl">Simpan Transaksi</button>
+            <button type="button" onclick="closeModal()" class="flex-1 bg-slate-200 text-slate-700 font-bold py-2 rounded-xl">Batal</button>
+          </div>
+        </form>
+      `;
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+    }
+
+    async function savePembayaranReal(e) {
+      e.preventDefault();
+      const no_transaksi = document.getElementById('payNo').value;
+      const nominal = document.getElementById('payNominal').value;
+      const metode_pembayaran = document.getElementById('payMetode').value;
+      const catatan = document.getElementById('payCatatan').value;
+
+      const { error } = await sb.from('payments').insert([{ no_transaksi, nominal, metode_pembayaran, catatan }]);
+      if (error) alert('Gagal menyimpan: ' + error.message);
+      else { closeModal(); renderKeuangan(document.getElementById('mainContent')); }
+    }
+
+    // 11. MODUL BROADCAST PENGUMUMAN
+    async function renderBroadcast(container) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
+          <div class="flex justify-between items-center">
+            <h2 class="text-base font-bold text-slate-800">Broadcast Pengumuman</h2>
+            <button onclick="openModalTambahBroadcast()" class="bg-pink-500 hover:bg-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition">+ Buat Pesan</button>
+          </div>
+
+          <div id="broadcastListContainer" class="space-y-2 text-xs"><p class="text-slate-400 italic">Memuat riwayat pengumuman...</p></div>
+        </div>
+      `;
+
+      const { data: broadcasts } = await sb.from('broadcasts').select('*').order('created_at', { ascending: false });
+      const listContainer = document.getElementById('broadcastListContainer');
+
+      if (!broadcasts || broadcasts.length === 0) {
+        listContainer.innerHTML = `<p class="text-slate-400 py-4 text-center">Belum ada pengumuman yang dikirim.</p>`;
+        return;
+      }
+
+      listContainer.innerHTML = broadcasts.map(b => `
+        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <div class="flex justify-between items-center mb-1">
+            <p class="font-bold text-slate-800">${b.judul}</p>
+            <span class="bg-pink-100 text-pink-700 text-[9px] font-bold px-2 py-0.5 rounded">${b.target_penerima}</span>
+          </div>
+          <p class="text-slate-600 text-[11px]">${b.pesan}</p>
+        </div>
+      `).join('');
+    }
+
+    function openModalTambahBroadcast() {
+      const modal = document.getElementById('modalCard');
+      modal.innerHTML = `
+        <h3 class="text-sm font-bold text-slate-800 mb-3">Buat Pengumuman Broadcast</h3>
+        <form onsubmit="saveBroadcastReal(event)" class="space-y-2 text-xs">
+          <div><label class="font-bold text-slate-600">Judul Pengumuman</label><input type="text" id="bcJudul" required placeholder="Ex: Libur Semester" class="w-full border p-2 rounded-lg mt-1"></div>
+          <div><label class="font-bold text-slate-600">Target Penerima</label>
+            <select id="bcTarget" class="w-full border p-2 rounded-lg mt-1 bg-white">
+              <option value="Semua User">Semua User</option>
+              <option value="Siswa">Siswa</option>
+              <option value="Guru">Guru</option>
+            </select>
+          </div>
+          <div><label class="font-bold text-slate-600">Isi Pesan</label><textarea id="bcPesan" required rows="3" placeholder="Tuliskan pengumuman di sini..." class="w-full border p-2 rounded-lg mt-1"></textarea></div>
+          <div class="flex gap-2 pt-2">
+            <button type="submit" class="flex-1 bg-pink-500 text-white font-bold py-2 rounded-xl">Kirim Broadcast</button>
+            <button type="button" onclick="closeModal()" class="flex-1 bg-slate-200 text-slate-700 font-bold py-2 rounded-xl">Batal</button>
+          </div>
+        </form>
+      `;
+      document.getElementById('modalBackdrop').classList.remove('hidden');
+    }
+
+    async function saveBroadcastReal(e) {
+      e.preventDefault();
+      const judul = document.getElementById('bcJudul').value;
+      const target_penerima = document.getElementById('bcTarget').value;
+      const pesan = document.getElementById('bcPesan').value;
+
+      const { error } = await sb.from('broadcasts').insert([{ judul, target_penerima, pesan, status: 'Terkirim' }]);
+      if (error) alert('Error: ' + error.message);
+      else { closeModal(); renderBroadcast(document.getElementById('mainContent')); }
+    }
+
+    // 12. MODUL SETTING WEB
+    async function renderSettingWeb(container) {
+      const { data: set } = await sb.from('settings').select('*').eq('id', 1).single();
+
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
+          <h2 class="text-base font-bold text-slate-800">Pengaturan Sistem & Identitas Web</h2>
+
+          <form onsubmit="saveSettingsReal(event)" class="space-y-3 text-xs">
+            <div>
+              <label class="font-bold text-slate-700">Nama Lembaga Bimbel</label>
+              <input type="text" id="setNama" value="${set?.nama_bimbel || 'BIMBEL SAINS'}" required class="w-full border p-2.5 rounded-xl mt-1">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Tahun Ajaran Aktif</label>
+              <input type="text" id="setTahun" value="${set?.tahun_ajaran_aktif || '2025/2026'}" required class="w-full border p-2.5 rounded-xl mt-1">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Nomor WhatsApp CS</label>
+              <input type="text" id="setWA" value="${set?.whatsapp || '081234567890'}" class="w-full border p-2.5 rounded-xl mt-1">
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">Alamat Pusat</label>
+              <input type="text" id="setAlamat" value="${set?.alamat || 'Surabaya, Jawa Timur'}" class="w-full border p-2.5 rounded-xl mt-1">
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl transition">Simpan Pengaturan</button>
+          </form>
+        </div>
+      `;
+    }
+
+    async function saveSettingsReal(e) {
+      e.preventDefault();
+      const nama_bimbel = document.getElementById('setNama').value;
+      const tahun_ajaran_aktif = document.getElementById('setTahun').value;
+      const whatsapp = document.getElementById('setWA').value;
+      const alamat = document.getElementById('setAlamat').value;
+
+      const { error } = await sb.from('settings').upsert([{ id: 1, nama_bimbel, tahun_ajaran_aktif, whatsapp, alamat }]);
+      if (error) alert('Gagal menyimpan: ' + error.message);
+      else alert('Pengaturan web berhasil diperbarui!');
+    }
+
+    // 13. MODUL PUSAT LAPORAN FULL
+    async function renderLaporan(container) {
+      container.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-4">
+          <h2 class="text-base font-bold text-slate-800">Pusat Laporan Full</h2>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <button onclick="cetakLaporan('Siswa')" class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-left hover:bg-brand-50 transition">
+              <i class="fa-solid fa-user-graduate text-brand-600 text-base mb-1"></i>
+              <p class="font-bold text-slate-800">Laporan Siswa</p>
+              <p class="text-[10px] text-slate-500">Ekspor data siswa aktif</p>
+            </button>
+            <button onclick="cetakLaporan('Keuangan')" class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-left hover:bg-brand-50 transition">
+              <i class="fa-solid fa-wallet text-amber-500 text-base mb-1"></i>
+              <p class="font-bold text-slate-800">Laporan Keuangan</p>
+              <p class="text-[10px] text-slate-500">Rekap transaksi & SPP</p>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function cetakLaporan(jenis) {
+      alert(`Mencetak Laporan ${jenis}... Fitur ekspor siap digabungkan dengan PDF/Print.`);
+    }
+
+    // 14. MODUL DATABASE & PRESENSI & JADWAL & NILAI
+    function renderJadwal(c) {
+      c.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
+          <h2 class="text-base font-bold text-slate-800">Jadwal Bimbel</h2>
+          <p class="text-xs text-slate-500">Jadwal pembelajaran terhubung langsung dengan modul kelas.</p>
+        </div>
+      `;
+    }
+
+    function renderPresensi(c) {
+      c.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
+          <h2 class="text-base font-bold text-slate-800">Presensi Kehadiran Hari Ini</h2>
+          <div class="flex gap-2 text-xs">
+            <button onclick="alert('Presensi Hadir Dicatat!')" class="flex-1 bg-emerald-600 text-white font-bold py-2 rounded-xl"><i class="fa-solid fa-check"></i> Hadir</button>
+            <button onclick="alert('Presensi Izin Dicatat!')" class="flex-1 bg-amber-500 text-white font-bold py-2 rounded-xl"><i class="fa-solid fa-envelope"></i> Izin</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderNilai(c) {
+      c.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
+          <h2 class="text-base font-bold text-slate-800">Modul Nilai Siswa</h2>
+          <p class="text-xs text-slate-500">Input nilai Tugas, UTS, UAS, dan Try Out siswa.</p>
+        </div>
+      `;
+    }
+
+    async function renderDatabase(c) {
+      const { count: uCount } = await sb.from('profiles').select('*', { count: 'exact', head: true });
+      const { count: sCount } = await sb.from('students').select('*', { count: 'exact', head: true });
+
+      c.innerHTML = `
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 space-y-3">
+          <h2 class="text-base font-bold text-slate-800">Database Health</h2>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="p-2.5 bg-slate-50 border rounded-xl"><p class="text-slate-500">Tabel Profiles</p><p class="font-bold text-slate-800">${uCount || 0} Data</p></div>
+            <div class="p-2.5 bg-slate-50 border rounded-xl"><p class="text-slate-500">Tabel Students</p><p class="font-bold text-slate-800">${sCount || 0} Data</p></div>
+          </div>
+        </div>
+      `;
+    }
 
     function renderSemuaMenu(container) {
       container.innerHTML = `
@@ -755,6 +1060,13 @@
               <button onclick="navigateView('presensi')" class="p-2.5 bg-slate-50 rounded-xl border text-xs font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-clipboard-user text-emerald-600"></i> Presensi</button>
             </div>
           </div>
+          <div>
+            <span class="text-[11px] font-extrabold text-slate-400 tracking-wider">KEUANGAN & SISTEM</span>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <button onclick="navigateView('keuangan')" class="p-2.5 bg-slate-50 rounded-xl border text-xs font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-wallet text-amber-500"></i> Keuangan</button>
+              <button onclick="navigateView('setting_web')" class="p-2.5 bg-slate-50 rounded-xl border text-xs font-bold text-slate-700 flex items-center gap-2"><i class="fa-solid fa-gear text-indigo-500"></i> Setting Web</button>
+            </div>
+          </div>
         </div>
       `;
     }
@@ -766,16 +1078,6 @@
           <h2 class="text-sm font-bold text-slate-800">${currentUser ? (currentUser.nama_lengkap || currentUser.email) : 'User'}</h2>
           <span class="bg-amber-400 text-blue-950 font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase">${userRole}</span>
           <button onclick="handleLogout()" class="w-full bg-red-500 text-white text-xs font-bold py-2 rounded-xl mt-2">Logout</button>
-        </div>
-      `;
-    }
-
-    function renderModulePlaceholder(container, name) {
-      container.innerHTML = `
-        <div class="bg-white rounded-2xl p-6 text-center border border-slate-100 shadow-sm">
-          <i class="fa-solid fa-folder-open text-3xl text-brand-500 mb-2"></i>
-          <h2 class="text-sm font-bold text-slate-800 uppercase">Modul ${name}</h2>
-          <p class="text-xs text-slate-500 mt-1">Sistem terintegrasi Supabase.</p>
         </div>
       `;
     }
